@@ -71,27 +71,6 @@ function build3DLayout(root: KnowledgeNode) {
   return { nodes, edges };
 }
 
-function CameraRig({ target }: { target: [number, number, number] }) {
-  const { camera } = useThree();
-  const targetRef = useRef<[number, number, number]>(target);
-
-  useEffect(() => {
-    targetRef.current = target;
-  }, [target]);
-
-  useFrame(() => {
-    // Smoothly move camera to target.z + offset
-    const [tx, ty, tz] = targetRef.current;
-    const desired = { x: tx, y: ty, z: tz - 10 }; // camera behind looking forward
-    camera.position.x += (desired.x - camera.position.x) * 0.08;
-    camera.position.y += (desired.y + 3 - camera.position.y) * 0.08; // a bit above
-    camera.position.z += (desired.z - camera.position.z) * 0.08;
-    camera.lookAt(tx, ty, tz);
-  });
-
-  return null;
-}
-
 function NodeMesh({ 
   node, 
   onClick, 
@@ -154,39 +133,94 @@ function NodeMesh({
   );
 }
 
+// Custom OrbitControls hook to refine controls
+function useCustomOrbitControls(controlsRef) {
+  const { camera, gl } = useThree();
+  
+  useEffect(() => {
+    if (!controlsRef.current) return;
+    
+    // Set initial position for better viewing
+    camera.position.set(0, 5, -15);
+    camera.lookAt(0, 0, 0);
+    
+    // Enhance control behavior
+    const controls = controlsRef.current;
+    controls.update();
+    
+    // Constrain vertical rotation to avoid upside-down view
+    controls.minPolarAngle = Math.PI * 0.1;
+    controls.maxPolarAngle = Math.PI * 0.8;
+    
+    // Add event listeners for zoom
+    const handleWheel = (e) => {
+      // Smooth zoom sensitivity
+      const zoomFactor = e.deltaY * 0.005;
+      camera.position.z += zoomFactor;
+      camera.position.z = Math.max(2, Math.min(camera.position.z, 30));
+      controls.update();
+    };
+    
+    gl.domElement.addEventListener('wheel', handleWheel, { passive: true });
+    
+    return () => {
+      gl.domElement.removeEventListener('wheel', handleWheel);
+    };
+  }, [camera, gl]);
+}
+
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
   const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
-  const focusPos: [number, number, number] = focusId ? (idToNode.get(focusId)?.position ?? [0, 0, 0]) : [0, 0, 0];
+  const focusPos = useRef<[number, number, number]>([0, 0, 0]);
+  const controlsRef = useRef();
+  const { camera } = useThree();
+  
+  // Update focus position reference but don't force camera movement
+  useEffect(() => {
+    if (focusId) {
+      const nodePos = idToNode.get(focusId)?.position ?? [0, 0, 0];
+      focusPos.current = nodePos;
+      
+      // Optional: Only move camera on initial focus, not during pans/zooms
+      if (controlsRef.current) {
+        // Smoothly move to new target only on focus change
+        const controls = controlsRef.current;
+        controls.target.set(nodePos[0], nodePos[1], nodePos[2]);
+        controls.update();
+      }
+    }
+  }, [focusId, idToNode]);
   
   // Get colors from CSS variables
   const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
-  // Use black for focused connections
   const focusedEdgeColor = "#000000";
   
-  // Direct function to check if an edge is connected to the focused node
-  const isEdgeConnectedToFocus = useCallback(
-    (source: string, target: string) => {
-      if (!focusId) return false;
-      return source === focusId || target === focusId;
-    },
-    [focusId]
-  );
+  // Use improved OrbitControls setup
+  const orbitControlsRef = useRef();
   
-  // Force component update when focus changes
-  const [, forceUpdate] = useState({});
-  useEffect(() => {
-    // Force re-render when focus changes to ensure all edges update
-    forceUpdate({});
-  }, [focusId]);
-
   return (
     <>
       <ambientLight intensity={0.6} />
       <directionalLight position={[5, 7, -5]} intensity={0.5} />
-      <CameraRig target={focusPos} />
       
+      {/* Replace CameraRig with OrbitControls - no forced movement */}
+      <OrbitControls
+        ref={orbitControlsRef}
+        enablePan={true}
+        enableZoom={true}
+        enableRotate={true}
+        minDistance={2}
+        maxDistance={30}
+        dampingFactor={0.1}
+        rotateSpeed={0.7}
+        panSpeed={0.5}
+        zoomSpeed={1.0}
+        makeDefault
+      />
+      
+      {/* Rest of your scene rendering */}
       {edges.map((e, idx) => {
         const a = idToNode.get(e.source)!;
         const b = idToNode.get(e.target)!;
@@ -200,15 +234,15 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineWidth = 0.5 + avgWeight * 2.5;
         
         // Check if this edge connects to the focused node
-        const connected = isEdgeConnectedToFocus(e.source, e.target);
+        const isConnected = focusId && (e.source === focusId || e.target === focusId);
         
         // Use black for connections to focused node
-        const lineColor = connected ? focusedEdgeColor : muted;
-        const lineOpacity = connected ? 1 : 0.6;
+        const lineColor = isConnected ? focusedEdgeColor : muted;
+        const lineOpacity = isConnected ? 1 : 0.6;
         
         return (
           <Line 
-            key={`edge-${idx}-${connected ? 'focused' : 'unfocused'}`}
+            key={`edge-${idx}-${isConnected ? 'focused' : 'unfocused'}`}
             points={[a.position, b.position]} 
             color={lineColor}
             lineWidth={lineWidth}
@@ -223,7 +257,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
           key={n.id} 
           node={n} 
           onClick={(id) => {
-            // Toggle focus if clicking the same node
+            // Only move camera on initial focus, allow free navigation after
             setFocusId(id === focusId ? null : id);
           }}
           isFocused={n.id === focusId} 
@@ -233,15 +267,16 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   );
 }
 
+// And update the Graph3D component to remove any custom controls that might interfere
 export function Graph3D({ data }: { data: KnowledgeNode }) {
   const card = useCssHsl("--card", "hsl(0 0% 100%)");
   return (
     <section aria-label="3D knowledge tree" className="w-full h-[520px] mt-10">
       <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
-        <Canvas shadows camera={{ position: [0, 3, -10], fov: 50 }}>
+        <Canvas shadows camera={{ position: [0, 5, -15], fov: 50 }}>
           <color attach="background" args={[card] as any} />
           <GraphScene data={data} />
-          <OrbitControls enablePan={false} enableZoom={true} />
+          {/* OrbitControls is now inside the GraphScene component */}
         </Canvas>
       </div>
     </section>
