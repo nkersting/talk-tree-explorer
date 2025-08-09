@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
 import type { KnowledgeNode } from "@/components/KnowledgeTree";
@@ -165,22 +165,22 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   // Use black for focused connections
   const focusedEdgeColor = "#000000";
   
-  // Calculate focused node's connections
-  const focusedConnections = useMemo(() => {
-    if (!focusId) return new Set<string>();
-    
-    const connections = new Set<string>();
-    edges.forEach(edge => {
-      if (edge.source === focusId) {
-        connections.add(`${edge.source}-${edge.target}`);
-      } else if (edge.target === focusId) {
-        connections.add(`${edge.source}-${edge.target}`);
-      }
-    });
-    
-    return connections;
-  }, [focusId, edges]);
+  // Direct function to check if an edge is connected to the focused node
+  const isEdgeConnectedToFocus = useCallback(
+    (source: string, target: string) => {
+      if (!focusId) return false;
+      return source === focusId || target === focusId;
+    },
+    [focusId]
+  );
   
+  // Force component update when focus changes
+  const [, forceUpdate] = useState({});
+  useEffect(() => {
+    // Force re-render when focus changes to ensure all edges update
+    forceUpdate({});
+  }, [focusId]);
+
   return (
     <>
       <ambientLight intensity={0.6} />
@@ -200,16 +200,15 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineWidth = 0.5 + avgWeight * 2.5;
         
         // Check if this edge connects to the focused node
-        const edgeKey = `${e.source}-${e.target}`;
-        const isConnectedToFocus = focusedConnections.has(edgeKey);
+        const connected = isEdgeConnectedToFocus(e.source, e.target);
         
         // Use black for connections to focused node
-        const lineColor = isConnectedToFocus ? focusedEdgeColor : muted;
-        const lineOpacity = isConnectedToFocus ? 1 : 0.6;
+        const lineColor = connected ? focusedEdgeColor : muted;
+        const lineOpacity = connected ? 1 : 0.6;
         
         return (
           <Line 
-            key={idx} 
+            key={`edge-${idx}-${connected ? 'focused' : 'unfocused'}`}
             points={[a.position, b.position]} 
             color={lineColor}
             lineWidth={lineWidth}
@@ -220,7 +219,15 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
       })}
       
       {nodes.map((n) => (
-        <NodeMesh key={n.id} node={n} onClick={setFocusId} isFocused={n.id === focusId} />
+        <NodeMesh 
+          key={n.id} 
+          node={n} 
+          onClick={(id) => {
+            // Toggle focus if clicking the same node
+            setFocusId(id === focusId ? null : id);
+          }}
+          isFocused={n.id === focusId} 
+        />
       ))}
     </>
   );
