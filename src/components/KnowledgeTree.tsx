@@ -98,6 +98,7 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
   const nodeMap = new Map<string, { x: number; y: number; depth: number }>();
+  const nodeWeightMap = new Map<string, number>();
   
   function weightToRadius(w?: number) {
     if (w === undefined || Number.isNaN(w)) return 20;
@@ -141,6 +142,9 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
 
     const y = (depthCount - 1 - depth) * vGap + vGap / 2;
     nodeMap.set(currentNodeId, { x, y, depth });
+    
+    // Store node weight for edge thickness calculation
+    nodeWeightMap.set(currentNodeId, node.weight || 1);
 
     nodes.push({
       id: currentNodeId,
@@ -160,8 +164,11 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
         id: `edge-${parentId}-${currentNodeId}`,
         source: parentId,
         target: currentNodeId,
-        type: 'smoothstep',
-        style: { stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1.5 },
+        type: 'straight',
+        style: { 
+          stroke: 'hsl(var(--muted-foreground))', 
+          strokeWidth: 1 // Will be updated after all nodes are processed
+        },
       });
     }
 
@@ -169,6 +176,20 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
   }
 
   processNode(root, 0);
+  
+  // Update edge thickness based on average weight of connected nodes
+  edges.forEach(edge => {
+    const sourceWeight = nodeWeightMap.get(edge.source) || 1;
+    const targetWeight = nodeWeightMap.get(edge.target) || 1;
+    const averageWeight = (sourceWeight + targetWeight) / 2;
+    const strokeWidth = Math.max(1, Math.min(8, averageWeight * 0.8));
+    
+    edge.style = {
+      ...edge.style,
+      strokeWidth: strokeWidth
+    };
+  });
+  
   return { nodes, edges };
 }
 
