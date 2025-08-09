@@ -1,4 +1,5 @@
 import { useState, MouseEvent } from "react";
+import { ReactFlowProvider } from "@xyflow/react";
 import { KnowledgeTree, type KnowledgeNode } from "@/components/KnowledgeTree";
 import { SEO } from "@/components/SEO";
 
@@ -234,7 +235,9 @@ const Index = () => {
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-6 pb-16">
-        <KnowledgeTree data={particleData} />
+        <ReactFlowProvider>
+          <KnowledgeTree data={particleData} />
+        </ReactFlowProvider>
         <p className="mt-6 text-sm text-muted-foreground">
           JSON schema: <code>{`{ "node": "string", "weight": "number", "children": "KnowledgeNode[]" }`}</code>
         </p>

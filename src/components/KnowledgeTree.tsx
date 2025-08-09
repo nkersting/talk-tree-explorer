@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useEffect } from "react";
 import { 
   ReactFlow, 
   Node, 
@@ -8,7 +8,11 @@ import {
   Background, 
   Controls,
   MiniMap,
-  NodeTypes
+  NodeTypes,
+  Handle,
+  Position,
+  NodeChange,
+  useReactFlow
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -26,37 +30,63 @@ type PositionedNode = KnowledgeNode & {
   radius: number;
 };
 
-// Custom node component
+// Custom node component with handles
 function KnowledgeNodeComponent({ data }: { data: any }) {
   const radius = data.radius || 20;
   
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div
-          className="rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1"
-          style={{
-            width: radius * 2,
-            height: radius * 2,
-            fontSize: Math.max(8, radius / 3),
-          }}
-          title={data.label}
-        >
-          {data.label}
-        </div>
-      </TooltipTrigger>
-      <TooltipContent side="top" className="max-w-xs text-sm">
-        <div className="font-medium">{data.label}</div>
-        {typeof data.weight !== "undefined" && (
-          <div className="text-muted-foreground">Weight: {data.weight}</div>
-        )}
-        {data.childrenCount > 0 && (
-          <div className="text-muted-foreground">
-            Children: {data.childrenCount}
+    <>
+      {/* Input handle (top) */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{ 
+          background: 'hsl(var(--primary))', 
+          border: '2px solid hsl(var(--background))',
+          width: '8px',
+          height: '8px'
+        }}
+      />
+      
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className="rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1"
+            style={{
+              width: radius * 2,
+              height: radius * 2,
+              fontSize: Math.max(8, radius / 3),
+            }}
+            title={data.label}
+          >
+            {data.label}
           </div>
-        )}
-      </TooltipContent>
-    </Tooltip>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs text-sm">
+          <div className="font-medium">{data.label}</div>
+          {typeof data.weight !== "undefined" && (
+            <div className="text-muted-foreground">Weight: {data.weight}</div>
+          )}
+          {data.childrenCount > 0 && (
+            <div className="text-muted-foreground">
+              Children: {data.childrenCount}
+            </div>
+          )}
+        </TooltipContent>
+      </Tooltip>
+
+      {/* Output handle (bottom) */}
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{ 
+          background: 'hsl(var(--primary))', 
+          border: '2px solid hsl(var(--background))',
+          width: '8px',
+          height: '8px'
+        }}
+      />
+    </>
   );
 }
 
@@ -149,6 +179,66 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
   
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { fitView } = useReactFlow();
+
+  // Dynamic repositioning based on node movements
+  const handleNodesChange = useCallback((changes: NodeChange[]) => {
+    onNodesChange(changes);
+    
+    // Check if any node was dragged
+    const draggedChanges = changes.filter(change => 
+      change.type === 'position' && change.dragging === false
+    );
+    
+    if (draggedChanges.length > 0) {
+      // Apply force-directed layout to avoid overlaps
+      setNodes(nds => {
+        const updatedNodes = [...nds];
+        
+        // Simple collision detection and resolution
+        for (let i = 0; i < updatedNodes.length; i++) {
+          for (let j = i + 1; j < updatedNodes.length; j++) {
+            const nodeA = updatedNodes[i];
+            const nodeB = updatedNodes[j];
+            
+            if (!nodeA.position || !nodeB.position) continue;
+            
+            const dx = nodeB.position.x - nodeA.position.x;
+            const dy = nodeB.position.y - nodeA.position.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const minDistance = 100; // Minimum distance between nodes
+            
+            if (distance < minDistance && distance > 0) {
+              const pushDistance = (minDistance - distance) / 2;
+              const angle = Math.atan2(dy, dx);
+              
+              // Push nodes apart
+              const pushX = Math.cos(angle) * pushDistance;
+              const pushY = Math.sin(angle) * pushDistance;
+              
+              updatedNodes[i] = {
+                ...nodeA,
+                position: {
+                  x: nodeA.position.x - pushX,
+                  y: nodeA.position.y - pushY
+                }
+              };
+              
+              updatedNodes[j] = {
+                ...nodeB,
+                position: {
+                  x: nodeB.position.x + pushX,
+                  y: nodeB.position.y + pushY
+                }
+              };
+            }
+          }
+        }
+        
+        return updatedNodes;
+      });
+    }
+  }, [onNodesChange, setNodes]);
 
   return (
     <section aria-label="Knowledge tree" className="w-full h-[600px]">
@@ -156,7 +246,7 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={onNodesChange}
+          onNodesChange={handleNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
           fitView
