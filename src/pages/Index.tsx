@@ -1,6 +1,7 @@
 import { useState, MouseEvent } from "react";
 import { ReactFlowProvider } from "@xyflow/react";
 import { KnowledgeTree, type KnowledgeNode } from "@/components/KnowledgeTree";
+import { Graph3D } from "@/components/Graph3D";
 import { SEO } from "@/components/SEO";
 
 const particleData: KnowledgeNode = {
@@ -238,6 +239,7 @@ const Index = () => {
         <ReactFlowProvider>
           <KnowledgeTree data={particleData} />
         </ReactFlowProvider>
+        <Graph3D data={particleData} />
         <p className="mt-6 text-sm text-muted-foreground">
           JSON schema: <code>{`{ "node": "string", "weight": "number", "children": "KnowledgeNode[]" }`}</code>
         </p>
