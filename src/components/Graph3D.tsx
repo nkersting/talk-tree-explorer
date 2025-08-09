@@ -92,21 +92,49 @@ function CameraRig({ target }: { target: [number, number, number] }) {
   return null;
 }
 
-function NodeMesh({ node, onClick }: { node: Node3D; onClick: (id: string) => void }) {
+function NodeMesh({ 
+  node, 
+  onClick, 
+  isFocused = false 
+}: { 
+  node: Node3D; 
+  onClick: (id: string) => void;
+  isFocused?: boolean;
+}) {
   const primary = useCssHsl("--primary", "hsl(262 83% 58%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
   const textColor = useCssHsl("--foreground", "hsl(222 47% 11%)");
-
   const weightN = normalizeWeight(node.weight);
   const depth = Math.max(0, node.position[2] / 6);
   const size = 0.35 + weightN * 0.6; // base by weight (heavier = larger)
   const scale = size / (1 + depth * 0.25); // smaller with distance
-
+  
+  // Add slight pulsing effect for focused node
+  const [pulseScale, setPulseScale] = useState(1);
+  
+  useFrame(({ clock }) => {
+    if (isFocused) {
+      setPulseScale(1 + Math.sin(clock.getElapsedTime() * 3) * 0.05);
+    } else {
+      setPulseScale(1);
+    }
+  });
+  
   return (
-    <group position={node.position} onClick={(e) => { e.stopPropagation(); onClick(node.id); }}>
+    <group 
+      position={node.position} 
+      onClick={(e) => { e.stopPropagation(); onClick(node.id); }}
+      scale={[pulseScale, pulseScale, pulseScale]}
+    >
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
         <sphereGeometry args={[1, 32, 32]} />
-        <meshStandardMaterial color={primary} emissive={ring} emissiveIntensity={0.15} metalness={0.1} roughness={0.4} />
+        <meshStandardMaterial 
+          color={primary} 
+          emissive={ring} 
+          emissiveIntensity={isFocused ? 0.4 : 0.15} 
+          metalness={0.1} 
+          roughness={0.4} 
+        />
       </mesh>
       <Html center distanceFactor={6} style={{ pointerEvents: "none" }}>
         <div style={{
@@ -117,6 +145,7 @@ function NodeMesh({ node, onClick }: { node: Node3D; onClick: (id: string) => vo
           padding: "2px 6px",
           fontSize: 12,
           whiteSpace: "nowrap",
+          fontWeight: isFocused ? "bold" : "normal",
         }}>
           {node.label}
         </div>
@@ -128,26 +157,70 @@ function NodeMesh({ node, onClick }: { node: Node3D; onClick: (id: string) => vo
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
-
   const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
   const focusPos: [number, number, number] = focusId ? (idToNode.get(focusId)?.position ?? [0, 0, 0]) : [0, 0, 0];
-
+  
+  // Get colors from CSS variables
   const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
-
+  // Use black for focused connections
+  const focusedEdgeColor = "#000000";
+  
+  // Calculate focused node's connections
+  const focusedConnections = useMemo(() => {
+    if (!focusId) return new Set<string>();
+    
+    const connections = new Set<string>();
+    edges.forEach(edge => {
+      if (edge.source === focusId) {
+        connections.add(`${edge.source}-${edge.target}`);
+      } else if (edge.target === focusId) {
+        connections.add(`${edge.source}-${edge.target}`);
+      }
+    });
+    
+    return connections;
+  }, [focusId, edges]);
+  
   return (
     <>
       <ambientLight intensity={0.6} />
       <directionalLight position={[5, 7, -5]} intensity={0.5} />
       <CameraRig target={focusPos} />
+      
       {edges.map((e, idx) => {
         const a = idToNode.get(e.source)!;
         const b = idToNode.get(e.target)!;
+        
+        // Calculate average weight for line thickness
+        const sourceWeight = normalizeWeight(a.weight);
+        const targetWeight = normalizeWeight(b.weight);
+        const avgWeight = (sourceWeight + targetWeight) / 2;
+        
+        // Base line width on average weight (0.5 to 3)
+        const lineWidth = 0.5 + avgWeight * 2.5;
+        
+        // Check if this edge connects to the focused node
+        const edgeKey = `${e.source}-${e.target}`;
+        const isConnectedToFocus = focusedConnections.has(edgeKey);
+        
+        // Use black for connections to focused node
+        const lineColor = isConnectedToFocus ? focusedEdgeColor : muted;
+        const lineOpacity = isConnectedToFocus ? 1 : 0.6;
+        
         return (
-          <Line key={idx} points={[a.position, b.position]} color={muted} lineWidth={1.5} />
+          <Line 
+            key={idx} 
+            points={[a.position, b.position]} 
+            color={lineColor}
+            lineWidth={lineWidth}
+            transparent
+            opacity={lineOpacity}
+          />
         );
       })}
+      
       {nodes.map((n) => (
-        <NodeMesh key={n.id} node={n} onClick={setFocusId} />
+        <NodeMesh key={n.id} node={n} onClick={setFocusId} isFocused={n.id === focusId} />
       ))}
     </>
   );
