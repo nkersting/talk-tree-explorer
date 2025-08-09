@@ -36,6 +36,7 @@ function layoutTree(
   const totalLeaves = leafCount(root);
   const usableWidth = Math.max(0, width - hPadding * 2);
   const stepX = totalLeaves > 1 ? usableWidth / (totalLeaves - 1) : 0; // single leaf -> centered
+  const depthCount = computeDepth(root);
 
   const nodes: PositionedNode[] = [];
   const edges: Array<{ from: PositionedNode; to: PositionedNode }> = [];
@@ -96,7 +97,7 @@ function layoutTree(
       positionedChildren = n.children.map((c) => placeWithEdges(c, depth + 1));
       const avgX =
         positionedChildren.reduce((sum, c) => sum + c.x, 0) / positionedChildren.length;
-      const y = depth * vGap + vGap / 2;
+      const y = (depthCount - 1 - depth) * vGap + vGap / 2;
       const positioned: PositionedNode = {
         ...n,
         x: avgX,
@@ -110,7 +111,7 @@ function layoutTree(
     } else {
       // leaf
       const x = hPadding + (totalLeaves === 1 ? usableWidth / 2 : leafIndex * stepX);
-      const y = depth * vGap + vGap / 2;
+      const y = (depthCount - 1 - depth) * vGap + vGap / 2;
       leafIndex += 1;
       const positioned: PositionedNode = {
         ...n,
@@ -129,7 +130,6 @@ function layoutTree(
   leafIndex = 0;
   placeWithEdges(root, 0);
 
-  const depthCount = computeDepth(root);
   const height = Math.max(1, depthCount) * vGap;
 
   return { nodes, edges, height };

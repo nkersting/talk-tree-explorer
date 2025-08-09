@@ -2,35 +2,199 @@ import { useState, MouseEvent } from "react";
 import { KnowledgeTree, type KnowledgeNode } from "@/components/KnowledgeTree";
 import { SEO } from "@/components/SEO";
 
-const sampleData: KnowledgeNode = {
-  node: "Keynote",
-  weight: 8,
+const particleData: KnowledgeNode = {
+  node: "Particle Physics",
+  weight: 10,
   children: [
     {
-      node: "Introduction",
-      weight: 5,
+      node: "Historical Particle Physics",
+      weight: 10,
       children: [
-        { node: "Context", weight: 3 },
-        { node: "Problem", weight: 4 },
-      ],
-    },
-    {
-      node: "Main Ideas",
-      weight: 7,
-      children: [
-        { node: "Idea A", weight: 6, children: [{ node: "Example A1", weight: 3 }] },
-        { node: "Idea B", weight: 6, children: [{ node: "Example B1", weight: 2 }, { node: "Example B2", weight: 2 }] },
-      ],
-    },
-    {
-      node: "Conclusion",
-      weight: 6,
-      children: [
-        { node: "Summary", weight: 4 },
-        { node: "Q&A", weight: 5 },
-      ],
-    },
-  ],
+        {
+          node: "Present Particle Physics",
+          weight: 10,
+          children: [
+            {
+              node: "Future Particle Physics",
+              weight: 10,
+              children: [
+                {
+                  node: "Quantum Gravity",
+                  weight: 2,
+                  children: []
+                },
+                {
+                  node: "DM/DE",
+                  weight: 2,
+                  children: []
+                },
+                {
+                  node: "TOE",
+                  weight: 2,
+                  children: []
+                }
+              ]
+            },
+            {
+              node: "Gravity",
+              weight: 5,
+              children: [
+                {
+                  node: "Einstein",
+                  weight: 3,
+                  children: []
+                },
+                {
+                  node: "LIGO",
+                  weight: 2,
+                  children: []
+                }
+              ]
+            },
+            {
+              node: "Standard Model",
+              weight: 5,
+              children: [
+                {
+                  node: "SU(2)xSU(3)xU(1)",
+                  weight: 3,
+                  children: []
+                },
+                {
+                  node: "Higgs",
+                  weight: 3,
+                  children: []
+                },
+                {
+                  node: "Puzzles",
+                  weight: 3,
+                  children: []
+                }
+              ]
+            },
+            {
+              node: "Mechanics",
+              weight: 3,
+              children: []
+            }
+          ]
+        },
+        {
+          node: "Discovery Timeline",
+          weight: 7,
+          children: [
+            {
+              node: "Discovery of photon",
+              weight: 6,
+              children: [
+                {
+                  node: "Discovery of electron",
+                  weight: 6,
+                  children: [
+                    {
+                      node: "Discovery of neutron",
+                      weight: 6,
+                      children: [
+                        {
+                          node: "neutron experiment",
+                          weight: 3,
+                          children: [
+                            {
+                              node: "discoverer",
+                              weight: 2,
+                              children: []
+                            },
+                            {
+                              node: "backdrop",
+                              weight: 2,
+                              children: []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      node: "electron experiment",
+                      weight: 3,
+                      children: [
+                        {
+                          node: "discoverer",
+                          weight: 2,
+                          children: []
+                        },
+                        {
+                          node: "backdrop",
+                          weight: 2,
+                          children: []
+                        },
+                        {
+                          node: "positron prediction",
+                          weight: 1,
+                          children: []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  node: "early experiments",
+                  weight: 3,
+                  children: [
+                    {
+                      node: "ancient times",
+                      weight: 2,
+                      children: []
+                    },
+                    {
+                      node: "Newton",
+                      weight: 2,
+                      children: []
+                    },
+                    {
+                      node: "Huygen",
+                      weight: 2,
+                      children: []
+                    },
+                    {
+                      node: "Fresnel",
+                      weight: 2,
+                      children: []
+                    }
+                  ]
+                },
+                {
+                  node: "particle experiment",
+                  weight: 3,
+                  children: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          node: "Historical Backdrop",
+          weight: 6,
+          children: [
+            {
+              node: "Europe",
+              weight: 2,
+              children: []
+            },
+            {
+              node: "Asia",
+              weight: 2,
+              children: []
+            },
+            {
+              node: "US",
+              weight: 3,
+              children: []
+            }
+          ]
+        }
+      ]
+    }
+  ]
 };
 
 const Index = () => {
@@ -46,8 +210,8 @@ const Index = () => {
   return (
     <>
       <SEO
-        title="Knowledge Tree Presenter – Top-Down JSON Tree"
-        description="Visualize your talk's structure as a top-down knowledge tree with weighted nodes and helpful tooltips."
+        title="Particle Physics Knowledge Tree – Bottom-Up"
+        description="An upward-growing knowledge tree: explore Particle Physics from the root up with weighted nodes and tooltips."
       />
       <header className="relative">
         <div
@@ -62,15 +226,15 @@ const Index = () => {
             }}
           />
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            Knowledge Tree Presenter
+            Particle Physics Knowledge Tree
           </h1>
           <p className="mt-3 text-lg text-muted-foreground">
-            A clear, top-down view of your JSON-defined knowledge tree with tooltips on each node.
+            A clear, bottom-up view of your JSON-defined knowledge tree with tooltips on each node.
           </p>
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-6 pb-16">
-        <KnowledgeTree data={sampleData} />
+        <KnowledgeTree data={particleData} />
         <p className="mt-6 text-sm text-muted-foreground">
           JSON schema: <code>{`{ "node": "string", "weight": "number", "children": "KnowledgeNode[]" }`}</code>
         </p>
