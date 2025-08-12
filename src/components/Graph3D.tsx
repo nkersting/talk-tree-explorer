@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { KnowledgeNode } from "@/components/KnowledgeTree";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
@@ -134,7 +135,7 @@ function NodeMesh({
 }
 
 // Custom OrbitControls hook to refine controls
-function useCustomOrbitControls(controlsRef) {
+function useCustomOrbitControls(controlsRef: React.RefObject<OrbitControlsImpl>) {
   const { camera, gl } = useThree();
   
   useEffect(() => {
@@ -153,7 +154,7 @@ function useCustomOrbitControls(controlsRef) {
     controls.maxPolarAngle = Math.PI * 0.8;
     
     // Add event listeners for zoom
-    const handleWheel = (e) => {
+    const handleWheel = (e: WheelEvent) => {
       // Smooth zoom sensitivity
       const zoomFactor = e.deltaY * 0.005;
       camera.position.z += zoomFactor;
@@ -166,7 +167,7 @@ function useCustomOrbitControls(controlsRef) {
     return () => {
       gl.domElement.removeEventListener('wheel', handleWheel);
     };
-  }, [camera, gl]);
+  }, [camera, gl, controlsRef]);
 }
 
 function GraphScene({ data }: { data: KnowledgeNode }) {
@@ -174,7 +175,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
   const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
   const focusPos = useRef<[number, number, number]>([0, 0, 0]);
-  const controlsRef = useRef();
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const { camera } = useThree();
   
   // Update focus position reference but don't force camera movement
@@ -198,7 +199,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   const focusedEdgeColor = "#000000";
   
   // Use improved OrbitControls setup
-  const orbitControlsRef = useRef();
+  const orbitControlsRef = useRef<OrbitControlsImpl>(null);
   
   return (
     <>
