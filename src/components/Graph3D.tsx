@@ -241,15 +241,49 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineColor = isConnected ? focusedEdgeColor : muted;
         const lineOpacity = isConnected ? 1 : 0.6;
         
+        // Calculate arrow head position and rotation
+        const direction = [
+          b.position[0] - a.position[0],
+          b.position[1] - a.position[1], 
+          b.position[2] - a.position[2]
+        ];
+        const length = Math.sqrt(direction[0]**2 + direction[1]**2 + direction[2]**2);
+        const normalized = [direction[0]/length, direction[1]/length, direction[2]/length];
+        
+        // Position arrow head slightly before the target node
+        const arrowOffset = 0.8; // Distance from target node center
+        const arrowPos: [number, number, number] = [
+          b.position[0] - normalized[0] * arrowOffset,
+          b.position[1] - normalized[1] * arrowOffset,
+          b.position[2] - normalized[2] * arrowOffset
+        ];
+        
         return (
-          <Line 
-            key={`edge-${idx}-${isConnected ? 'focused' : 'unfocused'}`}
-            points={[a.position, b.position]} 
-            color={lineColor}
-            lineWidth={lineWidth}
-            transparent
-            opacity={lineOpacity}
-          />
+          <group key={`edge-${idx}-${isConnected ? 'focused' : 'unfocused'}`}>
+            <Line 
+              points={[a.position, b.position]} 
+              color={lineColor}
+              lineWidth={lineWidth}
+              transparent
+              opacity={lineOpacity}
+            />
+            {/* Arrow head */}
+            <mesh 
+              position={arrowPos}
+              rotation={[
+                Math.atan2(normalized[1], Math.sqrt(normalized[0]**2 + normalized[2]**2)),
+                Math.atan2(normalized[0], normalized[2]),
+                0
+              ]}
+            >
+              <coneGeometry args={[0.1 + avgWeight * 0.1, 0.3, 8]} />
+              <meshStandardMaterial 
+                color={lineColor} 
+                transparent 
+                opacity={lineOpacity}
+              />
+            </mesh>
+          </group>
         );
       })}
       
