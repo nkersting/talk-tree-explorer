@@ -226,13 +226,13 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const a = idToNode.get(e.source)!;
         const b = idToNode.get(e.target)!;
         
-        // Calculate average weight for line thickness
+        // Calculate product of weights for line thickness
         const sourceWeight = normalizeWeight(a.weight);
         const targetWeight = normalizeWeight(b.weight);
-        const avgWeight = (sourceWeight + targetWeight) / 2;
+        const weightProduct = sourceWeight * targetWeight;
         
-        // Base line width on average weight (0.5 to 3)
-        const lineWidth = 0.5 + avgWeight * 2.5;
+        // Base line width on weight product (0.25 to 3)
+        const lineWidth = 0.25 + weightProduct * 2.75;
         
         // Check if this edge connects to the focused node
         const isConnected = focusId && (e.source === focusId || e.target === focusId);
@@ -250,12 +250,12 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const length = Math.sqrt(direction[0]**2 + direction[1]**2 + direction[2]**2);
         const normalized = [direction[0]/length, direction[1]/length, direction[2]/length];
         
-        // Create chevrons along the path
-        const numChevrons = Math.max(2, Math.floor(length / 2)); // One chevron every 2 units
+        // Create 10 chevrons along the path
+        const numChevrons = 10;
         const chevrons = [];
         
-        for (let i = 1; i < numChevrons; i++) {
-          const t = i / numChevrons; // position along the line (0 to 1)
+        for (let i = 1; i <= numChevrons; i++) {
+          const t = i / (numChevrons + 1); // position along the line (0 to 1), excluding endpoints
           const chevronPos: [number, number, number] = [
             a.position[0] + direction[0] * t,
             a.position[1] + direction[1] * t,
@@ -263,7 +263,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
           ];
           
           // Create two small lines forming a chevron (>)
-          const chevronSize = 0.2 + avgWeight * 0.1;
+          const chevronSize = 0.2 + weightProduct * 0.1;
           const leftArm: [number, number, number] = [
             chevronPos[0] - normalized[1] * chevronSize + normalized[0] * chevronSize * 0.5,
             chevronPos[1] + normalized[0] * chevronSize + normalized[1] * chevronSize * 0.5,
