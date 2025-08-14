@@ -262,7 +262,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
             a.position[2] + direction[2] * t
           ];
           
-          // Create two small lines forming a chevron (>)
+          // Create two small lines forming a chevron (>) - updated for weightProduct
           const chevronSize = 0.2 + weightProduct * 0.1;
           const leftArm: [number, number, number] = [
             chevronPos[0] - normalized[1] * chevronSize + normalized[0] * chevronSize * 0.5,
