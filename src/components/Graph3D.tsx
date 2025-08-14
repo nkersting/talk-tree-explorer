@@ -231,8 +231,8 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const targetWeight = normalizeWeight(b.weight);
         const weightProduct = sourceWeight * targetWeight;
         
-        // Base line width on weight product (0.25 to 3)
-        const lineWidth = 0.25 + weightProduct * 2.75;
+        // Base line width on weight product (1 to 12) - 4x thicker
+        const lineWidth = (0.25 + weightProduct * 2.75) * 4;
         
         // Check if this edge connects to the focused node
         const isConnected = focusId && (e.source === focusId || e.target === focusId);
