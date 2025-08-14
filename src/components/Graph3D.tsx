@@ -37,8 +37,8 @@ function build3DLayout(root: KnowledgeNode) {
   const edges: Edge3D[] = [];
   let idCounter = 0;
 
-  const layerZ = 6; // distance between layers along +Z (into the screen)
-  const radial = 4; // base radius for each layer
+  const layerZ = 8; // standard distance between layers
+  const radial = 5; // standard radius for each layer
 
   function traverse(n: KnowledgeNode, depth: number, parentId?: string) {
     const id = `n3-${idCounter++}`;
@@ -53,11 +53,11 @@ function build3DLayout(root: KnowledgeNode) {
     const children = n.children ?? [];
     const count = children.length;
     if (count > 0) {
-      const radius = radial * depth + 3; // grow the circle radius with depth
+      const radius = radial; // fixed radius for consistent edge lengths
       for (let i = 0; i < count; i++) {
         const angle = (i / count) * Math.PI * 2;
         const cx = Math.cos(angle) * radius;
-        const cy = Math.sin(angle) * (radius * 0.6); // ellipse for nicer spread
+        const cy = Math.sin(angle) * radius * 0.7; // slight ellipse
         const childId = traverse(children[i], depth + 1, id);
         const child = nodes.find((nn) => nn.id === childId)!;
         child.position = [cx, cy, (depth + 1) * layerZ];
@@ -241,7 +241,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineColor = isConnected ? focusedEdgeColor : muted;
         const lineOpacity = isConnected ? 1 : 0.6;
         
-        // Calculate arrow head position and rotation
+        // Calculate direction vector
         const direction = [
           b.position[0] - a.position[0],
           b.position[1] - a.position[1], 
@@ -250,13 +250,50 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const length = Math.sqrt(direction[0]**2 + direction[1]**2 + direction[2]**2);
         const normalized = [direction[0]/length, direction[1]/length, direction[2]/length];
         
-        // Position arrow head slightly before the target node
-        const arrowOffset = 0.8; // Distance from target node center
-        const arrowPos: [number, number, number] = [
-          b.position[0] - normalized[0] * arrowOffset,
-          b.position[1] - normalized[1] * arrowOffset,
-          b.position[2] - normalized[2] * arrowOffset
-        ];
+        // Create chevrons along the path
+        const numChevrons = Math.max(2, Math.floor(length / 2)); // One chevron every 2 units
+        const chevrons = [];
+        
+        for (let i = 1; i < numChevrons; i++) {
+          const t = i / numChevrons; // position along the line (0 to 1)
+          const chevronPos: [number, number, number] = [
+            a.position[0] + direction[0] * t,
+            a.position[1] + direction[1] * t,
+            a.position[2] + direction[2] * t
+          ];
+          
+          // Create two small lines forming a chevron (>)
+          const chevronSize = 0.2 + avgWeight * 0.1;
+          const leftArm: [number, number, number] = [
+            chevronPos[0] - normalized[1] * chevronSize + normalized[0] * chevronSize * 0.5,
+            chevronPos[1] + normalized[0] * chevronSize + normalized[1] * chevronSize * 0.5,
+            chevronPos[2]
+          ];
+          const rightArm: [number, number, number] = [
+            chevronPos[0] + normalized[1] * chevronSize + normalized[0] * chevronSize * 0.5,
+            chevronPos[1] - normalized[0] * chevronSize + normalized[1] * chevronSize * 0.5,
+            chevronPos[2]
+          ];
+          
+          chevrons.push(
+            <Line 
+              key={`chevron-${i}-left`}
+              points={[leftArm, chevronPos]} 
+              color={lineColor}
+              lineWidth={lineWidth * 0.8}
+              transparent
+              opacity={lineOpacity}
+            />,
+            <Line 
+              key={`chevron-${i}-right`}
+              points={[chevronPos, rightArm]} 
+              color={lineColor}
+              lineWidth={lineWidth * 0.8}
+              transparent
+              opacity={lineOpacity}
+            />
+          );
+        }
         
         return (
           <group key={`edge-${idx}-${isConnected ? 'focused' : 'unfocused'}`}>
@@ -267,22 +304,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
               transparent
               opacity={lineOpacity}
             />
-            {/* Arrow head */}
-            <mesh 
-              position={arrowPos}
-              rotation={[
-                Math.atan2(normalized[1], Math.sqrt(normalized[0]**2 + normalized[2]**2)),
-                Math.atan2(normalized[0], normalized[2]),
-                0
-              ]}
-            >
-              <coneGeometry args={[0.1 + avgWeight * 0.1, 0.3, 8]} />
-              <meshStandardMaterial 
-                color={lineColor} 
-                transparent 
-                opacity={lineOpacity}
-              />
-            </mesh>
+            {chevrons}
           </group>
         );
       })}
