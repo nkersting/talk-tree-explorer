@@ -8,89 +8,107 @@
   "knowledgeTree": {
     "node": "Particle Physics",
     "weight": 10,
-    "children": [
+      "widgets":["proton.png", "electron.png", "https://www.youtube.com/watch?v=mRMss7TAe6k"],
+"children": [
       {
         "node": "Experimental Tools",
         "weight": 8,
-        "children": [
+        "widgets":[],
+"children": [
           {
             "node": "Detectors",
             "weight": 4,
-            "children": [
+            "widgets":[],
+"children": [
               {
                 "node": "Drift Chamber",
                 "weight": 3,
-                "children": []
+                "widgets":[],
+"children": []
               },
               {
                 "node": "ATLAS",
                 "weight": 3,
-                "children": []
+                "widgets":[],
+"children": []
               },
               {
                 "node": "LIGO",
                 "weight": 2,
-                "children": []
+                "widgets":[],
+"children": []
               }
             ]
           },
           {
             "node": "Standard Model",
             "weight": 5,
-            "children": [
+            "widgets":[],
+"children": [
               {
                 "node": "SU(2)xSU(3)xU(1)",
                 "weight": 3,
-                "children": []
+                "widgets":[],
+"children": []
               },
               {
                 "node": "Higgs",
                 "weight": 3,
-                "children": []
+                "widgets":[],
+"children": []
               },
               {
                 "node": "Puzzles",
                 "weight": 3,
-                "children": []
+                "widgets":[],
+"children": []
               }
             ]
           },
           {
             "node": "Mechanics",
             "weight": 3,
-            "children": []
+            "widgets":[],
+"children": []
           }
         ]
       },
       {
         "node": "Discovery Timeline",
         "weight": 7,
-        "children": [
+        "widgets":[],
+"children": [
           {
             "node": "Discovery of photon",
             "weight": 6,
-            "children": [
+            "widgets":[],
+"children": [
               {
                 "node": "Discovery of electron",
                 "weight": 6,
-                "children": [
+                "widgets":[],
+"children": [
                   {
                     "node": "Discovery of neutron",
                     "weight": 6,
-                    "children": [
+                    "widgets":[],
+"children": [
                       {
                         "node": "neutron experiment",
                         "weight": 3,
-                        "children": [
+                        "widgets":[],
+"children": [
                           {
                             "node": "discoverer",
                             "weight": 2,
-                            "children": []
+                            "widgets":[],
+"children": []
                           },
                           {
                             "node": "backdrop",
                             "weight": 2,
-                            "children": []
+                            "widgets":[],
+"children": []
                           }
                         ]
                       }
@@ -99,21 +117,25 @@
                   {
                     "node": "electron experiment",
                     "weight": 3,
-                    "children": [
+                    "widgets":[],
+"children": [
                       {
                         "node": "discoverer",
                         "weight": 2,
-                        "children": []
+                        "widgets":[],
+"children": []
                       },
                       {
                         "node": "backdrop",
                         "weight": 2,
-                        "children": []
+                        "widgets":[],
+"children": []
                       },
                       {
                         "node": "positron prediction",
                         "weight": 1,
-                        "children": []
+                        "widgets":[],
+"children": []
                       }
                     ]
                   }
@@ -122,47 +144,56 @@
               {
                 "node": "early experiments",
                 "weight": 3,
-                "children": [
+                "widgets":[],
+"children": [
                   {
                     "node": "ancient times",
                     "weight": 2,
-                    "children": []
+                    "widgets":[],
+"children": []
                   },
                   {
                     "node": "Newton",
                     "weight": 2,
-                    "children": []
+                    "widgets":[],
+"children": []
                   },
                   {
                     "node": "Huygen",
                     "weight": 2,
-                    "children": []
+                    "widgets":[],
+"children": []
                   },
                   {
                     "node": "Fresnel",
                     "weight": 2,
-                    "children": []
+                    "widgets":[],
+"children": []
                   }
                 ]
               },
               {
                 "node": "Quantum revolution",
                 "weight": 4,
-                "children": [
+                "widgets":[],
+"children": [
                   {
                     "node": "Planck",
                     "weight": 3,
-                    "children": []
+                    "widgets":[],
+"children": []
                   },
                   {
                     "node": "Einstein",
                     "weight": 3,
-                    "children": []
+                    "widgets":[],
+"children": []
                   },
                   {
                     "node": "particle experiment",
                     "weight": 3,
-                    "children": []
+                    "widgets":[],
+"children": []
                   }
                 ]
               }
@@ -173,21 +204,25 @@
       {
         "node": "Historical Backdrop",
         "weight": 6,
-        "children": [
+        "widgets":[],
+"children": [
           {
             "node": "Europe",
             "weight": 2,
-            "children": []
+            "widgets":[],
+"children": []
           },
           {
             "node": "Asia",
             "weight": 2,
-            "children": []
+            "widgets":[],
+"children": []
           },
           {
             "node": "US",
             "weight": 3,
-            "children": []
+            "widgets":[],
+"children": []
           }
         ]
       }
