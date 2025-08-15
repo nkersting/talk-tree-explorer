@@ -76,6 +76,7 @@ function build3DLayout(root: KnowledgeNode) {
 // Image preview component
 function ImagePreview({ src, position, index }: { src: string; position: [number, number, number]; index: number }) {
   const [hovered, setHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   // Position images in a small arc around the node
   const angle = (index / 3) * Math.PI * 2;
@@ -96,25 +97,53 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
         onPointerLeave={() => setHovered(false)}
       >
         <div style={{ position: "relative" }}>
+          {/* Thumbnail version */}
           <img
             src={src}
             alt="Widget preview"
+            loading="lazy"
+            onLoad={() => setImageLoaded(true)}
             style={{
-              width: hovered ? "200px" : "40px",
-              height: hovered ? "200px" : "40px",
+              width: hovered ? "300px" : "48px",
+              height: hovered ? "300px" : "48px",
               objectFit: "cover",
-              borderRadius: "8px",
-              border: "2px solid hsl(var(--border))",
-              boxShadow: hovered ? "0 10px 30px -10px hsl(var(--primary) / 0.3)" : "0 2px 8px -2px hsl(var(--primary) / 0.2)",
-              transition: "all 0.3s ease",
+              objectPosition: "center",
+              borderRadius: hovered ? "12px" : "6px",
+              border: `2px solid hsl(var(--border))`,
+              boxShadow: hovered 
+                ? "0 20px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 1px hsl(var(--ring) / 0.1)" 
+                : "0 4px 12px -2px hsl(var(--primary) / 0.25)",
+              transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
               cursor: "pointer",
               zIndex: hovered ? 1000 : 1,
               position: hovered ? "fixed" : "relative",
               top: hovered ? "50%" : "auto",
               left: hovered ? "50%" : "auto",
               transform: hovered ? "translate(-50%, -50%)" : "none",
+              opacity: imageLoaded ? 1 : 0,
+              filter: hovered ? "none" : "brightness(0.9) contrast(1.1)",
+              imageRendering: hovered ? "auto" : "crisp-edges",
             }}
           />
+          {/* Loading placeholder */}
+          {!imageLoaded && (
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                backgroundColor: "hsl(var(--muted))",
+                borderRadius: "6px",
+                border: "2px solid hsl(var(--border))",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "12px",
+                color: "hsl(var(--muted-foreground))",
+              }}
+            >
+              📷
+            </div>
+          )}
         </div>
       </Html>
     </group>
