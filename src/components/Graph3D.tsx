@@ -178,11 +178,15 @@ function NodeMesh({
     }
   });
   
-  // Filter widgets for image files
+  // Filter widgets for image files (handle both local files and URLs)
   const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'];
-  const imageWidgets = node.widgets?.filter(widget => 
-    imageExtensions.some(ext => widget.toLowerCase().endsWith(ext))
-  ) || [];
+  const imageWidgets = node.widgets?.filter(widget => {
+    // Check if it's a URL with image extension or just a local image file
+    if (widget.startsWith('http')) {
+      return imageExtensions.some(ext => widget.toLowerCase().includes(ext));
+    }
+    return imageExtensions.some(ext => widget.toLowerCase().endsWith(ext));
+  }) || [];
   
   return (
     <group 
