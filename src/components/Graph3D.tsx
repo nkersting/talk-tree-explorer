@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import type { KnowledgeNode } from "@/components/KnowledgeTree";
+import type { KnowledgeNode } from "@/types";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -22,6 +22,7 @@ type Node3D = {
   label: string;
   weight?: number;
   position: [number, number, number];
+  widgets?: string[];
 };
 
 type Edge3D = { source: string; target: string };
@@ -46,7 +47,7 @@ function build3DLayout(root: KnowledgeNode) {
     // Arrange children on a circle; root at origin
     const z = depth * layerZ;
 
-    nodes.push({ id, label: n.node, weight: n.weight, position: [0, 0, z] });
+    nodes.push({ id, label: n.node, weight: n.weight, position: [0, 0, z], widgets: n.widgets });
 
     if (parentId) edges.push({ source: parentId, target: id });
 
@@ -70,6 +71,54 @@ function build3DLayout(root: KnowledgeNode) {
   traverse(root, 0);
 
   return { nodes, edges };
+}
+
+// Image preview component
+function ImagePreview({ src, position, index }: { src: string; position: [number, number, number]; index: number }) {
+  const [hovered, setHovered] = useState(false);
+  
+  // Position images in a small arc around the node
+  const angle = (index / 3) * Math.PI * 2;
+  const radius = 2;
+  const imagePos: [number, number, number] = [
+    position[0] + Math.cos(angle) * radius,
+    position[1] + Math.sin(angle) * radius,
+    position[2]
+  ];
+  
+  return (
+    <group position={imagePos}>
+      <Html
+        center
+        distanceFactor={8}
+        style={{ pointerEvents: "all" }}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
+        <div style={{ position: "relative" }}>
+          <img
+            src={src}
+            alt="Widget preview"
+            style={{
+              width: hovered ? "200px" : "40px",
+              height: hovered ? "200px" : "40px",
+              objectFit: "cover",
+              borderRadius: "8px",
+              border: "2px solid hsl(var(--border))",
+              boxShadow: hovered ? "0 10px 30px -10px hsl(var(--primary) / 0.3)" : "0 2px 8px -2px hsl(var(--primary) / 0.2)",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+              zIndex: hovered ? 1000 : 1,
+              position: hovered ? "fixed" : "relative",
+              top: hovered ? "50%" : "auto",
+              left: hovered ? "50%" : "auto",
+              transform: hovered ? "translate(-50%, -50%)" : "none",
+            }}
+          />
+        </div>
+      </Html>
+    </group>
+  );
 }
 
 function NodeMesh({ 
@@ -99,6 +148,12 @@ function NodeMesh({
       setPulseScale(1);
     }
   });
+  
+  // Filter widgets for image files
+  const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'];
+  const imageWidgets = node.widgets?.filter(widget => 
+    imageExtensions.some(ext => widget.toLowerCase().endsWith(ext))
+  ) || [];
   
   return (
     <group 
@@ -130,6 +185,16 @@ function NodeMesh({
           {node.label}
         </div>
       </Html>
+      
+      {/* Render image previews */}
+      {imageWidgets.map((widget, index) => (
+        <ImagePreview 
+          key={`${node.id}-image-${index}`}
+          src={widget}
+          position={node.position}
+          index={index}
+        />
+      ))}
     </group>
   );
 }

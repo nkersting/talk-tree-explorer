@@ -3,4 +3,5 @@ export type KnowledgeNode = {
   node: string;
   weight?: number;
   children?: KnowledgeNode[];
+  widgets?: string[];
 };
