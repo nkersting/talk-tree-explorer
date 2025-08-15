@@ -99,7 +99,7 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
         <div style={{ position: "relative" }}>
           {/* Thumbnail version */}
           <img
-            src={src}
+            src={src.startsWith('http') ? src : `data/${src}`}
             alt="Widget preview"
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
