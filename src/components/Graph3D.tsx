@@ -237,9 +237,11 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         // Check if this edge connects to the focused node
         const isConnected = focusId && (e.source === focusId || e.target === focusId);
         
-        // Use black for connections to focused node
-        const lineColor = isConnected ? focusedEdgeColor : muted;
-        const lineOpacity = isConnected ? 1 : 0.6;
+        // Asphalt road colors
+        const asphaltColor = "#2a2a2a"; // Dark asphalt
+        const focusedAsphaltColor = "#1a1a1a"; // Darker asphalt for focused
+        const lineColor = isConnected ? focusedAsphaltColor : asphaltColor;
+        const lineOpacity = 0.9;
         
         // Calculate direction vector
         const direction = [
@@ -262,35 +264,51 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
             a.position[2] + direction[2] * t
           ];
           
-          // Create two small lines forming a chevron (>) - updated for weightProduct
-          const chevronSize = 0.2 + weightProduct * 0.1;
-          const leftArm: [number, number, number] = [
-            chevronPos[0] - normalized[1] * chevronSize + normalized[0] * chevronSize * 0.5,
-            chevronPos[1] + normalized[0] * chevronSize + normalized[1] * chevronSize * 0.5,
+          // Create angular zebra stripe pattern like road markings
+          const stripeWidth = 0.3 + weightProduct * 0.15;
+          const stripeLength = lineWidth * 0.08; // Proportional to road width
+          
+          // Create perpendicular stripe across the road
+          const perpendicular = [
+            -normalized[1], 
+            normalized[0], 
+            0 // Keep stripes horizontal
+          ];
+          
+          // Angular zebra stripe - white/light colored
+          const zebraColor = "#f0f0f0"; // Light zebra stripe color
+          const leftEnd: [number, number, number] = [
+            chevronPos[0] - perpendicular[0] * stripeWidth,
+            chevronPos[1] - perpendicular[1] * stripeWidth,
             chevronPos[2]
           ];
-          const rightArm: [number, number, number] = [
-            chevronPos[0] + normalized[1] * chevronSize + normalized[0] * chevronSize * 0.5,
-            chevronPos[1] - normalized[0] * chevronSize + normalized[1] * chevronSize * 0.5,
+          const rightEnd: [number, number, number] = [
+            chevronPos[0] + perpendicular[0] * stripeWidth,
+            chevronPos[1] + perpendicular[1] * stripeWidth,
             chevronPos[2]
+          ];
+          
+          // Add angled edges to make it more angular
+          const angleOffset = stripeLength * 0.3;
+          const leftAngled: [number, number, number] = [
+            leftEnd[0] + normalized[0] * angleOffset,
+            leftEnd[1] + normalized[1] * angleOffset,
+            leftEnd[2]
+          ];
+          const rightAngled: [number, number, number] = [
+            rightEnd[0] - normalized[0] * angleOffset,
+            rightEnd[1] - normalized[1] * angleOffset,
+            rightEnd[2]
           ];
           
           chevrons.push(
             <Line 
-              key={`chevron-${i}-left`}
-              points={[leftArm, chevronPos]} 
-              color={lineColor}
-              lineWidth={lineWidth * 0.8}
+              key={`zebra-${i}`}
+              points={[leftAngled, rightAngled]} 
+              color={zebraColor}
+              lineWidth={lineWidth * 0.6}
               transparent
-              opacity={lineOpacity}
-            />,
-            <Line 
-              key={`chevron-${i}-right`}
-              points={[chevronPos, rightArm]} 
-              color={lineColor}
-              lineWidth={lineWidth * 0.8}
-              transparent
-              opacity={lineOpacity}
+              opacity={0.9}
             />
           );
         }
