@@ -76,7 +76,7 @@
       {
         "node": "Discovery Timeline",
         "weight": 7,
-        "widgets":[],
+        "widgets":["proton.png", "electron.png"],
 "children": [
           {
             "node": "Discovery of photon",
@@ -161,7 +161,7 @@
                   {
                     "node": "Huygen",
                     "weight": 2,
-                    "widgets":[],
+                    "widgets":["proton.png", "electron.png"],
 "children": []
                   },
                   {
