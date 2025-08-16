@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { createPortal } from "react-dom";
-import type { KnowledgeNode } from "../../types";
+import type { KnowledgeNode } from "../types"; // Adjusted path to match the correct location
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -92,6 +92,7 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
   const [imageError, setImageError] = useState(false);
   
   // Position images in a small arc around the node
+  // Modified to adjust the position to prevent inversion
   const angle = (index / 3) * Math.PI * 2;
   const radius = 2.5; // Increased radius for better visibility
   const imagePos: [number, number, number] = [
@@ -113,7 +114,6 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
     }
     
     // Otherwise, it's relative to the data directory
-    // In a Vite project, we can access public directory files like this:
     return `/data/${src}`;
   }, [src]);
   
@@ -162,9 +162,6 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
     setFullscreenView(false);
   };
   
-  // Force absolute positioning style for Html component
-  const htmlContainerStyle = { position: 'absolute', transform: 'translate3d(-50%, -50%, 0)' };
-  
   return (
     <>
       {/* Debug sphere to see where the image should be */}
@@ -174,17 +171,22 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
       <group position={imagePos}>
         <Html
           center
-          style={htmlContainerStyle}
-          distanceFactor={10}
-          zIndexRange={[100, 0]}
           transform
           occlude={false}
+          distanceFactor={10}
+          position={[0, 0, 0]}
+          style={{ 
+            width: "60px", 
+            height: "60px",
+            // Try different approach for the container
+            transform: "rotateY(180deg)"
+          }}
         >
           {imageError ? (
             <div 
               style={{
-                width: "60px",
-                height: "60px",
+                width: "100%",
+                height: "100%",
                 position: "relative",
                 backgroundColor: "rgba(255,0,0,0.5)",
                 display: "flex",
@@ -204,8 +206,8 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
             <div 
               ref={imageRef}
               style={{
-                width: "60px",
-                height: "60px",
+                width: "100%",
+                height: "100%",
                 position: "relative",
                 cursor: "pointer",
                 borderRadius: "5px",
@@ -213,7 +215,9 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
                 transition: "opacity 0.3s",
                 overflow: "hidden",
                 border: "2px solid white",
-                boxShadow: "0 0 10px rgba(0,0,0,0.7)"
+                boxShadow: "0 0 10px rgba(0,0,0,0.7)",
+                // Add this style to fix the inversion
+                transform: "scaleX(-1)"
               }}
               onClick={openFullscreen}
             >
@@ -225,7 +229,9 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover"
+                  objectFit: "cover",
+                  // Fix inversion
+                  transform: "scaleX(-1)"
                 }}
               />
             </div>
@@ -598,7 +604,6 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
         <Canvas shadows camera={{ position: [0, 5, -15], fov: 50 }}>
           <color attach="background" args={[card] as any} />
           <GraphScene data={data} />
-          {/* OrbitControls is now inside the GraphScene component */}
         </Canvas>
       </div>
     </section>
