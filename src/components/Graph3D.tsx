@@ -389,11 +389,11 @@ function NodeMesh({
       {/* Render image previews symmetrically around the node */}
       {allImages.map((imgSrc, index) => {
         const angle = (index / allImages.length) * Math.PI * 2; // Distribute evenly in a circle
-        const radius = 2.0; // Increased radius for better visibility
+        const radius = 2.0; // Radius around the node
         const widgetPosition: [number, number, number] = [
           node.position[0] + Math.cos(angle) * radius,
           node.position[1] + Math.sin(angle) * radius,
-          node.position[2]
+          node.position[2] + 0.5 // Small offset from node depth, not inherit full z-distance
         ];
         return (
           <ImagePreview 
