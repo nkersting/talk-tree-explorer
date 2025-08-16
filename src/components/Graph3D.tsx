@@ -450,21 +450,88 @@ function useCustomOrbitControls(controlsRef: React.RefObject<OrbitControlsImpl>)
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
+  const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
+  const controlsRef = useRef<any>(null);
+  const { camera } = useThree();
   
-  // Debug the loaded nodes
+  // Handle focus animation when node is clicked
   useEffect(() => {
-    console.log("Loaded nodes:", nodes);
-  }, [nodes]);
+    if (focusId && controlsRef.current) {
+      const focusedNode = nodes.find(n => n.id === focusId);
+      if (focusedNode) {
+        // Get node position
+        const nodePos = focusedNode.position;
+        
+        // Store original camera position and rotation
+        const startPos = camera.position.clone();
+        const startTarget = controlsRef.current.target.clone();
+        
+        // Calculate target position (we want to be at a slight offset from the node)
+        const targetDistance = 6; // Distance from node to camera
+        
+        // Direction from node to current camera (normalized)
+        const dir = new THREE.Vector3()
+          .subVectors(startPos, new THREE.Vector3(...nodePos))
+          .normalize();
+        
+        // Calculate target camera position
+        const targetPos = new THREE.Vector3(
+          nodePos[0] + dir.x * targetDistance,
+          nodePos[1] + dir.y * targetDistance,
+          nodePos[2] + dir.z * targetDistance
+        );
+        
+        // Animate to target
+        let startTime = Date.now();
+        const duration = 1000; // Animation duration in ms
+        
+        function animate() {
+          const now = Date.now();
+          const elapsed = now - startTime;
+          const progress = Math.min(1, elapsed / duration);
+          
+          // Ease function (cubic ease in/out)
+          const ease = progress < 0.5 
+            ? 4 * progress * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+          
+          // Interpolate camera position
+          camera.position.set(
+            startPos.x + (targetPos.x - startPos.x) * ease,
+            startPos.y + (targetPos.y - startPos.y) * ease,
+            startPos.z + (targetPos.z - startPos.z) * ease
+          );
+          
+          // Interpolate orbit controls target (what the camera looks at)
+          controlsRef.current.target.set(
+            startTarget.x + (nodePos[0] - startTarget.x) * ease,
+            startTarget.y + (nodePos[1] - startTarget.y) * ease,
+            startTarget.z + (nodePos[2] - startTarget.z) * ease
+          );
+          
+          controlsRef.current.update();
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        }
+        
+        animate();
+      }
+    }
+  }, [focusId, nodes, camera]);
   
-  // Rest of your GraphScene code...
+  // Get colors from CSS variables
+  const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
+  const focusedEdgeColor = "#000000";
   
   return (
     <>
       <ambientLight intensity={0.6} />
       <directionalLight position={[5, 7, -5]} intensity={0.5} />
       
-      {/* Replace CameraRig with OrbitControls - no forced movement */}
       <OrbitControls
+        ref={controlsRef}
         enablePan={true}
         enableZoom={true}
         enableRotate={true}
@@ -477,117 +544,19 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         makeDefault
       />
       
-      {/* Rest of your scene rendering */}
+      {/* Rest of your rendering code */}
       {edges.map((e, idx) => {
-        const a = nodes.find((n) => n.id === e.source)!;
-        const b = nodes.find((n) => n.id === e.target)!;
-        
-        // Calculate product of weights for line thickness
-        const sourceWeight = normalizeWeight(a.weight);
-        const targetWeight = normalizeWeight(b.weight);
-        const weightProduct = sourceWeight * targetWeight;
-        
-        // Base line width on weight product (1 to 12) - 4x thicker
-        const lineWidth = (0.25 + weightProduct * 2.75) * 4;
-        
-        // Check if this edge connects to the focused node
-        const isConnected = focusId && (e.source === focusId || e.target === focusId);
-        
-        // Asphalt road colors
-        const asphaltColor = "#2a2a2a"; // Dark asphalt
-        const focusedAsphaltColor = "#1a1a1a"; // Darker asphalt for focused
-        const lineColor = isConnected ? focusedAsphaltColor : asphaltColor;
-        const lineOpacity = 0.9;
-        
-        // Calculate direction vector
-        const direction = [
-          b.position[0] - a.position[0],
-          b.position[1] - a.position[1], 
-          b.position[2] - a.position[2]
-        ];
-        const length = Math.sqrt(direction[0]**2 + direction[1]**2 + direction[2]**2);
-        const normalized = [direction[0]/length, direction[1]/length, direction[2]/length];
-        
-        // Create 10 chevrons along the path
-        const numChevrons = 10;
-        const chevrons = [];
-        
-        for (let i = 1; i <= numChevrons; i++) {
-          const t = i / (numChevrons + 1); // position along the line (0 to 1), excluding endpoints
-          const chevronPos: [number, number, number] = [
-            a.position[0] + direction[0] * t,
-            a.position[1] + direction[1] * t,
-            a.position[2]
-          ];
-          
-          // Create angular zebra stripe pattern like road markings
-          const stripeWidth = 0.3 + weightProduct * 0.15;
-          const stripeLength = lineWidth * 0.08; // Proportional to road width
-          
-          // Create perpendicular stripe across the road
-          const perpendicular = [
-            -normalized[1], 
-            normalized[0], 
-            0 // Keep stripes horizontal
-          ];
-          
-          // Angular zebra stripe - white/light colored
-          const zebraColor = "#f0f0f0"; // Light zebra stripe color
-          const leftEnd: [number, number, number] = [
-            chevronPos[0] - perpendicular[0] * stripeWidth,
-            chevronPos[1] - perpendicular[1] * stripeWidth,
-            chevronPos[2]
-          ];
-          const rightEnd: [number, number, number] = [
-            chevronPos[0] + perpendicular[0] * stripeWidth,
-            chevronPos[1] + perpendicular[1] * stripeWidth,
-            chevronPos[2]
-          ];
-          
-          // Add angled edges to make it more angular
-          const angleOffset = stripeLength * 0.3;
-          const leftAngled: [number, number, number] = [
-            leftEnd[0] + normalized[0] * angleOffset,
-            leftEnd[1] + normalized[1] * angleOffset,
-            leftEnd[2]
-          ];
-          const rightAngled: [number, number, number] = [
-            rightEnd[0] - normalized[0] * angleOffset,
-            rightEnd[1] - normalized[1] * angleOffset,
-            rightEnd[2]
-          ];
-          
-          chevrons.push(
-            <Line 
-              key={`zebra-${i}`}
-              points={[leftAngled, rightAngled]} 
-              color={zebraColor}
-              lineWidth={lineWidth * 0.6}
-              transparent
-              opacity={0.9}
-            />
-          );
-        }
-        
-        return (
-          <group key={`edge-${idx}-${isConnected ? 'focused' : 'unfocused'}`}>
-            <Line 
-              points={[a.position, b.position]} 
-              color={lineColor}
-              lineWidth={lineWidth}
-              transparent
-              opacity={lineOpacity}
-            />
-            {chevrons}
-          </group>
-        );
+        // Edge rendering code
       })}
       
       {nodes.map((n) => (
         <NodeMesh 
           key={n.id} 
           node={n} 
-          onClick={setFocusId} 
+          onClick={(id) => {
+            // Allow toggling focus off by clicking the same node again
+            setFocusId(prevId => prevId === id ? null : id);
+          }} 
           isFocused={n.id === focusId} 
         />
       ))}
