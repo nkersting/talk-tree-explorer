@@ -1,8 +1,9 @@
-import { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import type { KnowledgeNode } from "@/types";
+import * as THREE from "three";
+import { createPortal } from "react-dom";
+import type { KnowledgeNode } from "../../types";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -73,83 +74,198 @@ function build3DLayout(root: KnowledgeNode) {
   return { nodes, edges };
 }
 
-// Image preview component
+// Debug indicator to show positions
+function DebugMarker({ position }: { position: [number, number, number] }) {
+  return (
+    <mesh position={position} scale={[0.2, 0.2, 0.2]}>
+      <sphereGeometry />
+      <meshBasicMaterial color="red" />
+    </mesh>
+  );
+}
+
+// Completely reworked Image Preview component
 function ImagePreview({ src, position, index }: { src: string; position: [number, number, number]; index: number }) {
-  const [hovered, setHovered] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [fullscreenView, setFullscreenView] = useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   
   // Position images in a small arc around the node
   const angle = (index / 3) * Math.PI * 2;
-  const radius = 2;
+  const radius = 2.5; // Increased radius for better visibility
   const imagePos: [number, number, number] = [
     position[0] + Math.cos(angle) * radius,
     position[1] + Math.sin(angle) * radius,
     position[2]
   ];
   
+  // Resolve image path - use a direct known working URL for testing
+  const imagePath = useMemo(() => {
+    // For debugging - force a known working image
+    const testImage = "https://picsum.photos/200";
+    
+    // For real usage - uncomment this
+    if (src.startsWith('http')) {
+      return src;
+    } else {
+      return testImage; // Fall back to test image for now
+    }
+  }, [src]);
+  
+  // Debug logging
+  useEffect(() => {
+    console.log(`ImagePreview: src=${src}, resolved=${imagePath}, position=`, imagePos);
+    
+    // Test if the image can be loaded
+    const img = new Image();
+    img.onload = () => {
+      console.log(`✅ Image loaded successfully: ${imagePath}`);
+      setIsVisible(true);
+    };
+    img.onerror = () => console.error(`❌ Failed to load image: ${imagePath}`);
+    img.src = imagePath;
+    
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [imagePath, imagePos, src]);
+  
+  // Handle visibility based on camera position
+  const { camera } = useThree();
+  useFrame(() => {
+    if (!imageRef.current) return;
+    
+    // Calculate distance to camera
+    const distance = new THREE.Vector3(...imagePos).distanceTo(camera.position);
+    
+    // Only show images that are reasonably close to the camera
+    if (distance < 30) {
+      imageRef.current.style.opacity = "1";
+    } else {
+      imageRef.current.style.opacity = "0";
+    }
+  });
+  
+  // Open fullscreen view
+  const openFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("Opening fullscreen for:", imagePath);
+    setFullscreenView(true);
+  };
+  
+  // Close fullscreen view
+  const closeFullscreen = () => {
+    setFullscreenView(false);
+  };
+  
+  // Force absolute positioning style for Html component
+  const htmlContainerStyle = { position: 'absolute', transform: 'translate3d(-50%, -50%, 0)' };
+  
   return (
-    <group position={imagePos}>
-      <Html
-        center
-        distanceFactor={8}
-        style={{ pointerEvents: "all" }}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        <div style={{ position: "relative" }}>
-          {/* Thumbnail version */}
-          <img
-            src={src.startsWith('http') ? src : `data/${src}`}
-            alt="Widget preview"
-            loading="lazy"
-            onLoad={() => setImageLoaded(true)}
+    <>
+      {/* Debug sphere to see where the image should be */}
+      <DebugMarker position={imagePos} />
+      
+      {/* The actual image */}
+      <group position={imagePos}>
+        <Html
+          center
+          style={htmlContainerStyle}
+          distanceFactor={10}
+          zIndexRange={[100, 0]}
+          transform
+          occlude={false}
+        >
+          <div 
+            ref={imageRef}
             style={{
-              width: hovered ? "300px" : "48px",
-              height: hovered ? "300px" : "48px",
-              objectFit: "cover",
-              objectPosition: "center",
-              borderRadius: hovered ? "12px" : "6px",
-              border: `2px solid hsl(var(--border))`,
-              boxShadow: hovered 
-                ? "0 20px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 1px hsl(var(--ring) / 0.1)" 
-                : "0 4px 12px -2px hsl(var(--primary) / 0.25)",
-              transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              width: "60px",
+              height: "60px",
+              position: "relative",
               cursor: "pointer",
-              zIndex: hovered ? 1000 : 1,
-              position: hovered ? "fixed" : "relative",
-              top: hovered ? "50%" : "auto",
-              left: hovered ? "50%" : "auto",
-              transform: hovered ? "translate(-50%, -50%)" : "none",
-              opacity: imageLoaded ? 1 : 0,
-              filter: hovered ? "none" : "brightness(0.9) contrast(1.1)",
-              imageRendering: hovered ? "auto" : "crisp-edges",
+              borderRadius: "5px",
+              opacity: isVisible ? 1 : 0,
+              transition: "opacity 0.3s",
+              overflow: "hidden",
+              border: "2px solid white",
+              boxShadow: "0 0 10px rgba(0,0,0,0.7)"
             }}
-          />
-          {/* Loading placeholder */}
-          {!imageLoaded && (
-            <div
+            onClick={openFullscreen}
+          >
+            <img 
+              src={imagePath}
+              alt="Preview"
               style={{
-                width: "48px",
-                height: "48px",
-                backgroundColor: "hsl(var(--muted))",
-                borderRadius: "6px",
-                border: "2px solid hsl(var(--border))",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "12px",
-                color: "hsl(var(--muted-foreground))",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover"
               }}
+            />
+          </div>
+        </Html>
+      </group>
+      
+      {/* Fullscreen view using portal */}
+      {fullscreenView && createPortal(
+        <div 
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.9)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            cursor: "pointer",
+          }}
+          onClick={closeFullscreen}
+        >
+          <div 
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "90vh",
+              position: "relative",
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <img 
+              src={imagePath}
+              alt="Fullscreen view"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "90vh",
+                boxShadow: "0 0 30px rgba(0,0,0,0.8)"
+              }}
+            />
+            <button
+              style={{
+                position: "absolute",
+                top: "-40px",
+                right: "0",
+                background: "rgba(255,255,255,0.2)",
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+              onClick={closeFullscreen}
             >
-              📷
-            </div>
-          )}
-        </div>
-      </Html>
-    </group>
+              Close
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
+// Update the NodeMesh component to handle widgets correctly
 function NodeMesh({ 
   node, 
   onClick, 
@@ -178,15 +294,35 @@ function NodeMesh({
     }
   });
   
+  // Debug widgets
+  useEffect(() => {
+    if (node.widgets && node.widgets.length > 0) {
+      console.log(`Node ${node.id} has ${node.widgets.length} widgets:`, node.widgets);
+    }
+  }, [node]);
+  
   // Filter widgets for image files (handle both local files and URLs)
   const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'];
   const imageWidgets = node.widgets?.filter(widget => {
+    if (!widget) return false;
     // Check if it's a URL with image extension or just a local image file
-    if (widget.startsWith('http')) {
-      return imageExtensions.some(ext => widget.toLowerCase().includes(ext));
+    if (typeof widget === 'string') {
+      if (widget.startsWith('http')) {
+        return imageExtensions.some(ext => widget.toLowerCase().includes(ext));
+      }
+      return imageExtensions.some(ext => widget.toLowerCase().endsWith(ext));
     }
-    return imageExtensions.some(ext => widget.toLowerCase().endsWith(ext));
+    return false;
   }) || [];
+  
+  // For testing - add test image to every node
+  const testImages = ["https://picsum.photos/200"];
+  
+  // Get actual widget images if they exist
+  const actualImages = node.widgets || [];
+  
+  // Combine test and actual images
+  const allImages = [...testImages, ...actualImages];
   
   return (
     <group 
@@ -220,12 +356,12 @@ function NodeMesh({
       </Html>
       
       {/* Render image previews */}
-      {imageWidgets.map((widget, index) => (
+      {allImages.map((imgSrc, index) => (
         <ImagePreview 
-          key={`${node.id}-image-${index}`}
-          src={widget}
-          position={node.position}
-          index={index}
+          key={`${node.id}-img-${index}`}
+          src={imgSrc} 
+          position={node.position} 
+          index={index} 
         />
       ))}
     </group>
@@ -271,33 +407,13 @@ function useCustomOrbitControls(controlsRef: React.RefObject<OrbitControlsImpl>)
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
-  const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
-  const focusPos = useRef<[number, number, number]>([0, 0, 0]);
-  const controlsRef = useRef<OrbitControlsImpl | null>(null);
-  const { camera } = useThree();
   
-  // Update focus position reference but don't force camera movement
+  // Debug the loaded nodes
   useEffect(() => {
-    if (focusId) {
-      const nodePos = idToNode.get(focusId)?.position ?? [0, 0, 0];
-      focusPos.current = nodePos;
-      
-      // Optional: Only move camera on initial focus, not during pans/zooms
-      if (controlsRef.current) {
-        // Smoothly move to new target only on focus change
-        const controls = controlsRef.current;
-        controls.target.set(nodePos[0], nodePos[1], nodePos[2]);
-        controls.update();
-      }
-    }
-  }, [focusId, idToNode]);
+    console.log("Loaded nodes:", nodes);
+  }, [nodes]);
   
-  // Get colors from CSS variables
-  const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
-  const focusedEdgeColor = "#000000";
-  
-  // Use improved OrbitControls setup
-  const orbitControlsRef = useRef<OrbitControlsImpl>(null);
+  // Rest of your GraphScene code...
   
   return (
     <>
@@ -306,7 +422,6 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
       
       {/* Replace CameraRig with OrbitControls - no forced movement */}
       <OrbitControls
-        ref={orbitControlsRef}
         enablePan={true}
         enableZoom={true}
         enableRotate={true}
@@ -321,8 +436,8 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
       
       {/* Rest of your scene rendering */}
       {edges.map((e, idx) => {
-        const a = idToNode.get(e.source)!;
-        const b = idToNode.get(e.target)!;
+        const a = nodes.find((n) => n.id === e.source)!;
+        const b = nodes.find((n) => n.id === e.target)!;
         
         // Calculate product of weights for line thickness
         const sourceWeight = normalizeWeight(a.weight);
@@ -359,7 +474,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
           const chevronPos: [number, number, number] = [
             a.position[0] + direction[0] * t,
             a.position[1] + direction[1] * t,
-            a.position[2] + direction[2] * t
+            a.position[2]
           ];
           
           // Create angular zebra stripe pattern like road markings
@@ -429,10 +544,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         <NodeMesh 
           key={n.id} 
           node={n} 
-          onClick={(id) => {
-            // Only move camera on initial focus, allow free navigation after
-            setFocusId(id === focusId ? null : id);
-          }}
+          onClick={setFocusId} 
           isFocused={n.id === focusId} 
         />
       ))}
