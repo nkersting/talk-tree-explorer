@@ -359,12 +359,7 @@ function NodeMesh({
     return false;
   }) || [];
   
-  // No test images - use only actual images from data
-  // Comment out these lines:
-  // const testImages = ["https://picsum.photos/200"];
-  // const allImages = [...testImages, ...actualImages];
-  
-  // Use only the actual images from knowledge.json
+ 
   const allImages = imageWidgets;
   
   return (
@@ -374,39 +369,48 @@ function NodeMesh({
       scale={[pulseScale, pulseScale, pulseScale]}
     >
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshStandardMaterial 
-          color={primary} 
-          emissive={ring} 
-          emissiveIntensity={isFocused ? 0.4 : 0.15} 
-          metalness={0.1} 
-          roughness={0.4} 
-        />
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial 
+        color={primary} 
+        emissive={ring} 
+        emissiveIntensity={isFocused ? 0.4 : 0.15} 
+        metalness={0.1} 
+        roughness={0.4} 
+      />
       </mesh>
       <Html center distanceFactor={6} style={{ pointerEvents: "none" }}>
-        <div style={{
-          background: "hsl(var(--card) / 0.8)",
-          color: textColor,
-          border: "1px solid hsl(var(--border))",
-          borderRadius: 8,
-          padding: "2px 6px",
-          fontSize: 12,
-          whiteSpace: "nowrap",
-          fontWeight: isFocused ? "bold" : "normal",
-        }}>
-          {node.label}
-        </div>
+      <div style={{
+        background: "hsl(var(--card) / 0.8)",
+        color: textColor,
+        border: "1px solid hsl(var(--border))",
+        borderRadius: 8,
+        padding: "2px 6px",
+        fontSize: 12,
+        whiteSpace: "nowrap",
+        fontWeight: isFocused ? "bold" : "normal",
+      }}>
+        {node.label}
+      </div>
       </Html>
       
-      {/* Render image previews */}
-      {allImages.map((imgSrc, index) => (
+      {/* Render image previews symmetrically around the node */}
+      {allImages.map((imgSrc, index) => {
+      const angle = (index / allImages.length) * Math.PI * 2; // Distribute evenly in a circle
+      const radius = 0.1; // Fixed distance from the node
+      const widgetPosition: [number, number, number] = [
+        node.position[0] + Math.cos(angle) * radius,
+        node.position[1] + Math.sin(angle) * radius,
+        node.position[2]
+      ];
+      return (
         <ImagePreview 
-          key={`${node.id}-img-${index}`}
-          src={imgSrc} 
-          position={node.position} 
-          index={index} 
+        key={`${node.id}-img-${index}`}
+        src={imgSrc} 
+        position={widgetPosition} 
+        index={index} 
         />
-      ))}
+      );
+      })}
     </group>
   );
 }
