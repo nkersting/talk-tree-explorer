@@ -76,7 +76,7 @@
       {
         "node": "Discovery Timeline",
         "weight": 7,
-        "widgets":["proton.png", "electron.png"],
+        "widgets":["proton.png", "electron.png", "electron.png"],
 "children": [
           {
             "node": "Discovery of photon",
