@@ -91,15 +91,8 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
   const [isVisible, setIsVisible] = useState(false);
   const [imageError, setImageError] = useState(false);
   
-  // Position images in a small arc around the node
-  // Modified to adjust the position to prevent inversion
-  const angle = (index / 3) * Math.PI * 2;
-  const radius = 2.5; // Increased radius for better visibility
-  const imagePos: [number, number, number] = [
-    position[0] + Math.cos(angle) * radius,
-    position[1] + Math.sin(angle) * radius,
-    position[2]
-  ];
+  // Use the position passed from parent (already calculated symmetrically)
+  const imagePos: [number, number, number] = position;
   
   // Resolve image path from data directory
   const imagePath = useMemo(() => {
@@ -395,28 +388,28 @@ function NodeMesh({
       
       {/* Render image previews symmetrically around the node */}
       {allImages.map((imgSrc, index) => {
-      const angle = (index / allImages.length) * Math.PI * 2; // Distribute evenly in a circle
-      const radius = 0.1; // Fixed distance from the node
-      const widgetPosition: [number, number, number] = [
-        node.position[0] + Math.cos(angle) * radius,
-        node.position[1] + Math.sin(angle) * radius,
-        node.position[2]
-      ];
-      return (
-        <ImagePreview 
-        key={`${node.id}-img-${index}`}
-        src={imgSrc} 
-        position={widgetPosition} 
-        index={index} 
-        />
-      );
+        const angle = (index / allImages.length) * Math.PI * 2; // Distribute evenly in a circle
+        const radius = 2.0; // Increased radius for better visibility
+        const widgetPosition: [number, number, number] = [
+          node.position[0] + Math.cos(angle) * radius,
+          node.position[1] + Math.sin(angle) * radius,
+          node.position[2]
+        ];
+        return (
+          <ImagePreview 
+            key={`${node.id}-img-${index}`}
+            src={imgSrc} 
+            position={widgetPosition} 
+            index={index} 
+          />
+        );
       })}
     </group>
   );
 }
 
 // Custom OrbitControls hook to refine controls
-function useCustomOrbitControls(controlsRef: React.RefObject<OrbitControlsImpl>) {
+function useCustomOrbitControls(controlsRef: React.RefObject<any>) {
   const { camera, gl } = useThree();
   
   useEffect(() => {
