@@ -89,6 +89,7 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
   const [fullscreenView, setFullscreenView] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [imageError, setImageError] = useState(false);
   
   // Position images in a small arc around the node
   const angle = (index / 3) * Math.PI * 2;
@@ -99,37 +100,39 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
     position[2]
   ];
   
-  // Resolve image path - use a direct known working URL for testing
+  // Resolve image path from data directory
   const imagePath = useMemo(() => {
-    // For debugging - force a known working image
-    const testImage = "https://picsum.photos/200";
-    
-    // For real usage - uncomment this
+    // If it's a URL, use it directly
     if (src.startsWith('http')) {
       return src;
-    } else {
-      return testImage; // Fall back to test image for now
     }
+    
+    // If it starts with slash, it's from the root
+    if (src.startsWith('/')) {
+      return src;
+    }
+    
+    // Otherwise, it's relative to the data directory
+    // In a Vite project, we can access public directory files like this:
+    return `/data/${src}`;
   }, [src]);
   
   // Debug logging
   useEffect(() => {
     console.log(`ImagePreview: src=${src}, resolved=${imagePath}, position=`, imagePos);
-    
-    // Test if the image can be loaded
-    const img = new Image();
-    img.onload = () => {
-      console.log(`✅ Image loaded successfully: ${imagePath}`);
-      setIsVisible(true);
-    };
-    img.onerror = () => console.error(`❌ Failed to load image: ${imagePath}`);
-    img.src = imagePath;
-    
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-    };
   }, [imagePath, imagePos, src]);
+  
+  // Handle image loading
+  const handleImageLoad = () => {
+    console.log(`✅ Image loaded successfully: ${imagePath}`);
+    setIsVisible(true);
+    setImageError(false);
+  };
+  
+  const handleImageError = () => {
+    console.error(`❌ Failed to load image: ${imagePath}`);
+    setImageError(true);
+  };
   
   // Handle visibility based on camera position
   const { camera } = useThree();
@@ -177,32 +180,56 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
           transform
           occlude={false}
         >
-          <div 
-            ref={imageRef}
-            style={{
-              width: "60px",
-              height: "60px",
-              position: "relative",
-              cursor: "pointer",
-              borderRadius: "5px",
-              opacity: isVisible ? 1 : 0,
-              transition: "opacity 0.3s",
-              overflow: "hidden",
-              border: "2px solid white",
-              boxShadow: "0 0 10px rgba(0,0,0,0.7)"
-            }}
-            onClick={openFullscreen}
-          >
-            <img 
-              src={imagePath}
-              alt="Preview"
+          {imageError ? (
+            <div 
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover"
+                width: "60px",
+                height: "60px",
+                position: "relative",
+                backgroundColor: "rgba(255,0,0,0.5)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "5px",
+                border: "2px solid white",
+                boxShadow: "0 0 10px rgba(0,0,0,0.7)",
+                fontSize: "10px",
+                color: "white",
+                textAlign: "center"
               }}
-            />
-          </div>
+            >
+              Image<br/>Error
+            </div>
+          ) : (
+            <div 
+              ref={imageRef}
+              style={{
+                width: "60px",
+                height: "60px",
+                position: "relative",
+                cursor: "pointer",
+                borderRadius: "5px",
+                opacity: isVisible ? 1 : 0,
+                transition: "opacity 0.3s",
+                overflow: "hidden",
+                border: "2px solid white",
+                boxShadow: "0 0 10px rgba(0,0,0,0.7)"
+              }}
+              onClick={openFullscreen}
+            >
+              <img 
+                src={imagePath}
+                alt="Preview"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover"
+                }}
+              />
+            </div>
+          )}
         </Html>
       </group>
       
@@ -257,6 +284,17 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
             >
               Close
             </button>
+            <div style={{
+              marginTop: "10px",
+              color: "white",
+              textAlign: "center",
+              maxWidth: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap"
+            }}>
+              {src}
+            </div>
           </div>
         </div>,
         document.body
@@ -315,14 +353,13 @@ function NodeMesh({
     return false;
   }) || [];
   
-  // For testing - add test image to every node
-  const testImages = ["https://picsum.photos/200"];
+  // No test images - use only actual images from data
+  // Comment out these lines:
+  // const testImages = ["https://picsum.photos/200"];
+  // const allImages = [...testImages, ...actualImages];
   
-  // Get actual widget images if they exist
-  const actualImages = node.widgets || [];
-  
-  // Combine test and actual images
-  const allImages = [...testImages, ...actualImages];
+  // Use only the actual images from knowledge.json
+  const allImages = imageWidgets;
   
   return (
     <group 
