@@ -34,7 +34,21 @@ type PositionedNode = KnowledgeNode & {
 // Custom node component with handles
 function KnowledgeNodeComponent({ data }: { data: any }) {
   const radius = data.radius || 20;
-  const { setFocusedNodeLabel } = useFocus();
+  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
+  
+  const isFocused = focusedNodeLabel === data.label;
+  
+  // Handle click on the node
+  const handleNodeClick = () => {
+    if (focusedNodeLabel === data.label) {
+      // Toggle off if already focused
+      setFocusedNodeLabel(null);
+      setFocusSource(null);
+    } else {
+      setFocusedNodeLabel(data.label);
+      setFocusSource('graph2d');
+    }
+  };
   
   return (
     <>
@@ -53,31 +67,23 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
       <Tooltip>
         <TooltipTrigger asChild>
           <div
-            className="rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1"
+            className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
+              isFocused ? 'scale-110 ring-2 ring-foreground animate-pulse' : ''
+            }`}
             style={{
               width: radius * 2,
               height: radius * 2,
               fontSize: Math.max(8, radius / 3),
             }}
             title={data.label}
-            onClick={() => setFocusedNodeLabel(data.label)}
+            onClick={handleNodeClick}
           >
             {data.label}
           </div>
         </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-xs text-sm">
-          <div className="font-medium">{data.label}</div>
-          {typeof data.weight !== "undefined" && (
-            <div className="text-muted-foreground">Weight: {data.weight}</div>
-          )}
-          {data.childrenCount > 0 && (
-            <div className="text-muted-foreground">
-              Children: {data.childrenCount}
-            </div>
-          )}
-        </TooltipContent>
+        <TooltipContent>{data.label}</TooltipContent>
       </Tooltip>
-
+      
       {/* Output handle (bottom) */}
       <Handle
         type="source"

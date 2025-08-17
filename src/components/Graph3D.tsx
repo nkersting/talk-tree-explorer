@@ -591,6 +591,7 @@ function EdgeWithArrows({
   );
 }
 
+// src/components/Graph3D.tsx - update the GraphScene component
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -599,7 +600,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   const { camera } = useThree();
   
   // Get the current focus from context
-  const { focusedNodeLabel } = useFocus();
+  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
   
   // Create a map of node labels to IDs for quick lookup
   const labelToId = useMemo(() => {
@@ -608,15 +609,34 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
     return map;
   }, [nodes]);
   
-  // Listen for changes to focusedNodeLabel and update the 3D focus
+  // Listen for changes to focusedNodeLabel and update the 3D focus when coming from 2D view
   useEffect(() => {
-    if (focusedNodeLabel) {
+    if (focusedNodeLabel && focusSource === 'graph2d') {
       const matchingId = labelToId.get(focusedNodeLabel);
       if (matchingId) {
         setFocusId(matchingId);
       }
+    } else if (!focusedNodeLabel) {
+      setFocusId(null);
     }
-  }, [focusedNodeLabel, labelToId]);
+  }, [focusedNodeLabel, labelToId, focusSource]);
+  
+  // Update the node click handler
+  const handleNodeClick = (id: string) => {
+    const clickedNode = idToNode.get(id);
+    if (!clickedNode) return;
+    
+    // Toggle focus state
+    if (focusId === id) {
+      setFocusId(null);
+      setFocusedNodeLabel(null);
+      setFocusSource(null);
+    } else {
+      setFocusId(id);
+      setFocusedNodeLabel(clickedNode.label);
+      setFocusSource('graph3d');
+    }
+  };
   
   // Handle focus animation when node is clicked
   useEffect(() => {
@@ -734,10 +754,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         <NodeMesh 
           key={n.id} 
           node={n} 
-          onClick={(id) => {
-            // Allow toggling focus off by clicking the same node again
-            setFocusId(prevId => prevId === id ? null : id);
-          }} 
+          onClick={handleNodeClick} 
           isFocused={n.id === focusId} 
         />
       ))}
