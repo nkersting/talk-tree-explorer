@@ -893,34 +893,23 @@ function GraphSceneWithDrawer({
   const controlsRef = useRef<any>(null);
   const { camera } = useThree();
   
-  // Calculate the center of all nodes for initial positioning
-  const graphCenter = useMemo(() => {
-    if (nodes.length === 0) return [0, 0, 0] as [number, number, number];
-    
-    const sum = nodes.reduce(
-      (acc, node) => ({
-        x: acc.x + node.position[0],
-        y: acc.y + node.position[1],
-        z: acc.z + node.position[2],
-      }),
-      { x: 0, y: 0, z: 0 }
-    );
-    
-    return [
-      sum.x / nodes.length,
-      sum.y / nodes.length,
-      sum.z / nodes.length,
-    ] as [number, number, number];
+  // Find the root node (at depth 0) for initial positioning
+  const rootNode = useMemo(() => {
+    return nodes.find(node => node.position[2] === 0); // Root node is at z=0 (depth 0)
   }, [nodes]);
   
-  // Center the graph on initial load
+  // Center the graph on the root node on initial load
   useEffect(() => {
-    if (controlsRef.current && nodes.length > 0) {
-      // Set the orbit controls to look at the center of the graph
-      controlsRef.current.target.set(graphCenter[0], graphCenter[1], graphCenter[2]);
+    if (controlsRef.current && rootNode) {
+      // Set the orbit controls to look at the root node
+      controlsRef.current.target.set(
+        rootNode.position[0], 
+        rootNode.position[1], 
+        rootNode.position[2]
+      );
       controlsRef.current.update();
     }
-  }, [graphCenter, nodes]);
+  }, [rootNode]);
   
   // Get the current focus from context
   const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
