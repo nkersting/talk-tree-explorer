@@ -836,7 +836,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
           <DrawerHeader className="text-left">
             <DrawerTitle>{selectedWidget?.title || 'Widget Details'}</DrawerTitle>
             <DrawerDescription>
-              {selectedWidget?.subtitle || 'Full-size widget view and information'}
+              {selectedWidget?.subtitle || ''}
             </DrawerDescription>
           </DrawerHeader>
           <div className="p-4 flex-1 overflow-auto">
