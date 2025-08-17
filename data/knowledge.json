@@ -8,7 +8,7 @@
   "knowledgeTree": {
     "node": "Particle Physics",
     "weight": 10,
-      "widgets":[{"name":"proton.png", "title":"Proton", "notes": "gluon structure"},  {"name":"electron.png", "title":"Electron", "notes":"in the atom\n point-like particle"}, {"name": "https://www.youtube.com/watch?v=mRMss7TAe6k", "notes":""}],
+      "widgets":[{"name":"proton.png", "title":"Proton", "subtitle":"A schematic ...", "notes": "gluon structure"},  {"name":"electron.png", "title":"Electron", "notes":"in the atom\n point-like particle"}, {"name": "https://www.youtube.com/watch?v=mRMss7TAe6k", "notes":""}],
 "children": [
       {
         "node": "Experimental Tools",
