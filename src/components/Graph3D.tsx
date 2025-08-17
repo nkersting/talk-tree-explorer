@@ -175,10 +175,7 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
     return `/data/${src}`;
   }, [src]);
   
-  // Debug logging
-  useEffect(() => {
-    console.log(`ImagePreview: src=${src}, resolved=${imagePath}, position=`, imagePos);
-  }, [imagePath, imagePos, src]);
+ 
   
   // Handle image loading
   const handleImageLoad = () => {
@@ -399,7 +396,7 @@ function NodeMesh({
   // Debug widgets
   useEffect(() => {
     if (node.widgets && node.widgets.length > 0) {
-      console.log(`Node ${node.id} has ${node.widgets.length} widgets:`, node.widgets);
+      console.log(`Node ${node.id}  at position ${node.position} has ${node.widgets.length} widgets:`, node.widgets);
     }
   }, [node]);
   
@@ -456,10 +453,12 @@ function NodeMesh({
         const angle = (index / allImages.length) * Math.PI * 2; // Distribute evenly in a circle
         const radius = 2.0; // Radius around the node
         const widgetPosition: [number, number, number] = [
-          node.position[0] + Math.cos(angle) * radius,
-          node.position[1] + Math.sin(angle) * radius,
-          node.position[2] + 0.5 // Small offset from node depth, not inherit full z-distance
+          Math.cos(angle) * radius,
+          Math.sin(angle) * radius,
+           0 
         ];
+        console.log(`Node ${node.id}  at position ${node.position} has widget image at position ${widgetPosition}`);
+
         return (
           <ImagePreview 
             key={`${node.id}-img-${index}`}
