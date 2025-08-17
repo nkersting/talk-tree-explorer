@@ -47,12 +47,16 @@ const Index = () => {
           </p>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-6 pb-16">
+      <main className="relative h-screen">
         <FocusProvider>
           <ReactFlowProvider>
-            <KnowledgeTree data={particleData} />
+            <div className="absolute top-4 left-4 w-80 h-60 bg-background border border-border rounded-lg shadow-lg z-10 overflow-hidden">
+              <KnowledgeTree data={particleData} />
+            </div>
           </ReactFlowProvider>
-          <Graph3D data={particleData} />
+          <div className="w-full h-full">
+            <Graph3D data={particleData} />
+          </div>
         </FocusProvider>
       </main>
     </>
