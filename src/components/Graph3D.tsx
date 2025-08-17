@@ -19,12 +19,14 @@ function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
   return color;
 }
 
+type Widget = string | { name: string; [key: string]: any };
+
 type Node3D = {
   id: string;
   label: string;
   weight?: number;
   position: [number, number, number];
-  widgets?: string[];
+  widgets?: Widget[];
 };
 
 type Edge3D = { source: string; target: string };
@@ -364,7 +366,7 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
   );
 }
 
-// Update the NodeMesh component to handle widgets correctly
+// Update the NodeMesh component to handle widgets as dictionaries with "name" attribute
 function NodeMesh({ 
   node, 
   onClick, 
@@ -396,7 +398,7 @@ function NodeMesh({
   // Debug widgets
   useEffect(() => {
     if (node.widgets && node.widgets.length > 0) {
-      console.log(`Node ${node.id}  at position ${node.position} has ${node.widgets.length} widgets:`, node.widgets);
+      console.log(`Node ${node.id} at position ${node.position} has ${node.widgets.length} widgets:`, node.widgets);
     }
   }, [node]);
   
@@ -404,17 +406,19 @@ function NodeMesh({
   const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'];
   const imageWidgets = node.widgets?.filter(widget => {
     if (!widget) return false;
+    
+    // Extract the name from the widget object
+    const widgetName = typeof widget === 'string' ? widget : widget.name;
+    
+    if (!widgetName) return false;
+    
     // Check if it's a URL with image extension or just a local image file
-    if (typeof widget === 'string') {
-      if (widget.startsWith('http')) {
-        return imageExtensions.some(ext => widget.toLowerCase().includes(ext));
-      }
-      return imageExtensions.some(ext => widget.toLowerCase().endsWith(ext));
+    if (widgetName.startsWith('http')) {
+      return imageExtensions.some(ext => widgetName.toLowerCase().includes(ext));
     }
-    return false;
+    return imageExtensions.some(ext => widgetName.toLowerCase().endsWith(ext));
   }) || [];
   
- 
   const allImages = imageWidgets;
   
   return (
@@ -424,45 +428,49 @@ function NodeMesh({
       scale={[pulseScale, pulseScale, pulseScale]}
     >
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
-      <sphereGeometry args={[1, 32, 32]} />
-      <meshStandardMaterial 
-        color={primary} 
-        emissive={ring} 
-        emissiveIntensity={isFocused ? 0.4 : 0.15} 
-        metalness={0.1} 
-        roughness={0.4} 
-      />
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshStandardMaterial 
+          color={primary} 
+          emissive={ring}
+          emissiveIntensity={isFocused ? 0.4 : 0.15} 
+          metalness={0.1} 
+          roughness={0.4} 
+        />
       </mesh>
       <Html center distanceFactor={6} style={{ pointerEvents: "none" }}>
-      <div style={{
-        background: "hsl(var(--card) / 0.8)",
-        color: textColor,
-        border: "1px solid hsl(var(--border))",
-        borderRadius: 8,
-        padding: "2px 6px",
-        fontSize: 12,
-        whiteSpace: "nowrap",
-        fontWeight: isFocused ? "bold" : "normal",
-      }}>
-        {node.label}
-      </div>
+        <div style={{
+          background: "hsl(var(--card) / 0.8)",
+          color: textColor,
+          border: "1px solid hsl(var(--border))",
+          borderRadius: 8,
+          padding: "2px 6px",
+          fontSize: 12,
+          whiteSpace: "nowrap",
+          fontWeight: isFocused ? "bold" : "normal",
+        }}>
+          {node.label}
+        </div>
       </Html>
       
       {/* Render image previews symmetrically around the node */}
-      {allImages.map((imgSrc, index) => {
+      {allImages.map((widget, index) => {
         const angle = (index / allImages.length) * Math.PI * 2; // Distribute evenly in a circle
         const radius = 2.0; // Radius around the node
         const widgetPosition: [number, number, number] = [
           Math.cos(angle) * radius,
           Math.sin(angle) * radius,
-           0 
+          0 
         ];
-        console.log(`Node ${node.id}  at position ${node.position} has widget image at position ${widgetPosition}`);
-
+        
+        // Extract the widget name from the widget object
+        const widgetSrc = typeof widget === 'string' ? widget : widget.name;
+        
+        console.log(`Node ${node.id} at position ${node.position} has widget image at position ${widgetPosition}`);
+        
         return (
           <ImagePreview 
             key={`${node.id}-img-${index}`}
-            src={imgSrc} 
+            src={widgetSrc} 
             position={widgetPosition} 
             index={index} 
           />
