@@ -616,17 +616,25 @@ function EdgeWithArrows({
         varying vec2 vUv;
         
         void main() {
-          // Create animated stripes along the U direction (along the line)
-          float stripe = sin((vUv.x * stripeScale - time * speed) * 3.14159 * 2.0);
+          // Create a pulse that travels from 0 to 1 along the line
+          float pulsePosition = mod(time * speed * 0.5, 1.0);
+          float distanceFromPulse = abs(vUv.x - pulsePosition);
           
-          // Make stripes more visible
-          float alpha = opacity * (0.7 + 0.3 * stripe);
+          // Create a smooth pulse with falloff
+          float pulseWidth = 0.1; // Width of the pulse
+          float pulse = 1.0 - smoothstep(0.0, pulseWidth, distanceFromPulse);
           
-          // Fade out at the edges for smoother appearance
+          // Base alpha with pulse intensity
+          float alpha = opacity * (0.3 + 0.7 * pulse);
+          
+          // Fade out at the edges for smoother tube appearance
           float edgeFade = 1.0 - abs(vUv.y - 0.5) * 2.0;
           alpha *= edgeFade;
           
-          gl_FragColor = vec4(color, alpha);
+          // Brighten the color during pulse
+          vec3 finalColor = color * (1.0 + pulse * 0.5);
+          
+          gl_FragColor = vec4(finalColor, alpha);
         }
       `,
       transparent: true,
