@@ -7,7 +7,6 @@ import {
   useEdgesState, 
   Background, 
   Controls,
-  MiniMap,
   NodeTypes,
   Handle,
   Position,
@@ -291,14 +290,6 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
         >
           <Background color="hsl(var(--muted))" gap={20} />
           <Controls />
-          <MiniMap 
-            style={{ 
-              backgroundColor: 'hsl(var(--muted))',
-              border: '1px solid hsl(var(--border))'
-            }}
-            nodeColor="hsl(var(--primary))"
-            maskColor="hsl(var(--background) / 0.8)"
-          />
         </ReactFlow>
       </div>
     </section>
