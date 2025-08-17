@@ -546,86 +546,94 @@ function useCustomOrbitControls(controlsRef: React.RefObject<any>) {
   }, [camera, gl, controlsRef]);
 }
 
-// Component to render an edge with repeating arrow heads
-function EdgeWithArrows({ 
+// Component to render an edge with tapered thickness based on node weights
+function TaperedEdge({ 
   sourcePos, 
   targetPos, 
+  sourceWeight,
+  targetWeight,
   color, 
-  lineWidth, 
   opacity, 
   isFocused 
 }: {
   sourcePos: [number, number, number];
   targetPos: [number, number, number];
+  sourceWeight?: number;
+  targetWeight?: number;
   color: string;
-  lineWidth: number;
   opacity: number;
   isFocused: boolean;
 }) {
-  const arrowCount = isFocused ? 20 : 10; // More arrows when focused
-  const arrowSize = isFocused ? 0.05 : 0.03;
+  // Calculate line thickness based on node weights
+  const sourceThickness = normalizeWeight(sourceWeight) * 0.15 + 0.05; // 0.05 to 0.2
+  const targetThickness = normalizeWeight(targetWeight) * 0.15 + 0.05; // 0.05 to 0.2
   
-  // Calculate direction vector from source to target
-  const direction = new THREE.Vector3(
-    targetPos[0] - sourcePos[0],
-    targetPos[1] - sourcePos[1],
-    targetPos[2] - sourcePos[2]
-  );
+  // Create tapered line geometry
+  const segments = 20; // Number of segments for smooth tapering
+  const points = [];
+  const radii = [];
   
-  const lineLength = direction.length();
-  direction.normalize();
-  
-  // Create arrow positions along the line (skip very start and end to avoid overlap with nodes)
-  const arrowPositions = [];
-  for (let i = 1; i <= arrowCount; i++) {
-    const t = (i / (arrowCount + 1)); // Distribute evenly, avoiding start/end
-    const pos = new THREE.Vector3(
-      sourcePos[0] + direction.x * lineLength * t,
-      sourcePos[1] + direction.y * lineLength * t,
-      sourcePos[2] + direction.z * lineLength * t
-    );
-    arrowPositions.push(pos);
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    // Interpolate position along the line
+    points.push(new THREE.Vector3(
+      sourcePos[0] + (targetPos[0] - sourcePos[0]) * t,
+      sourcePos[1] + (targetPos[1] - sourcePos[1]) * t,
+      sourcePos[2] + (targetPos[2] - sourcePos[2]) * t
+    ));
+    // Interpolate thickness from source to target
+    const thickness = sourceThickness + (targetThickness - sourceThickness) * t;
+    radii.push(thickness * (isFocused ? 2 : 1));
   }
   
+  // Create tube geometry for tapered line
+  const curve = new THREE.CatmullRomCurve3(points);
+  const tubeGeometry = new THREE.TubeGeometry(curve, segments, 0.1, 8, false);
+  
+  // Modify the tube geometry to have variable radius
+  const positionAttribute = tubeGeometry.attributes.position;
+  for (let i = 0; i < positionAttribute.count; i++) {
+    const segmentIndex = Math.floor(i / 9); // 9 vertices per ring (8 sides + center)
+    const radius = radii[Math.min(segmentIndex, radii.length - 1)] || 0.05;
+    
+    // Get the vertex position
+    const x = positionAttribute.getX(i);
+    const y = positionAttribute.getY(i);
+    const z = positionAttribute.getZ(i);
+    
+    // Calculate distance from the curve center for this vertex
+    const segmentT = segmentIndex / segments;
+    const curvePoint = curve.getPoint(segmentT);
+    const dx = x - curvePoint.x;
+    const dy = y - curvePoint.y;
+    const dz = z - curvePoint.z;
+    const distFromCenter = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    
+    // Scale the vertex position based on the desired radius
+    if (distFromCenter > 0) {
+      const scale = radius / 0.1; // 0.1 is the default tube radius
+      positionAttribute.setXYZ(i,
+        curvePoint.x + dx * scale,
+        curvePoint.y + dy * scale,
+        curvePoint.z + dz * scale
+      );
+    }
+  }
+  
+  positionAttribute.needsUpdate = true;
+  tubeGeometry.computeVertexNormals();
+  
   return (
-    <group>
-      {/* The main line */}
-      <Line
-        points={[sourcePos, targetPos]}
+    <mesh>
+      <primitive object={tubeGeometry} />
+      <meshStandardMaterial 
         color={color}
-        lineWidth={lineWidth}
-        transparent
+        transparent 
         opacity={opacity}
+        metalness={0.2}
+        roughness={0.8}
       />
-      
-      {/* Arrow heads along the line */}
-      {arrowPositions.map((pos, idx) => {
-        // Calculate rotation to point along the direction vector
-        const quaternion = new THREE.Quaternion();
-        
-        // Create a default "up" vector for the cone (pointing along positive Y)
-        const defaultDirection = new THREE.Vector3(0, 1, 0);
-        
-        // Calculate the rotation needed to align defaultDirection with our line direction
-        quaternion.setFromUnitVectors(defaultDirection, direction);
-        
-        return (
-          <mesh
-            key={`arrow-${idx}`}
-            position={[pos.x, pos.y, pos.z]}
-            quaternion={quaternion}
-            scale={[arrowSize, arrowSize, arrowSize]}
-          >
-            <coneGeometry args={[0.5, 2, 8]} />
-            <meshBasicMaterial 
-              color={color} 
-              transparent 
-              opacity={opacity}
-            />
-          </mesh>
-        );
-      })}
-    </group>
+    </mesh>
   );
 }
 
@@ -774,7 +782,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         makeDefault
       />
       
-      {/* Render edges connecting nodes with arrow heads */}
+      {/* Render edges connecting nodes with tapered thickness */}
       {edges.map((e, idx) => {
         const sourceNode = idToNode.get(e.source);
         const targetNode = idToNode.get(e.target);
@@ -784,12 +792,13 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
         return (
-          <EdgeWithArrows
+          <TaperedEdge
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
+            sourceWeight={sourceNode.weight}
+            targetWeight={targetNode.weight}
             color={lineColor}
-            lineWidth={isFocusedEdge ? 3 : 1}
             opacity={isFocusedEdge ? 1.0 : 0.6}
             isFocused={isFocusedEdge}
           />
@@ -1046,7 +1055,7 @@ function GraphSceneWithDrawer({
         makeDefault
       />
       
-      {/* Render edges connecting nodes with arrow heads */}
+      {/* Render edges connecting nodes with tapered thickness */}
       {edges.map((e, idx) => {
         const sourceNode = idToNode.get(e.source);
         const targetNode = idToNode.get(e.target);
@@ -1055,22 +1064,14 @@ function GraphSceneWithDrawer({
         const isFocusedEdge = focusId === e.source || focusId === e.target;
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
-        // Calculate line thickness based on average of node weights
-        const sourceWeight = normalizeWeight(sourceNode.weight);
-        const targetWeight = normalizeWeight(targetNode.weight);
-        const averageWeight = (sourceWeight + targetWeight) / 2;
-        
-        // Base thickness: 0.5 to 4, scaled by average weight
-        const baseThickness = 0.5 + (averageWeight * 3.5);
-        const lineWidth = isFocusedEdge ? baseThickness * 1.5 : baseThickness;
-        
         return (
-          <EdgeWithArrows
+          <TaperedEdge
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
+            sourceWeight={sourceNode.weight}
+            targetWeight={targetNode.weight}
             color={lineColor}
-            lineWidth={lineWidth}
             opacity={isFocusedEdge ? 1.0 : 0.6}
             isFocused={isFocusedEdge}
           />
