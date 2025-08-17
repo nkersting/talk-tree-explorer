@@ -289,7 +289,7 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
           elementsSelectable
         >
           <Background color="hsl(var(--muted))" gap={20} />
-          <Controls />
+          <Controls showInteractive={false} />
         </ReactFlow>
       </div>
     </section>
