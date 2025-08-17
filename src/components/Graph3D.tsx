@@ -546,8 +546,8 @@ function useCustomOrbitControls(controlsRef: React.RefObject<any>) {
   }, [camera, gl, controlsRef]);
 }
 
-// Component to render an edge with animated striped pattern showing direction
-function EdgeWithArrows({ 
+// Component to render an edge with animated pulse showing direction
+function EdgeWithPulse({ 
   sourcePos, 
   targetPos, 
   color, 
@@ -564,16 +564,6 @@ function EdgeWithArrows({
 }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   
-  // Calculate direction vector from source to target
-  const direction = new THREE.Vector3(
-    targetPos[0] - sourcePos[0],
-    targetPos[1] - sourcePos[1],
-    targetPos[2] - sourcePos[2]
-  );
-  
-  const lineLength = direction.length();
-  direction.normalize();
-  
   // Create tube geometry along the line
   const curve = useMemo(() => {
     return new THREE.LineCurve3(
@@ -582,23 +572,21 @@ function EdgeWithArrows({
     );
   }, [sourcePos, targetPos]);
   
-  // Animate the stripe pattern
+  // Animate the pulse
   useFrame(({ clock }) => {
     if (materialRef.current) {
-      // Move the stripes along the line direction to show flow
       materialRef.current.uniforms.time.value = clock.getElapsedTime();
     }
   });
   
-  // Custom shader material for animated stripes
+  // Custom shader material for animated pulse
   const shaderMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
         color: { value: new THREE.Color(color) },
         opacity: { value: opacity },
         time: { value: 0 },
-        stripeScale: { value: isFocused ? 8 : 12 }, // More stripes when focused
-        speed: { value: isFocused ? 2 : 1 }, // Faster animation when focused
+        speed: { value: isFocused ? 1.5 : 0.8 }, // Faster pulse when focused
       },
       vertexShader: `
         varying vec2 vUv;
@@ -611,7 +599,6 @@ function EdgeWithArrows({
         uniform vec3 color;
         uniform float opacity;
         uniform float time;
-        uniform float stripeScale;
         uniform float speed;
         varying vec2 vUv;
         
@@ -643,19 +630,16 @@ function EdgeWithArrows({
   }, [color, opacity, isFocused]);
   
   return (
-    <group>
-      {/* Striped tube geometry */}
-      <mesh>
-        <tubeGeometry 
-          args={[curve, 32, lineWidth * 0.02, 8, false]} 
-        />
-        <primitive 
-          ref={materialRef}
-          object={shaderMaterial} 
-          attach="material" 
-        />
-      </mesh>
-    </group>
+    <mesh>
+      <tubeGeometry 
+        args={[curve, 32, lineWidth * 0.02, 8, false]} 
+      />
+      <primitive 
+        ref={materialRef}
+        object={shaderMaterial} 
+        attach="material" 
+      />
+    </mesh>
   );
 }
 
@@ -814,7 +798,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
         return (
-          <EdgeWithArrows
+          <EdgeWithPulse
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
@@ -1095,7 +1079,7 @@ function GraphSceneWithDrawer({
         const lineWidth = isFocusedEdge ? baseThickness * 1.5 : baseThickness;
         
         return (
-          <EdgeWithArrows
+          <EdgeWithPulse
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
