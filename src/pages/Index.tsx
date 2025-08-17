@@ -5,6 +5,7 @@ import { Graph3D } from "@/components/Graph3D";
 import { SEO } from "@/components/SEO";
 import { KnowledgeNode } from "../types"; 
 import { KnowledgeTree } from "@/components/KnowledgeTree";
+import { FocusProvider } from '@/contexts/FocusContext';
 
 
 const particleData = knowledgeData.knowledgeTree as KnowledgeNode;
@@ -47,13 +48,12 @@ const Index = () => {
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-6 pb-16">
-        <ReactFlowProvider>
-          <KnowledgeTree data={particleData} />
-        </ReactFlowProvider>
-        <Graph3D data={particleData} />
-        <p className="mt-6 text-sm text-muted-foreground">
-          JSON schema: <code>{`{ "node": "string", "weight": "number", "children": "KnowledgeNode[]" }`}</code>
-        </p>
+        <FocusProvider>
+          <ReactFlowProvider>
+            <KnowledgeTree data={particleData} />
+          </ReactFlowProvider>
+          <Graph3D data={particleData} />
+        </FocusProvider>
       </main>
     </>
   );

@@ -16,6 +16,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useFocus } from '@/contexts/FocusContext';
 
 export type KnowledgeNode = {
   node: string;
@@ -33,6 +34,7 @@ type PositionedNode = KnowledgeNode & {
 // Custom node component with handles
 function KnowledgeNodeComponent({ data }: { data: any }) {
   const radius = data.radius || 20;
+  const { setFocusedNodeLabel } = useFocus();
   
   return (
     <>
@@ -58,6 +60,7 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
               fontSize: Math.max(8, radius / 3),
             }}
             title={data.label}
+            onClick={() => setFocusedNodeLabel(data.label)}
           >
             {data.label}
           </div>

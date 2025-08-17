@@ -4,6 +4,7 @@ import { OrbitControls, Line, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { createPortal } from "react-dom";
 import type { KnowledgeNode } from "../types"; // Adjusted path to match the correct location
+import { useFocus } from '@/contexts/FocusContext';
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -450,6 +451,26 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
   const controlsRef = useRef<any>(null);
   const { camera } = useThree();
+  
+  // Get the current focus from context
+  const { focusedNodeLabel } = useFocus();
+  
+  // Create a map of node labels to IDs for quick lookup
+  const labelToId = useMemo(() => {
+    const map = new Map<string, string>();
+    nodes.forEach(node => map.set(node.label, node.id));
+    return map;
+  }, [nodes]);
+  
+  // Listen for changes to focusedNodeLabel and update the 3D focus
+  useEffect(() => {
+    if (focusedNodeLabel) {
+      const matchingId = labelToId.get(focusedNodeLabel);
+      if (matchingId) {
+        setFocusId(matchingId);
+      }
+    }
+  }, [focusedNodeLabel, labelToId]);
   
   // Handle focus animation when node is clicked
   useEffect(() => {
