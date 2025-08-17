@@ -50,7 +50,7 @@ const Index = () => {
       <main className="relative h-screen">
         <FocusProvider>
           <ReactFlowProvider>
-            <div className="absolute top-4 left-4 w-80 h-60 bg-background border border-border rounded-lg shadow-lg z-10 overflow-hidden">
+            <div className="absolute top-4 left-4 w-96 h-80 bg-background border border-border rounded-lg shadow-lg z-10 overflow-hidden">
               <KnowledgeTree data={particleData} />
             </div>
           </ReactFlowProvider>

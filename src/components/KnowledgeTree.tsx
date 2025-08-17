@@ -271,7 +271,7 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
   }, [onNodesChange, setNodes]);
 
   return (
-    <section aria-label="Knowledge tree" className="w-full h-[600px]">
+    <section aria-label="Knowledge tree" className="w-full h-full">
       <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
         <ReactFlow
           nodes={nodes}
