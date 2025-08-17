@@ -1055,13 +1055,22 @@ function GraphSceneWithDrawer({
         const isFocusedEdge = focusId === e.source || focusId === e.target;
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
+        // Calculate line thickness based on average of node weights
+        const sourceWeight = normalizeWeight(sourceNode.weight);
+        const targetWeight = normalizeWeight(targetNode.weight);
+        const averageWeight = (sourceWeight + targetWeight) / 2;
+        
+        // Base thickness: 0.5 to 4, scaled by average weight
+        const baseThickness = 0.5 + (averageWeight * 3.5);
+        const lineWidth = isFocusedEdge ? baseThickness * 1.5 : baseThickness;
+        
         return (
           <EdgeWithArrows
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
             color={lineColor}
-            lineWidth={isFocusedEdge ? 3 : 1}
+            lineWidth={lineWidth}
             opacity={isFocusedEdge ? 1.0 : 0.6}
             isFocused={isFocusedEdge}
           />
