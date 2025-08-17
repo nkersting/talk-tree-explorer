@@ -893,6 +893,35 @@ function GraphSceneWithDrawer({
   const controlsRef = useRef<any>(null);
   const { camera } = useThree();
   
+  // Calculate the center of all nodes for initial positioning
+  const graphCenter = useMemo(() => {
+    if (nodes.length === 0) return [0, 0, 0] as [number, number, number];
+    
+    const sum = nodes.reduce(
+      (acc, node) => ({
+        x: acc.x + node.position[0],
+        y: acc.y + node.position[1],
+        z: acc.z + node.position[2],
+      }),
+      { x: 0, y: 0, z: 0 }
+    );
+    
+    return [
+      sum.x / nodes.length,
+      sum.y / nodes.length,
+      sum.z / nodes.length,
+    ] as [number, number, number];
+  }, [nodes]);
+  
+  // Center the graph on initial load
+  useEffect(() => {
+    if (controlsRef.current && nodes.length > 0) {
+      // Set the orbit controls to look at the center of the graph
+      controlsRef.current.target.set(graphCenter[0], graphCenter[1], graphCenter[2]);
+      controlsRef.current.update();
+    }
+  }, [graphCenter, nodes]);
+  
   // Get the current focus from context
   const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
   
