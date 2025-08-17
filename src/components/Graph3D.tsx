@@ -158,6 +158,154 @@ function DebugMarker({ position }: { position: [number, number, number] }) {
   );
 }
 
+// YouTube Preview component
+function YouTubePreview({ 
+  url, 
+  position, 
+  index, 
+  notes,
+  widget,
+  onWidgetClick 
+}: { 
+  url: string; 
+  position: [number, number, number]; 
+  index: number;
+  notes?: string;
+  widget: Widget;
+  onWidgetClick: (widget: Widget) => void;
+}) {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  
+  // Use the position passed from parent
+  const previewPos: [number, number, number] = position;
+  
+  // Get YouTube video ID
+  const getYouTubeVideoId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+  
+  const videoId = getYouTubeVideoId(url);
+  const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
+  
+  // Handle visibility based on camera position
+  const { camera } = useThree();
+  useFrame(() => {
+    if (!previewRef.current) return;
+    
+    // Calculate distance to camera
+    const distance = new THREE.Vector3(...previewPos).distanceTo(camera.position);
+    
+    // Only show previews that are reasonably close to the camera
+    if (distance < 30) {
+      previewRef.current.style.opacity = "1";
+      setIsVisible(true);
+    } else {
+      previewRef.current.style.opacity = "0";
+      setIsVisible(false);
+    }
+  });
+  
+  // Open side panel view  
+  const openSidePanel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("Opening side panel for YouTube video:", url);
+    onWidgetClick(widget);
+  };
+  
+  return (
+    <>
+      {/* Debug sphere to see where the preview should be */}
+      <DebugMarker position={previewPos} />
+      
+      {/* The YouTube preview */}
+      <group position={previewPos}>
+        <Html
+          center
+          transform
+          occlude={false}
+          distanceFactor={10}
+          position={[0, 0, 0]}
+          style={{ 
+            width: "60px", 
+            height: "45px", // 4:3 aspect ratio for YouTube thumbnails
+            transform: "rotateY(180deg)"
+          }}
+        >
+          <div 
+            ref={previewRef}
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "relative",
+              cursor: "pointer",
+              borderRadius: "5px",
+              opacity: isVisible ? 1 : 0,
+              transition: "opacity 0.3s",
+              overflow: "hidden",
+              border: "2px solid #ff0000", // YouTube red border
+              boxShadow: "0 0 10px rgba(255,0,0,0.7)",
+              transform: "scaleX(-1)", // Fix inversion
+              backgroundColor: "#000"
+            }}
+            onClick={openSidePanel}
+          >
+            {thumbnailUrl ? (
+              <>
+                <img 
+                  src={thumbnailUrl}
+                  alt="YouTube thumbnail"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    transform: "scaleX(-1)" // Fix inversion
+                  }}
+                />
+                {/* Play button overlay */}
+                <div style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: "rgba(255,0,0,0.8)",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  fontSize: "8px",
+                  fontWeight: "bold"
+                }}>
+                  ▶
+                </div>
+              </>
+            ) : (
+              <div style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#ff0000",
+                color: "white",
+                fontSize: "8px",
+                textAlign: "center"
+              }}>
+                YouTube<br/>Video
+              </div>
+            )}
+          </div>
+        </Html>
+      </group>
+    </>
+  );
+}
+
 // Completely reworked Image Preview component
 function ImagePreview({ 
   src, 
@@ -426,6 +574,21 @@ function NodeMesh({
     }
   }, [node]);
   
+  // Helper function to detect YouTube URLs
+  const isYouTubeUrl = (url: string) => {
+    return url.includes('youtube.com/watch') || 
+           url.includes('youtu.be/') || 
+           url.includes('youtube.com/embed/') ||
+           url.includes('youtube.com/v/');
+  };
+
+  // Helper function to get YouTube video ID
+  const getYouTubeVideoId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   // Filter widgets for image files (handle both local files and URLs)
   const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'];
   const imageWidgets = node.widgets?.filter(widget => {
@@ -442,8 +605,16 @@ function NodeMesh({
     }
     return imageExtensions.some(ext => widgetName.toLowerCase().endsWith(ext));
   }) || [];
+
+  // Filter widgets for YouTube videos
+  const youtubeWidgets = node.widgets?.filter(widget => {
+    if (!widget) return false;
+    const widgetName = widget.name;
+    if (!widgetName) return false;
+    return isYouTubeUrl(widgetName);
+  }) || [];
   
-  const allImages = imageWidgets;
+  const allWidgets = [...imageWidgets, ...youtubeWidgets];
   
   return (
     <group 
@@ -476,9 +647,9 @@ function NodeMesh({
         </div>
       </Html>
       
-      {/* Render image previews symmetrically around the node */}
-      {allImages.map((widget, index) => {
-        const angle = (index / allImages.length) * Math.PI * 2; // Distribute evenly in a circle
+      {/* Render widget previews symmetrically around the node */}
+      {allWidgets.map((widget, index) => {
+        const angle = (index / allWidgets.length) * Math.PI * 2; // Distribute evenly in a circle
         const radius = 2.0; // Radius around the node
         const widgetPosition: [number, number, number] = [
           Math.cos(angle) * radius,
@@ -489,22 +660,39 @@ function NodeMesh({
         // Extract the widget name from the widget object - widgets are now always objects  
         const widgetSrc = widget.name;
         
-        console.log(`Node ${node.id} at position ${node.position} has widget image at position ${widgetPosition}`);
+        console.log(`Node ${node.id} at position ${node.position} has widget at position ${widgetPosition}`);
         
         // Extract notes from widget object
         const widgetNotes = widget.notes || '';
         
-        return (
-          <ImagePreview 
-            key={`${node.id}-img-${index}`}
-            src={widgetSrc} 
-            position={widgetPosition} 
-            index={index}
-            notes={widgetNotes}
-            widget={widget}
-            onWidgetClick={onWidgetClick}
-          />
-        );
+        // Check if it's a YouTube video or image
+        const isYoutube = isYouTubeUrl(widgetSrc);
+        
+        if (isYoutube) {
+          return (
+            <YouTubePreview 
+              key={`${node.id}-youtube-${index}`}
+              url={widgetSrc} 
+              position={widgetPosition} 
+              index={index}
+              notes={widgetNotes}
+              widget={widget}
+              onWidgetClick={onWidgetClick}
+            />
+          );
+        } else {
+          return (
+            <ImagePreview 
+              key={`${node.id}-img-${index}`}
+              src={widgetSrc} 
+              position={widgetPosition} 
+              index={index}
+              notes={widgetNotes}
+              widget={widget}
+              onWidgetClick={onWidgetClick}
+            />
+          );
+        }
       })}
     </group>
   );
@@ -851,22 +1039,42 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
           <div className="p-4 flex-1 overflow-auto">
             {selectedWidget && (
               <div className="space-y-4">
-                {/* Full-size widget image */}
-                <div className="w-full">
-                  <img 
-                    src={selectedWidget.name.startsWith('http') 
-                      ? selectedWidget.name 
-                      : selectedWidget.name.startsWith('/') 
+                {/* Check if it's a YouTube video and render accordingly */}
+                {selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
+                  <div className="w-full">
+                    <iframe 
+                      src={(() => {
+                        const getYouTubeVideoId = (url: string) => {
+                          const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                          const match = url.match(regExp);
+                          return (match && match[2].length === 11) ? match[2] : null;
+                        };
+                        const videoId = getYouTubeVideoId(selectedWidget.name);
+                        return videoId ? `https://www.youtube.com/embed/${videoId}` : selectedWidget.name;
+                      })()}
+                      title="YouTube video"
+                      className="w-full aspect-video rounded-lg border border-border"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  /* Full-size widget image */
+                  <div className="w-full">
+                    <img 
+                      src={selectedWidget.name.startsWith('http') 
                         ? selectedWidget.name 
-                        : `/data/${selectedWidget.name}`
-                    }
-                    alt="Widget" 
-                    className="w-full max-h-96 object-contain rounded-lg border border-border"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                </div>
+                        : selectedWidget.name.startsWith('/') 
+                          ? selectedWidget.name 
+                          : `/data/${selectedWidget.name}`
+                      }
+                      alt="Widget" 
+                      className="w-full max-h-96 object-contain rounded-lg border border-border"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
                 
                 {/* Widget notes */}
                 {selectedWidget.notes && (
