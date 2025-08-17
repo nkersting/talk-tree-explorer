@@ -66,9 +66,9 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
       
       <Tooltip>
         <TooltipTrigger asChild>
-          <div
+            <div
             className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
-              isFocused ? 'scale-110 ring-2 ring-foreground animate-pulse' : ''
+              isFocused ? 'scale-110 ring-8 ring-blue-500' : ''
             }`}
             style={{
               width: radius * 2,
@@ -77,9 +77,9 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
             }}
             title={data.label}
             onClick={handleNodeClick}
-          >
+            >
             {data.label}
-          </div>
+            </div>
         </TooltipTrigger>
         <TooltipContent>{data.label}</TooltipContent>
       </Tooltip>
