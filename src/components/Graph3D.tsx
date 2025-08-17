@@ -605,7 +605,7 @@ function EdgeWithChevrons({
           occlude={false}
           distanceFactor={3}
           style={{
-            transform: `rotate(${angle}rad)`,
+            transform: `rotate(${angle}rad) rotateZ(90deg)`,
             pointerEvents: 'none',
           }}
         >
