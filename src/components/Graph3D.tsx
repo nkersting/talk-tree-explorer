@@ -5,6 +5,13 @@ import * as THREE from "three";
 import { createPortal } from "react-dom";
 import type { KnowledgeNode } from "../types"; // Adjusted path to match the correct location
 import { useFocus } from '@/contexts/FocusContext';
+import { 
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -152,7 +159,19 @@ function DebugMarker({ position }: { position: [number, number, number] }) {
 }
 
 // Completely reworked Image Preview component
-function ImagePreview({ src, position, index }: { src: string; position: [number, number, number]; index: number }) {
+function ImagePreview({ 
+  src, 
+  position, 
+  index, 
+  notes, 
+  onWidgetClick 
+}: { 
+  src: string; 
+  position: [number, number, number]; 
+  index: number;
+  notes?: string;
+  onWidgetClick: (src: string, notes: string) => void;
+}) {
   const [fullscreenView, setFullscreenView] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -207,11 +226,11 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
     }
   });
   
-  // Open fullscreen view
-  const openFullscreen = (e: React.MouseEvent) => {
+  // Open side panel view
+  const openSidePanel = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("Opening fullscreen for:", imagePath);
-    setFullscreenView(true);
+    console.log("Opening side panel for:", imagePath);
+    onWidgetClick(imagePath, notes || '');
   };
   
   // Close fullscreen view
@@ -276,7 +295,7 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
                 // Add this style to fix the inversion
                 transform: "scaleX(-1)"
               }}
-              onClick={openFullscreen}
+              onClick={openSidePanel}
             >
               <img 
                 src={imagePath}
@@ -370,11 +389,13 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
 function NodeMesh({ 
   node, 
   onClick, 
-  isFocused = false 
+  isFocused = false,
+  onWidgetClick
 }: { 
   node: Node3D; 
   onClick: (id: string) => void;
   isFocused?: boolean;
+  onWidgetClick: (src: string, notes: string) => void;
 }) {
   const primary = useCssHsl("--primary", "hsl(262 83% 58%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
@@ -467,12 +488,17 @@ function NodeMesh({
         
         console.log(`Node ${node.id} at position ${node.position} has widget image at position ${widgetPosition}`);
         
+        // Extract notes from widget object
+        const widgetNotes = typeof widget === 'string' ? '' : widget.notes || '';
+        
         return (
           <ImagePreview 
             key={`${node.id}-img-${index}`}
             src={widgetSrc} 
             position={widgetPosition} 
-            index={index} 
+            index={index}
+            notes={widgetNotes}
+            onWidgetClick={onWidgetClick}
           />
         );
       })}
@@ -602,6 +628,8 @@ function EdgeWithArrows({
 // src/components/Graph3D.tsx - update the GraphScene component
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
+  const [sidePanelOpen, setSidePanelOpen] = useState(false);
+  const [selectedWidget, setSelectedWidget] = useState<{src: string, notes: string} | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
   const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
   const controlsRef = useRef<any>(null);
@@ -644,6 +672,12 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
       setFocusedNodeLabel(clickedNode.label);
       setFocusSource('graph3d');
     }
+  };
+
+  // Handle widget clicks
+  const handleWidgetClick = (src: string, notes: string) => {
+    setSelectedWidget({ src, notes });
+    setSidePanelOpen(true);
   };
   
   // Handle focus animation when node is clicked
@@ -763,24 +797,264 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
           key={n.id} 
           node={n} 
           onClick={handleNodeClick} 
-          isFocused={n.id === focusId} 
+          isFocused={n.id === focusId}
+          onWidgetClick={handleWidgetClick}
         />
       ))}
     </>
   );
 }
 
-// And update the Graph3D component to remove any custom controls that might interfere
+// And update the Graph3D component to include the drawer
 export function Graph3D({ data }: { data: KnowledgeNode }) {
   const card = useCssHsl("--card", "hsl(0 0% 100%)");
+  const [sidePanelOpen, setSidePanelOpen] = useState(false);
+  const [selectedWidget, setSelectedWidget] = useState<{src: string, notes: string} | null>(null);
+  
   return (
-    <section aria-label="3D knowledge tree" className="w-full h-[520px] mt-10">
-      <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
-        <Canvas shadows camera={{ position: [0, 5, -15], fov: 50 }}>
-          <color attach="background" args={[card] as any} />
-          <GraphScene data={data} />
-        </Canvas>
-      </div>
-    </section>
+    <>
+      <section aria-label="3D knowledge tree" className="w-full h-[520px] mt-10">
+        <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
+          <Canvas shadows camera={{ position: [0, 5, -15], fov: 50 }}>
+            <color attach="background" args={[card] as any} />
+            <GraphSceneWithDrawer 
+              data={data} 
+              setSidePanelOpen={setSidePanelOpen}
+              setSelectedWidget={setSelectedWidget}
+            />
+          </Canvas>
+        </div>
+      </section>
+
+      {/* Side panel drawer */}
+      <Drawer open={sidePanelOpen} onOpenChange={setSidePanelOpen}>
+        <DrawerContent className="max-w-md ml-auto h-full">
+          <DrawerHeader className="text-left">
+            <DrawerTitle>Widget Details</DrawerTitle>
+            <DrawerDescription>
+              Full-size widget view and information
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4 flex-1 overflow-auto">
+            {selectedWidget && (
+              <div className="space-y-4">
+                {/* Full-size widget image */}
+                <div className="w-full">
+                  <img 
+                    src={selectedWidget.src.startsWith('http') 
+                      ? selectedWidget.src 
+                      : selectedWidget.src.startsWith('/') 
+                        ? selectedWidget.src 
+                        : `/data/${selectedWidget.src}`
+                    }
+                    alt="Widget" 
+                    className="w-full max-h-96 object-contain rounded-lg border border-border"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                </div>
+                
+                {/* Widget notes */}
+                {selectedWidget.notes && (
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-foreground">Notes:</h3>
+                    <div className="text-muted-foreground whitespace-pre-wrap bg-muted/50 p-3 rounded-lg">
+                      {selectedWidget.notes}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
+}
+
+// Create a wrapper component that passes the drawer state down
+function GraphSceneWithDrawer({ 
+  data, 
+  setSidePanelOpen, 
+  setSelectedWidget 
+}: { 
+  data: KnowledgeNode;
+  setSidePanelOpen: (open: boolean) => void;
+  setSelectedWidget: (widget: {src: string, notes: string} | null) => void;
+}) {
+  const [focusId, setFocusId] = useState<string | null>(null);
+  const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
+  const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
+  const controlsRef = useRef<any>(null);
+  const { camera } = useThree();
+  
+  // Get the current focus from context
+  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
+  
+  // Create a map of node labels to IDs for quick lookup
+  const labelToId = useMemo(() => {
+    const map = new Map<string, string>();
+    nodes.forEach(node => map.set(node.label, node.id));
+    return map;
+  }, [nodes]);
+  
+  // Listen for changes to focusedNodeLabel and update the 3D focus when coming from 2D view
+  useEffect(() => {
+    if (focusedNodeLabel && focusSource === 'graph2d') {
+      const matchingId = labelToId.get(focusedNodeLabel);
+      if (matchingId) {
+        setFocusId(matchingId);
+      }
+    } else if (!focusedNodeLabel) {
+      setFocusId(null);
+    }
+  }, [focusedNodeLabel, labelToId, focusSource]);
+  
+  // Update the node click handler
+  const handleNodeClick = (id: string) => {
+    const clickedNode = idToNode.get(id);
+    if (!clickedNode) return;
+    
+    // Toggle focus state
+    if (focusId === id) {
+      setFocusId(null);
+      setFocusedNodeLabel(null);
+      setFocusSource(null);
+    } else {
+      setFocusId(id);
+      setFocusedNodeLabel(clickedNode.label);
+      setFocusSource('graph3d');
+    }
+  };
+
+  // Handle widget clicks
+  const handleWidgetClick = (src: string, notes: string) => {
+    setSelectedWidget({ src, notes });
+    setSidePanelOpen(true);
+  };
+  
+  // Handle focus animation when node is clicked
+  useEffect(() => {
+    if (focusId && controlsRef.current) {
+      const focusedNode = nodes.find(n => n.id === focusId);
+      if (focusedNode) {
+        // Get node position
+        const nodePos = focusedNode.position;
+        
+        // Store original camera position and rotation
+        const startPos = camera.position.clone();
+        const startTarget = controlsRef.current.target.clone();
+        
+        // Calculate target position (we want to be at a slight offset from the node)
+        const targetDistance = 6; // Distance from node to camera
+        
+        // Direction from node to current camera (normalized)
+        const dir = new THREE.Vector3()
+          .subVectors(startPos, new THREE.Vector3(...nodePos))
+          .normalize();
+        
+        // Calculate target camera position
+        const targetPos = new THREE.Vector3(
+          nodePos[0] + dir.x * targetDistance,
+          nodePos[1] + dir.y * targetDistance,
+          nodePos[2] + dir.z * targetDistance
+        );
+        
+        // Animate to target
+        let startTime = Date.now();
+        const duration = 1000; // Animation duration in ms
+        
+        function animate() {
+          const now = Date.now();
+          const elapsed = now - startTime;
+          const progress = Math.min(1, elapsed / duration);
+          
+          // Ease function (cubic ease in/out)
+          const ease = progress < 0.5 
+            ? 4 * progress * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+          
+          // Interpolate camera position
+          camera.position.set(
+            startPos.x + (targetPos.x - startPos.x) * ease,
+            startPos.y + (targetPos.y - startPos.y) * ease,
+            startPos.z + (targetPos.z - startPos.z) * ease
+          );
+          
+          // Interpolate orbit controls target (what the camera looks at)
+          controlsRef.current.target.set(
+            startTarget.x + (nodePos[0] - startTarget.x) * ease,
+            startTarget.y + (nodePos[1] - startTarget.y) * ease,
+            startTarget.z + (nodePos[2] - startTarget.z) * ease
+          );
+          
+          controlsRef.current.update();
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        }
+        
+        animate();
+      }
+    }
+  }, [focusId, nodes, camera]);
+  
+  // Get colors from CSS variables
+  const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
+  const focusedEdgeColor = "#000000";
+  
+  return (
+    <>
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[5, 7, -5]} intensity={0.5} />
+      
+      <OrbitControls
+        ref={controlsRef}
+        enablePan={true}
+        enableZoom={true}
+        enableRotate={true}
+        minDistance={2}
+        maxDistance={30}
+        dampingFactor={0.1}
+        rotateSpeed={0.7}
+        panSpeed={0.5}
+        zoomSpeed={1.0}
+        makeDefault
+      />
+      
+      {/* Render edges connecting nodes with arrow heads */}
+      {edges.map((e, idx) => {
+        const sourceNode = idToNode.get(e.source);
+        const targetNode = idToNode.get(e.target);
+        if (!sourceNode || !targetNode) return null;
+        
+        const isFocusedEdge = focusId === e.source || focusId === e.target;
+        const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
+        
+        return (
+          <EdgeWithArrows
+            key={`edge-${idx}`}
+            sourcePos={sourceNode.position}
+            targetPos={targetNode.position}
+            color={lineColor}
+            lineWidth={isFocusedEdge ? 3 : 1}
+            opacity={isFocusedEdge ? 1.0 : 0.6}
+            isFocused={isFocusedEdge}
+          />
+        );
+      })}
+      
+      {nodes.map((n) => (
+        <NodeMesh 
+          key={n.id} 
+          node={n} 
+          onClick={handleNodeClick} 
+          isFocused={n.id === focusId}
+          onWidgetClick={handleWidgetClick}
+        />
+      ))}
+    </>
   );
 }
