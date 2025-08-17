@@ -19,7 +19,7 @@ function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
   return color;
 }
 
-type Widget = string | { name: string; [key: string]: any };
+type Widget = string | { name: string; notes: string; [key: string]: any };
 
 type Node3D = {
   id: string;
