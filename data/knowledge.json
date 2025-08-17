@@ -8,7 +8,7 @@
   "knowledgeTree": {
     "node": "Particle Physics",
     "weight": 10,
-      "widgets":[{"name":"proton.png", "notes": "gluon structure"},  {"name":"electron.png", "notes":"in the atom\n point-like particle"}, {"name": "https://www.youtube.com/watch?v=mRMss7TAe6k", "notes":""}],
+      "widgets":[{"name":"proton.png", "title":"Proton", "notes": "gluon structure"},  {"name":"electron.png", "title":"Electron", "notes":"in the atom\n point-like particle"}, {"name": "https://www.youtube.com/watch?v=mRMss7TAe6k", "notes":""}],
 "children": [
       {
         "node": "Experimental Tools",
@@ -76,7 +76,7 @@
       {
         "node": "Discovery Timeline",
         "weight": 7,
-        "widgets":[{"name":"proton.png", "notes": "gluon structure"}, {"name":"electron.png", "notes":"in the atom\n point-like particle"},  {"name":"electron.png", "notes":"in the atom\n point-like particle"}],
+        "widgets":[{"name":"proton.png", "title":"Proton", "notes": "gluon structure"}, {"name":"electron.png", "title":"Electron", "notes":"in the atom\n point-like particle"},  {"name":"electron.png", "notes":"in the atom\n point-like particle"}],
 "children": [
           {
             "node": "Discovery of photon",
@@ -161,7 +161,7 @@
                   {
                     "node": "Huygen",
                     "weight": 2,
-                    "widgets":[{"name":"proton.png", "notes": "gluon structure"},  {"name":"electron.png", "notes":"in the atom\n point-like particle"}],
+                    "widgets":[{"name":"proton.png", "title": "Proton", "notes": "gluon structure"},  {"name":"electron.png", "title":"Electron", "notes":"in the atom\n point-like particle"}],
 "children": []
                   },
                   {
