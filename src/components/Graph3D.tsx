@@ -26,7 +26,7 @@ function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
   return color;
 }
 
-type Widget = string | { name: string; notes: string; [key: string]: any };
+type Widget = string | { name: string; notes: string; title: string; [key: string]: any };
 
 type Node3D = {
   id: string;
@@ -612,7 +612,7 @@ function EdgeWithArrows({
             quaternion={quaternion}
             scale={[arrowSize, arrowSize, arrowSize]}
           >
-            <coneGeometry args={[1, 2, 8]} />
+            <coneGeometry args={[0.5, 2, 8]} />
             <meshBasicMaterial 
               color={color} 
               transparent 
