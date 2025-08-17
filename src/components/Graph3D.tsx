@@ -546,8 +546,8 @@ function useCustomOrbitControls(controlsRef: React.RefObject<any>) {
   }, [camera, gl, controlsRef]);
 }
 
-// Component to render an edge with animated pulse showing direction
-function EdgeWithPulse({ 
+// Component to render an edge with repeating arrow heads
+function EdgeWithArrows({ 
   sourcePos, 
   targetPos, 
   color, 
@@ -562,84 +562,70 @@ function EdgeWithPulse({
   opacity: number;
   isFocused: boolean;
 }) {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const arrowCount = isFocused ? 20 : 10; // More arrows when focused
+  const arrowSize = isFocused ? 0.05 : 0.03;
   
-  // Create tube geometry along the line
-  const curve = useMemo(() => {
-    return new THREE.LineCurve3(
-      new THREE.Vector3(...sourcePos),
-      new THREE.Vector3(...targetPos)
+  // Calculate direction vector from source to target
+  const direction = new THREE.Vector3(
+    targetPos[0] - sourcePos[0],
+    targetPos[1] - sourcePos[1],
+    targetPos[2] - sourcePos[2]
+  );
+  
+  const lineLength = direction.length();
+  direction.normalize();
+  
+  // Create arrow positions along the line (skip very start and end to avoid overlap with nodes)
+  const arrowPositions = [];
+  for (let i = 1; i <= arrowCount; i++) {
+    const t = (i / (arrowCount + 1)); // Distribute evenly, avoiding start/end
+    const pos = new THREE.Vector3(
+      sourcePos[0] + direction.x * lineLength * t,
+      sourcePos[1] + direction.y * lineLength * t,
+      sourcePos[2] + direction.z * lineLength * t
     );
-  }, [sourcePos, targetPos]);
-  
-  // Animate the pulse
-  useFrame(({ clock }) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.time.value = clock.getElapsedTime();
-    }
-  });
-  
-  // Custom shader material for animated pulse
-  const shaderMaterial = useMemo(() => {
-    return new THREE.ShaderMaterial({
-      uniforms: {
-        color: { value: new THREE.Color(color) },
-        opacity: { value: opacity },
-        time: { value: 0 },
-        speed: { value: isFocused ? 1.5 : 0.8 }, // Faster pulse when focused
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 color;
-        uniform float opacity;
-        uniform float time;
-        uniform float speed;
-        varying vec2 vUv;
-        
-        void main() {
-          // Create a pulse that travels from 0 to 1 along the line
-          float pulsePosition = mod(time * speed * 0.5, 1.0);
-          float distanceFromPulse = abs(vUv.x - pulsePosition);
-          
-          // Create a smooth pulse with falloff
-          float pulseWidth = 0.1; // Width of the pulse
-          float pulse = 1.0 - smoothstep(0.0, pulseWidth, distanceFromPulse);
-          
-          // Base alpha with pulse intensity
-          float alpha = opacity * (0.3 + 0.7 * pulse);
-          
-          // Fade out at the edges for smoother tube appearance
-          float edgeFade = 1.0 - abs(vUv.y - 0.5) * 2.0;
-          alpha *= edgeFade;
-          
-          // Brighten the color during pulse
-          vec3 finalColor = color * (1.0 + pulse * 0.5);
-          
-          gl_FragColor = vec4(finalColor, alpha);
-        }
-      `,
-      transparent: true,
-      side: THREE.DoubleSide,
-    });
-  }, [color, opacity, isFocused]);
+    arrowPositions.push(pos);
+  }
   
   return (
-    <mesh>
-      <tubeGeometry 
-        args={[curve, 32, lineWidth * 0.02, 8, false]} 
+    <group>
+      {/* The main line */}
+      <Line
+        points={[sourcePos, targetPos]}
+        color={color}
+        lineWidth={lineWidth}
+        transparent
+        opacity={opacity}
       />
-      <primitive 
-        ref={materialRef}
-        object={shaderMaterial} 
-        attach="material" 
-      />
-    </mesh>
+      
+      {/* Arrow heads along the line */}
+      {arrowPositions.map((pos, idx) => {
+        // Calculate rotation to point along the direction vector
+        const quaternion = new THREE.Quaternion();
+        
+        // Create a default "up" vector for the cone (pointing along positive Y)
+        const defaultDirection = new THREE.Vector3(0, 1, 0);
+        
+        // Calculate the rotation needed to align defaultDirection with our line direction
+        quaternion.setFromUnitVectors(defaultDirection, direction);
+        
+        return (
+          <mesh
+            key={`arrow-${idx}`}
+            position={[pos.x, pos.y, pos.z]}
+            quaternion={quaternion}
+            scale={[arrowSize, arrowSize, arrowSize]}
+          >
+            <coneGeometry args={[0.5, 2, 8]} />
+            <meshBasicMaterial 
+              color={color} 
+              transparent 
+              opacity={opacity}
+            />
+          </mesh>
+        );
+      })}
+    </group>
   );
 }
 
@@ -798,7 +784,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
         return (
-          <EdgeWithPulse
+          <EdgeWithArrows
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
@@ -1079,7 +1065,7 @@ function GraphSceneWithDrawer({
         const lineWidth = isFocusedEdge ? baseThickness * 1.5 : baseThickness;
         
         return (
-          <EdgeWithPulse
+          <EdgeWithArrows
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
