@@ -40,30 +40,47 @@ function build3DLayout(root: KnowledgeNode) {
   const edges: Edge3D[] = [];
   let idCounter = 0;
 
-  const layerZ = 8; // standard distance between layers
-  const radial = 5; // standard radius for each layer
-
-  function traverse(n: KnowledgeNode, depth: number, parentId?: string) {
+  // Better spacing parameters for tree-like arrangement
+  const layerDistance = 12; // Distance between depth levels
+  const baseRadius = 8; // Base radius for spreading siblings
+  const radiusGrowthFactor = 1.8; // How much radius grows per depth level
+  
+  function traverse(n: KnowledgeNode, depth: number, parentId?: string, angleStart = 0, angleSpan = Math.PI * 2, parentPos: [number, number, number] = [0, 0, 0]) {
     const id = `n3-${idCounter++}`;
+    const z = depth * layerDistance;
+    
+    let x = 0, y = 0;
+    
+    if (depth === 0) {
+      // Root node at origin
+      x = 0;
+      y = 0;
+    } else {
+      // Calculate position for non-root nodes
+      const radius = baseRadius + depth * radiusGrowthFactor;
+      const angle = angleStart + angleSpan / 2; // Center of assigned angle span
+      x = parentPos[0] + Math.cos(angle) * radius;
+      y = parentPos[1] + Math.sin(angle) * radius;
+    }
 
-    // Arrange children on a circle; root at origin
-    const z = depth * layerZ;
-
-    nodes.push({ id, label: n.node, weight: n.weight, position: [0, 0, z], widgets: n.widgets });
+    const position: [number, number, number] = [x, y, z];
+    nodes.push({ id, label: n.node, weight: n.weight, position, widgets: n.widgets });
 
     if (parentId) edges.push({ source: parentId, target: id });
 
     const children = n.children ?? [];
-    const count = children.length;
-    if (count > 0) {
-      const radius = radial; // fixed radius for consistent edge lengths
-      for (let i = 0; i < count; i++) {
-        const angle = (i / count) * Math.PI * 2;
-        const cx = Math.cos(angle) * radius;
-        const cy = Math.sin(angle) * radius * 0.7; // slight ellipse
-        const childId = traverse(children[i], depth + 1, id);
-        const child = nodes.find((nn) => nn.id === childId)!;
-        child.position = [cx, cy, (depth + 1) * layerZ];
+    const childCount = children.length;
+    
+    if (childCount > 0) {
+      // Distribute children evenly across the assigned angle span
+      const childAngleSpan = Math.min(angleSpan * 0.8, Math.PI * 2); // Don't exceed full circle
+      const angleStep = childCount > 1 ? childAngleSpan / childCount : 0;
+      const startAngle = angleStart + (angleSpan - childAngleSpan) / 2;
+      
+      for (let i = 0; i < childCount; i++) {
+        const childAngleStart = startAngle + i * angleStep;
+        const childAngleSpan = angleStep * 0.9; // Small gap between children
+        traverse(children[i], depth + 1, id, childAngleStart, childAngleSpan, position);
       }
     }
 
@@ -562,9 +579,25 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         makeDefault
       />
       
-      {/* Rest of your rendering code */}
+      {/* Render edges connecting nodes */}
       {edges.map((e, idx) => {
-        // Edge rendering code
+        const sourceNode = idToNode.get(e.source);
+        const targetNode = idToNode.get(e.target);
+        if (!sourceNode || !targetNode) return null;
+        
+        const isFocusedEdge = focusId === e.source || focusId === e.target;
+        const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
+        
+        return (
+          <Line
+            key={`edge-${idx}`}
+            points={[sourceNode.position, targetNode.position]}
+            color={lineColor}
+            lineWidth={isFocusedEdge ? 3 : 1}
+            transparent
+            opacity={isFocusedEdge ? 1.0 : 0.6}
+          />
+        );
       })}
       
       {nodes.map((n) => (
