@@ -40,8 +40,8 @@ type Edge3D = { source: string; target: string };
 
 function normalizeWeight(w?: number) {
   if (w === undefined || Number.isNaN(w)) return 0.5;
-  const clamped = Math.max(1, Math.min(10, w));
-  return (clamped - 1) / 9; // 0..1
+  const clamped = Math.max(1, Math.min(100, w));
+  return (clamped - 1) / 99; // 0..1
 }
 
 function build3DLayout(root: KnowledgeNode) {

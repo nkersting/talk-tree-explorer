@@ -7,7 +7,7 @@
   "pageDescription": "A clear, bottom-up view of your JSON-defined knowledge tree with tooltips on each node.",
   "knowledgeTree": {
     "node": "Particle Physics",
-    "weight": 10,
+    "weight": 100,
       "widgets":[{"name":"proton.png", "title":"Proton", "subtitle":"A schematic ...", "notes": "gluon structure"},  {"name":"electron.png", "title":"Electron", "notes":"in the atom\n point-like particle"}, {"name": "https://www.youtube.com/watch?v=mRMss7TAe6k", "notes":""}],
 "children": [
       {
@@ -75,7 +75,7 @@
       },
       {
         "node": "Discovery Timeline",
-        "weight": 7,
+        "weight": 70,
         "widgets":[{"name":"proton.png", "title":"Proton", "notes": "gluon structure"}, {"name":"electron.png", "title":"Electron", "notes":"in the atom\n point-like particle"},  {"name":"electron.png", "notes":"in the atom\n point-like particle"}],
 "children": [
           {
@@ -220,7 +220,7 @@
           },
           {
             "node": "US",
-            "weight": 3,
+            "weight": 0.1,
             "widgets":[],
 "children": []
           }
