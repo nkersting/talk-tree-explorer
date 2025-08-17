@@ -508,6 +508,89 @@ function useCustomOrbitControls(controlsRef: React.RefObject<any>) {
   }, [camera, gl, controlsRef]);
 }
 
+// Component to render an edge with repeating arrow heads
+function EdgeWithArrows({ 
+  sourcePos, 
+  targetPos, 
+  color, 
+  lineWidth, 
+  opacity, 
+  isFocused 
+}: {
+  sourcePos: [number, number, number];
+  targetPos: [number, number, number];
+  color: string;
+  lineWidth: number;
+  opacity: number;
+  isFocused: boolean;
+}) {
+  const arrowCount = isFocused ? 6 : 4; // More arrows when focused
+  const arrowSize = isFocused ? 0.15 : 0.1;
+  
+  // Calculate direction vector from source to target
+  const direction = new THREE.Vector3(
+    targetPos[0] - sourcePos[0],
+    targetPos[1] - sourcePos[1],
+    targetPos[2] - sourcePos[2]
+  );
+  
+  const lineLength = direction.length();
+  direction.normalize();
+  
+  // Create arrow positions along the line (skip very start and end to avoid overlap with nodes)
+  const arrowPositions = [];
+  for (let i = 1; i <= arrowCount; i++) {
+    const t = (i / (arrowCount + 1)); // Distribute evenly, avoiding start/end
+    const pos = new THREE.Vector3(
+      sourcePos[0] + direction.x * lineLength * t,
+      sourcePos[1] + direction.y * lineLength * t,
+      sourcePos[2] + direction.z * lineLength * t
+    );
+    arrowPositions.push(pos);
+  }
+  
+  return (
+    <group>
+      {/* The main line */}
+      <Line
+        points={[sourcePos, targetPos]}
+        color={color}
+        lineWidth={lineWidth}
+        transparent
+        opacity={opacity}
+      />
+      
+      {/* Arrow heads along the line */}
+      {arrowPositions.map((pos, idx) => {
+        // Calculate rotation to point along the direction vector
+        const quaternion = new THREE.Quaternion();
+        
+        // Create a default "up" vector for the cone (pointing along positive Y)
+        const defaultDirection = new THREE.Vector3(0, 1, 0);
+        
+        // Calculate the rotation needed to align defaultDirection with our line direction
+        quaternion.setFromUnitVectors(defaultDirection, direction);
+        
+        return (
+          <mesh
+            key={`arrow-${idx}`}
+            position={[pos.x, pos.y, pos.z]}
+            quaternion={quaternion}
+            scale={[arrowSize, arrowSize, arrowSize]}
+          >
+            <coneGeometry args={[1, 2, 8]} />
+            <meshBasicMaterial 
+              color={color} 
+              transparent 
+              opacity={opacity}
+            />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+}
+
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -625,7 +708,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         makeDefault
       />
       
-      {/* Render edges connecting nodes */}
+      {/* Render edges connecting nodes with arrow heads */}
       {edges.map((e, idx) => {
         const sourceNode = idToNode.get(e.source);
         const targetNode = idToNode.get(e.target);
@@ -635,13 +718,14 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
         return (
-          <Line
+          <EdgeWithArrows
             key={`edge-${idx}`}
-            points={[sourceNode.position, targetNode.position]}
+            sourcePos={sourceNode.position}
+            targetPos={targetNode.position}
             color={lineColor}
             lineWidth={isFocusedEdge ? 3 : 1}
-            transparent
             opacity={isFocusedEdge ? 1.0 : 0.6}
+            isFocused={isFocusedEdge}
           />
         );
       })}
