@@ -817,7 +817,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   
   return (
     <>
-      <section aria-label="3D knowledge tree" className="w-full h-[520px] mt-10">
+      <section aria-label="3D knowledge tree" className="w-full h-[800px] mt-10">
         <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
           <Canvas shadows camera={{ position: [0, 5, -15], fov: 50 }}>
             <color attach="background" args={[card] as any} />
