@@ -590,8 +590,8 @@ function EdgeWithChevrons({
   }
   
   // Calculate rotation angle for chevron alignment
-  // ChevronRight points right by default, so we need to align it with our direction vector
-  const angle = Math.atan2(direction.y, direction.x) + Math.PI/2;
+  // ChevronRight points right by default, rotate to align apex with direction vector
+  const angle = Math.atan2(direction.y, direction.x);
   
   return (
     <group>
@@ -605,7 +605,7 @@ function EdgeWithChevrons({
           occlude={false}
           distanceFactor={3}
           style={{
-            transform: `rotate(${angle}rad) rotateZ(90deg)`,
+            transform: `rotate(${angle}rad)`,
             pointerEvents: 'none',
           }}
         >
