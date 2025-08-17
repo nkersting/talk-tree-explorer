@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { createPortal } from "react-dom";
 import type { KnowledgeNode, Widget } from "../types"; // Adjusted path to match the correct location
 import { useFocus } from '@/contexts/FocusContext';
+import { ChevronRight } from 'lucide-react';
 import { 
   Drawer,
   DrawerContent,
@@ -546,8 +547,8 @@ function useCustomOrbitControls(controlsRef: React.RefObject<any>) {
   }, [camera, gl, controlsRef]);
 }
 
-// Component to render an edge with repeating arrow heads
-function EdgeWithArrows({ 
+// Component to render an edge with dense chevron sequence
+function EdgeWithChevrons({ 
   sourcePos, 
   targetPos, 
   color, 
@@ -562,8 +563,9 @@ function EdgeWithArrows({
   opacity: number;
   isFocused: boolean;
 }) {
-  const arrowCount = isFocused ? 20 : 10; // More arrows when focused
-  const arrowSize = isFocused ? 0.05 : 0.03;
+  // Dense chevron count based on line thickness and focus state
+  const baseChevronCount = Math.round(lineWidth * 8); // More chevrons for thicker lines
+  const chevronCount = isFocused ? baseChevronCount * 1.5 : baseChevronCount;
   
   // Calculate direction vector from source to target
   const direction = new THREE.Vector3(
@@ -575,56 +577,47 @@ function EdgeWithArrows({
   const lineLength = direction.length();
   direction.normalize();
   
-  // Create arrow positions along the line (skip very start and end to avoid overlap with nodes)
-  const arrowPositions = [];
-  for (let i = 1; i <= arrowCount; i++) {
-    const t = (i / (arrowCount + 1)); // Distribute evenly, avoiding start/end
+  // Create chevron positions along the line (skip very start and end to avoid overlap with nodes)
+  const chevronPositions = [];
+  for (let i = 1; i <= chevronCount; i++) {
+    const t = (i / (chevronCount + 1)); // Distribute evenly, avoiding start/end
     const pos = new THREE.Vector3(
       sourcePos[0] + direction.x * lineLength * t,
       sourcePos[1] + direction.y * lineLength * t,
       sourcePos[2] + direction.z * lineLength * t
     );
-    arrowPositions.push(pos);
+    chevronPositions.push(pos);
   }
+  
+  // Calculate rotation angle for chevron alignment
+  const angle = Math.atan2(direction.y, direction.x);
   
   return (
     <group>
-      {/* The main line */}
-      <Line
-        points={[sourcePos, targetPos]}
-        color={color}
-        lineWidth={lineWidth}
-        transparent
-        opacity={opacity}
-      />
-      
-      {/* Arrow heads along the line */}
-      {arrowPositions.map((pos, idx) => {
-        // Calculate rotation to point along the direction vector
-        const quaternion = new THREE.Quaternion();
-        
-        // Create a default "up" vector for the cone (pointing along positive Y)
-        const defaultDirection = new THREE.Vector3(0, 1, 0);
-        
-        // Calculate the rotation needed to align defaultDirection with our line direction
-        quaternion.setFromUnitVectors(defaultDirection, direction);
-        
-        return (
-          <mesh
-            key={`arrow-${idx}`}
-            position={[pos.x, pos.y, pos.z]}
-            quaternion={quaternion}
-            scale={[arrowSize, arrowSize, arrowSize]}
-          >
-            <coneGeometry args={[0.5, 2, 8]} />
-            <meshBasicMaterial 
-              color={color} 
-              transparent 
-              opacity={opacity}
-            />
-          </mesh>
-        );
-      })}
+      {/* Dense chevron sequence */}
+      {chevronPositions.map((pos, idx) => (
+        <Html
+          key={`chevron-${idx}`}
+          position={[pos.x, pos.y, pos.z]}
+          center
+          transform
+          occlude={false}
+          distanceFactor={3}
+          style={{
+            transform: `rotate(${angle}rad)`,
+            pointerEvents: 'none',
+          }}
+        >
+          <ChevronRight 
+            size={Math.max(8, lineWidth * 4)} 
+            color={color}
+            style={{ 
+              opacity,
+              filter: isFocused ? 'drop-shadow(0 0 3px currentColor)' : 'none'
+            }}
+          />
+        </Html>
+      ))}
     </group>
   );
 }
@@ -784,7 +777,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
         return (
-          <EdgeWithArrows
+          <EdgeWithChevrons
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
@@ -1065,7 +1058,7 @@ function GraphSceneWithDrawer({
         const lineWidth = isFocusedEdge ? baseThickness * 1.5 : baseThickness;
         
         return (
-          <EdgeWithArrows
+          <EdgeWithChevrons
             key={`edge-${idx}`}
             sourcePos={sourceNode.position}
             targetPos={targetNode.position}
