@@ -40,12 +40,27 @@ function build3DLayout(root: KnowledgeNode) {
   const edges: Edge3D[] = [];
   let idCounter = 0;
 
-  // Better spacing parameters for tree-like arrangement
-  const layerDistance = 12; // Distance between depth levels
-  const baseRadius = 8; // Base radius for spreading siblings
-  const radiusGrowthFactor = 1.8; // How much radius grows per depth level
+  // Improved spacing parameters to prevent overlaps
+  const layerDistance = 15; // Increased distance between depth levels
+  const minNodeDistance = 4; // Minimum distance between any two nodes
+  const baseRadius = 6; // Base radius for first level
   
-  function traverse(n: KnowledgeNode, depth: number, parentId?: string, angleStart = 0, angleSpan = Math.PI * 2, parentPos: [number, number, number] = [0, 0, 0]) {
+  function countNodesAtDepth(node: KnowledgeNode, targetDepth: number, currentDepth = 0): number {
+    if (currentDepth === targetDepth) return 1;
+    if (!node.children || currentDepth >= targetDepth) return 0;
+    
+    return node.children.reduce((sum, child) => 
+      sum + countNodesAtDepth(child, targetDepth, currentDepth + 1), 0);
+  }
+  
+  function calculateOptimalRadius(nodeCount: number, minDistance: number): number {
+    if (nodeCount <= 1) return 0;
+    // Calculate radius needed to fit nodeCount nodes with minDistance between them
+    const circumference = nodeCount * minDistance * 2;
+    return Math.max(baseRadius, circumference / (2 * Math.PI));
+  }
+  
+  function traverse(n: KnowledgeNode, depth: number, parentId?: string, parentPos: [number, number, number] = [0, 0, 0], siblingIndex = 0, totalSiblings = 1) {
     const id = `n3-${idCounter++}`;
     const z = depth * layerDistance;
     
@@ -56,15 +71,54 @@ function build3DLayout(root: KnowledgeNode) {
       x = 0;
       y = 0;
     } else {
-      // Calculate position for non-root nodes
-      const radius = baseRadius + depth * radiusGrowthFactor;
-      const angle = angleStart + angleSpan / 2; // Center of assigned angle span
-      x = parentPos[0] + Math.cos(angle) * radius;
-      y = parentPos[1] + Math.sin(angle) * radius;
+      // Calculate position based on sibling arrangement
+      if (totalSiblings === 1) {
+        // Single child, place directly below parent with slight offset to avoid exact overlap
+        x = parentPos[0] + (Math.random() - 0.5) * 0.5; // Small random offset
+        y = parentPos[1] + (Math.random() - 0.5) * 0.5;
+      } else {
+        // Multiple siblings, arrange in circle around parent
+        const radius = calculateOptimalRadius(totalSiblings, minNodeDistance);
+        const angle = (siblingIndex / totalSiblings) * Math.PI * 2;
+        x = parentPos[0] + Math.cos(angle) * radius;
+        y = parentPos[1] + Math.sin(angle) * radius;
+      }
     }
 
     const position: [number, number, number] = [x, y, z];
-    nodes.push({ id, label: n.node, weight: n.weight, position, widgets: n.widgets });
+    
+    // Check for collisions with existing nodes and adjust if necessary
+    let finalPosition = position;
+    let attempts = 0;
+    const maxAttempts = 20;
+    
+    while (attempts < maxAttempts) {
+      let collision = false;
+      for (const existingNode of nodes) {
+        const dx = finalPosition[0] - existingNode.position[0];
+        const dy = finalPosition[1] - existingNode.position[1];
+        const dz = finalPosition[2] - existingNode.position[2];
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        
+        if (distance < minNodeDistance) {
+          collision = true;
+          // Move away from collision
+          const moveDistance = minNodeDistance - distance + 1;
+          const moveAngle = Math.atan2(dy, dx);
+          finalPosition = [
+            finalPosition[0] + Math.cos(moveAngle) * moveDistance,
+            finalPosition[1] + Math.sin(moveAngle) * moveDistance,
+            finalPosition[2]
+          ];
+          break;
+        }
+      }
+      
+      if (!collision) break;
+      attempts++;
+    }
+
+    nodes.push({ id, label: n.node, weight: n.weight, position: finalPosition, widgets: n.widgets });
 
     if (parentId) edges.push({ source: parentId, target: id });
 
@@ -72,15 +126,8 @@ function build3DLayout(root: KnowledgeNode) {
     const childCount = children.length;
     
     if (childCount > 0) {
-      // Distribute children evenly across the assigned angle span
-      const childAngleSpan = Math.min(angleSpan * 0.8, Math.PI * 2); // Don't exceed full circle
-      const angleStep = childCount > 1 ? childAngleSpan / childCount : 0;
-      const startAngle = angleStart + (angleSpan - childAngleSpan) / 2;
-      
       for (let i = 0; i < childCount; i++) {
-        const childAngleStart = startAngle + i * angleStep;
-        const childAngleSpan = angleStep * 0.9; // Small gap between children
-        traverse(children[i], depth + 1, id, childAngleStart, childAngleSpan, position);
+        traverse(children[i], depth + 1, id, finalPosition, i, childCount);
       }
     }
 
