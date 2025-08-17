@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { createPortal } from "react-dom";
-import type { KnowledgeNode } from "../types"; // Adjusted path to match the correct location
+import type { KnowledgeNode, Widget } from "../types"; // Adjusted path to match the correct location
 import { useFocus } from '@/contexts/FocusContext';
 import { 
   Drawer,
@@ -26,7 +26,7 @@ function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
   return color;
 }
 
-type Widget = string | { name: string; notes: string; title: string; [key: string]: any };
+
 
 type Node3D = {
   id: string;
@@ -163,14 +163,16 @@ function ImagePreview({
   src, 
   position, 
   index, 
-  notes, 
+  notes,
+  widget,
   onWidgetClick 
 }: { 
   src: string; 
   position: [number, number, number]; 
   index: number;
   notes?: string;
-  onWidgetClick: (src: string, notes: string) => void;
+  widget: Widget;
+  onWidgetClick: (widget: Widget) => void;
 }) {
   const [fullscreenView, setFullscreenView] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -226,11 +228,12 @@ function ImagePreview({
     }
   });
   
-  // Open side panel view
+  // Open side panel view  
   const openSidePanel = (e: React.MouseEvent) => {
     e.stopPropagation();
     console.log("Opening side panel for:", imagePath);
-    onWidgetClick(imagePath, notes || '');
+    // Pass the entire widget object to the handler
+    onWidgetClick(widget);
   };
   
   // Close fullscreen view
@@ -395,7 +398,7 @@ function NodeMesh({
   node: Node3D; 
   onClick: (id: string) => void;
   isFocused?: boolean;
-  onWidgetClick: (src: string, notes: string) => void;
+  onWidgetClick: (widget: Widget) => void;
 }) {
   const primary = useCssHsl("--primary", "hsl(262 83% 58%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
@@ -428,8 +431,8 @@ function NodeMesh({
   const imageWidgets = node.widgets?.filter(widget => {
     if (!widget) return false;
     
-    // Extract the name from the widget object
-    const widgetName = typeof widget === 'string' ? widget : widget.name;
+    // Extract the name from the widget object - widgets are now always objects
+    const widgetName = widget.name;
     
     if (!widgetName) return false;
     
@@ -483,13 +486,13 @@ function NodeMesh({
           0 
         ];
         
-        // Extract the widget name from the widget object
-        const widgetSrc = typeof widget === 'string' ? widget : widget.name;
+        // Extract the widget name from the widget object - widgets are now always objects  
+        const widgetSrc = widget.name;
         
         console.log(`Node ${node.id} at position ${node.position} has widget image at position ${widgetPosition}`);
         
         // Extract notes from widget object
-        const widgetNotes = typeof widget === 'string' ? '' : widget.notes || '';
+        const widgetNotes = widget.notes || '';
         
         return (
           <ImagePreview 
@@ -498,6 +501,7 @@ function NodeMesh({
             position={widgetPosition} 
             index={index}
             notes={widgetNotes}
+            widget={widget}
             onWidgetClick={onWidgetClick}
           />
         );
@@ -629,7 +633,7 @@ function EdgeWithArrows({
 function GraphScene({ data }: { data: KnowledgeNode }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
-  const [selectedWidget, setSelectedWidget] = useState<{src: string, notes: string} | null>(null);
+  const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
   const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
   const controlsRef = useRef<any>(null);
@@ -675,8 +679,8 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   };
 
   // Handle widget clicks
-  const handleWidgetClick = (src: string, notes: string) => {
-    setSelectedWidget({ src, notes });
+  const handleWidgetClick = (widget: Widget) => {
+    setSelectedWidget(widget);
     setSidePanelOpen(true);
   };
   
@@ -809,7 +813,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
 export function Graph3D({ data }: { data: KnowledgeNode }) {
   const card = useCssHsl("--card", "hsl(0 0% 100%)");
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
-  const [selectedWidget, setSelectedWidget] = useState<{src: string, notes: string} | null>(null);
+  const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
   
   return (
     <>
@@ -830,9 +834,9 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
       <Drawer open={sidePanelOpen} onOpenChange={setSidePanelOpen}>
         <DrawerContent className="max-w-md ml-auto h-full">
           <DrawerHeader className="text-left">
-            <DrawerTitle>Widget Details</DrawerTitle>
+            <DrawerTitle>{selectedWidget?.title || 'Widget Details'}</DrawerTitle>
             <DrawerDescription>
-              Full-size widget view and information
+              {selectedWidget?.subtitle || 'Full-size widget view and information'}
             </DrawerDescription>
           </DrawerHeader>
           <div className="p-4 flex-1 overflow-auto">
@@ -841,11 +845,11 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 {/* Full-size widget image */}
                 <div className="w-full">
                   <img 
-                    src={selectedWidget.src.startsWith('http') 
-                      ? selectedWidget.src 
-                      : selectedWidget.src.startsWith('/') 
-                        ? selectedWidget.src 
-                        : `/data/${selectedWidget.src}`
+                    src={selectedWidget.name.startsWith('http') 
+                      ? selectedWidget.name 
+                      : selectedWidget.name.startsWith('/') 
+                        ? selectedWidget.name 
+                        : `/data/${selectedWidget.name}`
                     }
                     alt="Widget" 
                     className="w-full max-h-96 object-contain rounded-lg border border-border"
@@ -881,7 +885,7 @@ function GraphSceneWithDrawer({
 }: { 
   data: KnowledgeNode;
   setSidePanelOpen: (open: boolean) => void;
-  setSelectedWidget: (widget: {src: string, notes: string} | null) => void;
+  setSelectedWidget: (widget: Widget | null) => void;
 }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -929,8 +933,8 @@ function GraphSceneWithDrawer({
   };
 
   // Handle widget clicks
-  const handleWidgetClick = (src: string, notes: string) => {
-    setSelectedWidget({ src, notes });
+  const handleWidgetClick = (widget: Widget) => {
+    setSelectedWidget(widget);
     setSidePanelOpen(true);
   };
   
