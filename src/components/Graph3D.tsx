@@ -524,8 +524,8 @@ function EdgeWithArrows({
   opacity: number;
   isFocused: boolean;
 }) {
-  const arrowCount = isFocused ? 6 : 4; // More arrows when focused
-  const arrowSize = isFocused ? 0.15 : 0.1;
+  const arrowCount = isFocused ? 20 : 10; // More arrows when focused
+  const arrowSize = isFocused ? 0.05 : 0.03;
   
   // Calculate direction vector from source to target
   const direction = new THREE.Vector3(
