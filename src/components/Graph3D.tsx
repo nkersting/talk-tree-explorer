@@ -111,7 +111,11 @@ function ImagePreview({ src, position, index }: { src: string; position: [number
     return `/data/${src}`;
   }, [src]);
   
-
+  // Debug logging
+  useEffect(() => {
+    console.log(`ImagePreview: src=${src}, resolved=${imagePath}, position=`, imagePos);
+  }, [imagePath, imagePos, src]);
+  
   // Handle image loading
   const handleImageLoad = () => {
     console.log(`✅ Image loaded successfully: ${imagePath}`);
