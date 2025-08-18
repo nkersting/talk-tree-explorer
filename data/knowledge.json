@@ -31,7 +31,7 @@
 	    [
 		{"node":"Humanoid Robots",
 		 "weight":80,
-	    "widgets":[{"name":"https://www.youtube.com/watch?v=eCNVet_wXGA", "title":"Tesla Optimus", "subtitle":"... a bit more than a sideshow now", "notes": ""},  {"name":"https://www.youtube.com/shorts/EdIAA1zROiA", "subtitle":"", "title":"NVIDIA NEO", "notes":""}, {"name": "https://www.youtube.com/watch?v=I44_zbEwz_w","subtitle":"","Boston Dynamics Atlas", "notes":""},
+	    "widgets":[{"name":"https://www.youtube.com/watch?v=eCNVet_wXGA", "title":"Tesla Optimus", "subtitle":"... a bit more than a sideshow now", "notes": ""},  {"name":"https://www.youtube.com/shorts/EdIAA1zROiA", "subtitle":"", "title":"NVIDIA NEO", "notes":""}, {"name": "https://www.youtube.com/watch?v=I44_zbEwz_w","subtitle":"","title":"Boston Dynamics Atlas", "notes":""},
 		       {"name":"https://www.youtube.com/watch?v=mSPxRVTJW1I", "title":"Unitree"},
 		       {"name":"robotic_companies.png","title":"Dominance of China"}],
 	    "children": [
