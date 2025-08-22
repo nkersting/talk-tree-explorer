@@ -63,11 +63,13 @@ function build3DLayout(root: KnowledgeNode) {
       sum + countNodesAtDepth(child, targetDepth, currentDepth + 1), 0);
   }
   
-  function calculateOptimalRadius(nodeCount: number, minDistance: number): number {
+  function calculateOptimalRadius(nodeCount: number, minDistance: number, averageNodeSize = 1): number {
     if (nodeCount <= 1) return 0;
     // Calculate radius needed to fit nodeCount nodes with minDistance between them
-    const circumference = nodeCount * minDistance * 2;
-    return Math.max(baseRadius, circumference / (2 * Math.PI));
+    // Scale by average node size - smaller nodes get shorter links
+    const sizeScale = 0.5 + (averageNodeSize * 0.8); // Range from 0.5x to 1.3x
+    const circumference = nodeCount * minDistance * 2 * sizeScale;
+    return Math.max(baseRadius * sizeScale, circumference / (2 * Math.PI));
   }
   
   function traverse(n: KnowledgeNode, depth: number, parentId?: string, parentPos: [number, number, number] = [0, 0, 0], siblingIndex = 0, totalSiblings = 1) {
@@ -88,8 +90,13 @@ function build3DLayout(root: KnowledgeNode) {
         y = parentPos[1] + (Math.random() - 0.5) * 0.5;
       } else {
         // Multiple siblings, arrange in circle around parent
-        const radius = calculateOptimalRadius(totalSiblings, minNodeDistance);
-        const angle = (siblingIndex / totalSiblings) * Math.PI * 3; // 50% larger spread (3π instead of 2π)
+        // Calculate average node size for this group (including parent and siblings)
+        const parentWeight = normalizeWeight(n.weight);
+        const siblingWeights = (n.children || []).map(child => normalizeWeight(child.weight));
+        const averageSize = ([parentWeight, ...siblingWeights].reduce((sum, w) => sum + w, 0)) / (siblingWeights.length + 1);
+        
+        const radius = calculateOptimalRadius(totalSiblings, minNodeDistance, averageSize);
+        const angle = (siblingIndex / totalSiblings) * Math.PI * 4; // Wider spread (4π instead of 3π)
         x = parentPos[0] + Math.cos(angle) * radius;
         y = parentPos[1] + Math.sin(angle) * radius;
       }
