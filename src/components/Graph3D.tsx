@@ -89,7 +89,7 @@ function build3DLayout(root: KnowledgeNode) {
       } else {
         // Multiple siblings, arrange in circle around parent
         const radius = calculateOptimalRadius(totalSiblings, minNodeDistance);
-        const angle = (siblingIndex / totalSiblings) * Math.PI * 2;
+        const angle = (siblingIndex / totalSiblings) * Math.PI * 3; // 50% larger spread (3π instead of 2π)
         x = parentPos[0] + Math.cos(angle) * radius;
         y = parentPos[1] + Math.sin(angle) * radius;
       }
