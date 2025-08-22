@@ -12,6 +12,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { Switch } from "@/components/ui/switch";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -541,12 +542,16 @@ function NodeMesh({
   node, 
   onClick, 
   isFocused = false,
-  onWidgetClick
+  onWidgetClick,
+  showOnlyFocusedWidgets = false,
+  focusedNodeId
 }: { 
   node: Node3D; 
   onClick: (id: string) => void;
   isFocused?: boolean;
   onWidgetClick: (widget: Widget) => void;
+  showOnlyFocusedWidgets?: boolean;
+  focusedNodeId?: string | null;
 }) {
   const primary = useCssHsl("--primary", "hsl(262 83% 58%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
@@ -616,6 +621,9 @@ function NodeMesh({
   
   const allWidgets = [...imageWidgets, ...youtubeWidgets];
   
+  // Determine if widgets should be visible
+  const shouldShowWidgets = !showOnlyFocusedWidgets || (showOnlyFocusedWidgets && node.id === focusedNodeId);
+  
   return (
     <group 
       position={node.position} 
@@ -648,7 +656,7 @@ function NodeMesh({
       </Html>
       
       {/* Render widget previews symmetrically around the node */}
-      {allWidgets.map((widget, index) => {
+      {shouldShowWidgets && allWidgets.map((widget, index) => {
         const angle = (index / allWidgets.length) * Math.PI * 2; // Distribute evenly in a circle
         const radius = 2.0; // Radius around the node
         const widgetPosition: [number, number, number] = [
@@ -1011,10 +1019,31 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const card = useCssHsl("--card", "hsl(0 0% 100%)");
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
+  const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(false);
   
   return (
     <>
-      <section aria-label="3D knowledge tree" className="w-full h-[800px] mt-10">
+      <section aria-label="3D knowledge tree" className="w-full h-[800px] mt-10 relative">
+        {/* Widget visibility toggle */}
+        <div className="absolute top-4 right-4 z-10 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg">
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="widget-visibility"
+              checked={showOnlyFocusedWidgets}
+              onCheckedChange={setShowOnlyFocusedWidgets}
+            />
+            <label 
+              htmlFor="widget-visibility" 
+              className="text-sm font-medium text-foreground cursor-pointer"
+            >
+              Focus mode
+            </label>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Show widgets only for focused node
+          </p>
+        </div>
+        
         <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
           <Canvas shadows camera={{ position: [0, 5, -15], fov: 50 }}>
             <color attach="background" args={[card] as any} />
@@ -1022,6 +1051,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               data={data} 
               setSidePanelOpen={setSidePanelOpen}
               setSelectedWidget={setSelectedWidget}
+              showOnlyFocusedWidgets={showOnlyFocusedWidgets}
             />
           </Canvas>
         </div>
@@ -1098,11 +1128,13 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
 function GraphSceneWithDrawer({ 
   data, 
   setSidePanelOpen, 
-  setSelectedWidget 
+  setSelectedWidget,
+  showOnlyFocusedWidgets 
 }: { 
   data: KnowledgeNode;
   setSidePanelOpen: (open: boolean) => void;
   setSelectedWidget: (widget: Widget | null) => void;
+  showOnlyFocusedWidgets: boolean;
 }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -1293,6 +1325,8 @@ function GraphSceneWithDrawer({
           onClick={handleNodeClick} 
           isFocused={n.id === focusId}
           onWidgetClick={handleWidgetClick}
+          showOnlyFocusedWidgets={showOnlyFocusedWidgets}
+          focusedNodeId={focusId}
         />
       ))}
     </>
