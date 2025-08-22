@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, Line, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { createPortal } from "react-dom";
@@ -544,7 +544,8 @@ function NodeMesh({
   isFocused = false,
   onWidgetClick,
   showOnlyFocusedWidgets = false,
-  focusedNodeId
+  focusedNodeId,
+  onPositionChange
 }: { 
   node: Node3D; 
   onClick: (id: string) => void;
@@ -552,6 +553,7 @@ function NodeMesh({
   onWidgetClick: (widget: Widget) => void;
   showOnlyFocusedWidgets?: boolean;
   focusedNodeId?: string | null;
+  onPositionChange: (nodeId: string, newPosition: [number, number, number]) => void;
 }) {
   const primary = useCssHsl("--primary", "hsl(262 83% 58%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
@@ -564,11 +566,41 @@ function NodeMesh({
   // Add slight pulsing effect for focused node
   const [pulseScale, setPulseScale] = useState(1);
   
+  // Drag state
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState<THREE.Vector3 | null>(null);
+  const [initialPosition, setInitialPosition] = useState<THREE.Vector3 | null>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const { camera, raycaster, pointer } = useThree();
+  
   useFrame(({ clock }) => {
     if (isFocused) {
       setPulseScale(1 + Math.sin(clock.getElapsedTime() * 3) * 0.05);
     } else {
       setPulseScale(1);
+    }
+    
+    // Handle dragging
+    if (isDragging && dragStart && initialPosition && groupRef.current) {
+      // Calculate mouse position in 3D space
+      raycaster.setFromCamera(pointer, camera);
+      
+      // Create a plane at the node's Z position for intersection
+      const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -node.position[2]);
+      const intersectionPoint = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, intersectionPoint);
+      
+      if (intersectionPoint) {
+        // Calculate the offset from drag start
+        const offset = intersectionPoint.clone().sub(dragStart);
+        const newPosition = initialPosition.clone().add(offset);
+        
+        // Update the group position
+        groupRef.current.position.copy(newPosition);
+        
+        // Notify parent component of position change
+        onPositionChange(node.id, [newPosition.x, newPosition.y, newPosition.z]);
+      }
     }
   });
   
@@ -624,11 +656,49 @@ function NodeMesh({
   // Determine if widgets should be visible
   const shouldShowWidgets = !showOnlyFocusedWidgets || (showOnlyFocusedWidgets && node.id === focusedNodeId);
   
+  // Drag handlers
+  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+    setIsDragging(true);
+    
+    // Calculate mouse position in 3D space at the current node Z level
+    raycaster.setFromCamera(pointer, camera);
+    
+    // Create a plane at the node's Z position for intersection
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -node.position[2]);
+    const intersectionPoint = new THREE.Vector3();
+    raycaster.ray.intersectPlane(plane, intersectionPoint);
+    
+    if (intersectionPoint) {
+      setDragStart(intersectionPoint.clone());
+      setInitialPosition(new THREE.Vector3(...node.position));
+    }
+  };
+  
+  const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+    setIsDragging(false);
+    setDragStart(null);
+    setInitialPosition(null);
+  };
+  
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    // Only trigger click if we weren't dragging
+    if (!isDragging) {
+      onClick(node.id);
+    }
+  };
+  
   return (
     <group 
+      ref={groupRef}
       position={node.position} 
-      onClick={(e) => { e.stopPropagation(); onClick(node.id); }}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onClick={handleClick}
       scale={[pulseScale, pulseScale, pulseScale]}
+      onPointerMissed={() => setIsDragging(false)}
     >
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
         <sphereGeometry args={[1, 32, 32]} />
@@ -833,185 +903,11 @@ function TaperedEdge({
   );
 }
 
-// src/components/Graph3D.tsx - update the GraphScene component
+// src/components/Graph3D.tsx - update the GraphScene component (DEPRECATED - use GraphSceneWithDrawer instead)
 function GraphScene({ data }: { data: KnowledgeNode }) {
-  const [focusId, setFocusId] = useState<string | null>(null);
-  const [sidePanelOpen, setSidePanelOpen] = useState(false);
-  const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
-  const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
-  const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
-  const controlsRef = useRef<any>(null);
-  const { camera } = useThree();
-  
-  // Get the current focus from context
-  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
-  
-  // Create a map of node labels to IDs for quick lookup
-  const labelToId = useMemo(() => {
-    const map = new Map<string, string>();
-    nodes.forEach(node => map.set(node.label, node.id));
-    return map;
-  }, [nodes]);
-  
-  // Listen for changes to focusedNodeLabel and update the 3D focus when coming from 2D view
-  useEffect(() => {
-    if (focusedNodeLabel && focusSource === 'graph2d') {
-      const matchingId = labelToId.get(focusedNodeLabel);
-      if (matchingId) {
-        setFocusId(matchingId);
-      }
-    } else if (!focusedNodeLabel) {
-      setFocusId(null);
-    }
-  }, [focusedNodeLabel, labelToId, focusSource]);
-  
-  // Update the node click handler
-  const handleNodeClick = (id: string) => {
-    const clickedNode = idToNode.get(id);
-    if (!clickedNode) return;
-    
-    // Toggle focus state
-    if (focusId === id) {
-      setFocusId(null);
-      setFocusedNodeLabel(null);
-      setFocusSource(null);
-    } else {
-      setFocusId(id);
-      setFocusedNodeLabel(clickedNode.label);
-      setFocusSource('graph3d');
-    }
-  };
-
-  // Handle widget clicks
-  const handleWidgetClick = (widget: Widget) => {
-    setSelectedWidget(widget);
-    setSidePanelOpen(true);
-  };
-  
-  // Handle focus animation when node is clicked
-  useEffect(() => {
-    if (focusId && controlsRef.current) {
-      const focusedNode = nodes.find(n => n.id === focusId);
-      if (focusedNode) {
-        // Get node position
-        const nodePos = focusedNode.position;
-        
-        // Store original camera position and rotation
-        const startPos = camera.position.clone();
-        const startTarget = controlsRef.current.target.clone();
-        
-        // Calculate target position (we want to be at a slight offset from the node)
-        const targetDistance = 6; // Distance from node to camera
-        
-        // Direction from node to current camera (normalized)
-        const dir = new THREE.Vector3()
-          .subVectors(startPos, new THREE.Vector3(...nodePos))
-          .normalize();
-        
-        // Calculate target camera position
-        const targetPos = new THREE.Vector3(
-          nodePos[0] + dir.x * targetDistance,
-          nodePos[1] + dir.y * targetDistance,
-          nodePos[2] + dir.z * targetDistance
-        );
-        
-        // Animate to target
-        let startTime = Date.now();
-        const duration = 1000; // Animation duration in ms
-        
-        function animate() {
-          const now = Date.now();
-          const elapsed = now - startTime;
-          const progress = Math.min(1, elapsed / duration);
-          
-          // Ease function (cubic ease in/out)
-          const ease = progress < 0.5 
-            ? 4 * progress * progress * progress 
-            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-          
-          // Interpolate camera position
-          camera.position.set(
-            startPos.x + (targetPos.x - startPos.x) * ease,
-            startPos.y + (targetPos.y - startPos.y) * ease,
-            startPos.z + (targetPos.z - startPos.z) * ease
-          );
-          
-          // Interpolate orbit controls target (what the camera looks at)
-          controlsRef.current.target.set(
-            startTarget.x + (nodePos[0] - startTarget.x) * ease,
-            startTarget.y + (nodePos[1] - startTarget.y) * ease,
-            startTarget.z + (nodePos[2] - startTarget.z) * ease
-          );
-          
-          controlsRef.current.update();
-          
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          }
-        }
-        
-        animate();
-      }
-    }
-  }, [focusId, nodes, camera]);
-  
-  // Get colors from CSS variables
-  const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
-  const focusedEdgeColor = "#000000";
-  
-  return (
-    <>
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 7, -5]} intensity={0.5} />
-      
-      <OrbitControls
-        ref={controlsRef}
-        enablePan={true}
-        enableZoom={true}
-        enableRotate={true}
-        minDistance={2}
-        maxDistance={30}
-        dampingFactor={0.1}
-        rotateSpeed={0.7}
-        panSpeed={0.5}
-        zoomSpeed={1.0}
-        makeDefault
-      />
-      
-      {/* Render edges connecting nodes with tapered thickness */}
-      {edges.map((e, idx) => {
-        const sourceNode = idToNode.get(e.source);
-        const targetNode = idToNode.get(e.target);
-        if (!sourceNode || !targetNode) return null;
-        
-        const isFocusedEdge = focusId === e.source || focusId === e.target;
-        const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
-        
-        return (
-          <TaperedEdge
-            key={`edge-${idx}`}
-            sourcePos={sourceNode.position}
-            targetPos={targetNode.position}
-            sourceWeight={sourceNode.weight}
-            targetWeight={targetNode.weight}
-            color={lineColor}
-            opacity={isFocusedEdge ? 1.0 : 0.6}
-            isFocused={isFocusedEdge}
-          />
-        );
-      })}
-      
-      {nodes.map((n) => (
-        <NodeMesh 
-          key={n.id} 
-          node={n} 
-          onClick={handleNodeClick} 
-          isFocused={n.id === focusId}
-          onWidgetClick={handleWidgetClick}
-        />
-      ))}
-    </>
-  );
+  // This component is deprecated and should not be used
+  // Use GraphSceneWithDrawer instead which has all the latest features
+  return null;
 }
 
 // And update the Graph3D component to include the drawer
@@ -1138,14 +1034,31 @@ function GraphSceneWithDrawer({
 }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
-  const idToNode = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
+  
+  // Track dragged positions separately from the original layout
+  const [draggedPositions, setDraggedPositions] = useState<Map<string, [number, number, number]>>(new Map());
+  
+  // Create nodes with updated positions (dragged positions override original positions)
+  const nodesWithDraggedPositions = useMemo(() => {
+    return nodes.map(node => ({
+      ...node,
+      position: draggedPositions.get(node.id) || node.position
+    }));
+  }, [nodes, draggedPositions]);
+  
+  const idToNode = useMemo(() => new Map(nodesWithDraggedPositions.map((n) => [n.id, n])), [nodesWithDraggedPositions]);
   const controlsRef = useRef<any>(null);
   const { camera } = useThree();
   
+  // Handle position changes from dragging
+  const handlePositionChange = (nodeId: string, newPosition: [number, number, number]) => {
+    setDraggedPositions(prev => new Map(prev).set(nodeId, newPosition));
+  };
+  
   // Find the root node (at depth 0) for initial positioning
   const rootNode = useMemo(() => {
-    return nodes.find(node => node.position[2] === 0); // Root node is at z=0 (depth 0)
-  }, [nodes]);
+    return nodesWithDraggedPositions.find(node => node.position[2] === 0); // Root node is at z=0 (depth 0)
+  }, [nodesWithDraggedPositions]);
   
   // Center the graph on the root node on initial load
   useEffect(() => {
@@ -1166,9 +1079,9 @@ function GraphSceneWithDrawer({
   // Create a map of node labels to IDs for quick lookup
   const labelToId = useMemo(() => {
     const map = new Map<string, string>();
-    nodes.forEach(node => map.set(node.label, node.id));
+    nodesWithDraggedPositions.forEach(node => map.set(node.label, node.id));
     return map;
-  }, [nodes]);
+  }, [nodesWithDraggedPositions]);
   
   // Listen for changes to focusedNodeLabel and update the 3D focus when coming from 2D view
   useEffect(() => {
@@ -1208,7 +1121,7 @@ function GraphSceneWithDrawer({
   // Handle focus animation when node is clicked
   useEffect(() => {
     if (focusId && controlsRef.current) {
-      const focusedNode = nodes.find(n => n.id === focusId);
+      const focusedNode = nodesWithDraggedPositions.find(n => n.id === focusId);
       if (focusedNode) {
         // Get node position
         const nodePos = focusedNode.position;
@@ -1270,7 +1183,7 @@ function GraphSceneWithDrawer({
         animate();
       }
     }
-  }, [focusId, nodes, camera]);
+  }, [focusId, nodesWithDraggedPositions, camera]);
   
   // Get colors from CSS variables
   const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
@@ -1293,6 +1206,7 @@ function GraphSceneWithDrawer({
         panSpeed={0.5}
         zoomSpeed={1.0}
         makeDefault
+        enabled={true}
       />
       
       {/* Render edges connecting nodes with tapered thickness */}
@@ -1318,7 +1232,7 @@ function GraphSceneWithDrawer({
         );
       })}
       
-      {nodes.map((n) => (
+      {nodesWithDraggedPositions.map((n) => (
         <NodeMesh 
           key={n.id} 
           node={n} 
@@ -1327,6 +1241,7 @@ function GraphSceneWithDrawer({
           onWidgetClick={handleWidgetClick}
           showOnlyFocusedWidgets={showOnlyFocusedWidgets}
           focusedNodeId={focusId}
+          onPositionChange={handlePositionChange}
         />
       ))}
     </>
