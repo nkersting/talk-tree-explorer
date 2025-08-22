@@ -771,11 +771,11 @@ function TaperedEdge({
   
   for (let i = 0; i <= segments; i++) {
     const t = i / segments;
-    // Interpolate position along the line (half the original distance)
+    // Interpolate position along the line from source to target
     points.push(new THREE.Vector3(
-      sourcePos[0] + (targetPos[0] - sourcePos[0]) * t * 0.5,
-      sourcePos[1] + (targetPos[1] - sourcePos[1]) * t * 0.5,
-      sourcePos[2] + (targetPos[2] - sourcePos[2]) * t * 0.5
+      sourcePos[0] + (targetPos[0] - sourcePos[0]) * t,
+      sourcePos[1] + (targetPos[1] - sourcePos[1]) * t,
+      sourcePos[2] + (targetPos[2] - sourcePos[2]) * t
     ));
     // Interpolate thickness from source to target
     const thickness = sourceThickness + (targetThickness - sourceThickness) * t;
