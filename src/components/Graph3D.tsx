@@ -50,10 +50,10 @@ function build3DLayout(root: KnowledgeNode) {
   const edges: Edge3D[] = [];
   let idCounter = 0;
 
-  // Improved spacing parameters to prevent overlaps
-  const layerDistance = 15; // Increased distance between depth levels
-  const minNodeDistance = 4; // Minimum distance between any two nodes
-  const baseRadius = 6; // Base radius for first level
+  // Improved spacing parameters to prevent overlaps (halved for shorter links)
+  const layerDistance = 7.5; // Half the distance between depth levels
+  const minNodeDistance = 2; // Half the minimum distance between any two nodes
+  const baseRadius = 3; // Half the base radius for first level
   
   function countNodesAtDepth(node: KnowledgeNode, targetDepth: number, currentDepth = 0): number {
     if (currentDepth === targetDepth) return 1;
