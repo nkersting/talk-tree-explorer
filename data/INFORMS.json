@@ -10,66 +10,197 @@
       "weight": 100,
       "widgets":[{"name":"safety.png", "title":"The Reputation of Safety", "subtitle":"slightly negative ...", "notes": "Historically we don't see safety mentioned until ... \n Gradual institutionalization \n Satire \n Intentional violation (machismo) \n Current political connotations"},  {"name":"safety2.png", "subtitle":"src...", "title":"Satire", "notes":"seen as overly cautious"}, {"name": "safety3.png","subtitle":"src...", "notes":"bravado and machismo, disregard all protocol!"}],
     "children": [
-	{
-	    "node": "Safety => Progress",
-            "weight": 50,
-	    "widgets":[{"name":"tautology.png", "title":"The Tautology", "subtitle":"if it wasn't safe, it would kill us!", "notes": ""},  {"name":"sword.png", "subtitle":"", "title":"Sword Hilts", "notes":"without a hand, you can't use a sword"}, {"name": "guns.png","subtitle":"", "notes":"without a hand, you can't use a gun",  "title":"Gun Safeties"},
-		       {"name":"seatbelt.png", "subtitle":"", "title":"Seat Belts", "notes":""},
-		      {"name":"web.png", "subtitle":"", "title":"Web Security", "notes":"SHA \n RSA \n SSH"}],
-	    "children": []
-	},
-	{
-	    "node": "Humane => Progress",
-            "weight": 50,
-	    "widgets":[{"name":"tautology.png", "title":"The Tautology", "subtitle":"if it wasn't humane, it would kill us!", "notes": ""},  {"name":"unhumane1.png", "subtitle":"", "title":"Example 1", "notes":""}, {"name": "unhumane2.png","subtitle":"", "notes":""}],
-	    "children": []
-},
-	{
-	    "node": "Motivation",
-            "weight": 90,
-	    "children":
-	    [
-		{"node":"Humanoid Robots",
-		 "weight":80,
-	    "widgets":[{"name":"https://www.youtube.com/watch?v=eCNVet_wXGA", "title":"Tesla Optimus", "subtitle":"... a bit more than a sideshow now", "notes": ""},  {"name":"https://www.youtube.com/shorts/EdIAA1zROiA", "subtitle":"", "title":"NVIDIA NEO", "notes":""}, {"name": "https://www.youtube.com/watch?v=I44_zbEwz_w","subtitle":"","Boston Dynamics Atlas", "notes":""},
-		       {"name":"https://www.youtube.com/watch?v=mSPxRVTJW1I", "title":"Unitree"},
-		       {"name":"robotic_companies.png","title":"Dominance of China"}],
-	    "children": [
-        {"node":"Why Humanoid?", "weight":30}, 
-		{"node":"Robotic Rights", "weight":20, "widgets":[{"name":"robotic-udrr.png", "title":"Universal Declation of Robotic Rights"}]
-		}
-			]
-		},
-		{"node":"Aliens", "weight":30, "widgets":[]},
-		{"node":"The next ChatGPT Moment", "weight":60, "widgets":[]},
-    {"node":"What if we don't deal with this?", "weight":80, "widgets":[], "children":[]},
-    {"node":"How do we deal with this?", "weight":80, "widgets":[], "children":[
-              {"node":"Controls, Bounds, Accountability", "weight":50, "widgets":[{"name":"training.png", "title":"Training + Filters + Guardrails + Explainability"}]},
-              {"node":"MCP Agentic AI", "weight":50, "widgets":[{"name":"mcp_agentic_ai.png", "title":"MCP Agentic AI", "subtitle":"see my MCP server"}]},
-              {"node":"LLM Hallucination", "weight":50, "widgets":[{"name":"llm_hallucination.png", "title":"LLM Hallucination", "subtitle":"a symptom of deeper disease"}]},
-              {"node":"Integration", "weight":50, "widgets":[{"name":"integration.png", "title":"Integration of AI and Robotics"}]},
-              {"node":"Losing Control", "weight":20, "widgets":[{"name":"losing_control.png", "title":"Losing Control"}]},
-              {"node":"Religion, Acceptance", "weight":20, "widgets":[{"name":"religion_acceptance.png", "title":"Religion and Acceptance"}]}
-	    ]
-	},
-  {"node":"Proposal", "weight":90, "children":
-      [{"node":"natural safeguards", "weight":50},
-      {"node": "low-tech", "weight":50},
-      {"node": "kung-fu", "weight":50},
-      {"node": "communication", "weight":50},
-      {"node": "IronAction AI", "weight":50, "widgets":[{"name":"ironaction_ai.png", "title":"IronAction AI"}]},
-      {"node": "explainable", "weight":50},
-      {"node": "positronic brain shutoffs", "weight":50},
-      {"node": "regulation", "weight":50
-      }
-      ]
-  }
-    ]
-  }
+    {
+        "node": "Safety => Progress",
+        "weight": 50,
+        "widgets":[
+            {"name":"tautology.png", "title":"The Tautology", "subtitle":"if it wasn't safe, it would kill us!", "notes": ""},
+            {"name":"sword.png", "subtitle":"", "title":"Sword Hilts", "notes":"without a hand, you can't use a sword"}, 
+            {"name": "guns.png", "subtitle":"", "notes":"without a hand, you can't use a gun",  "title":"Gun Safeties"},
+            {"name":"seatbelt.png", "subtitle":"", "title":"Seat Belts", "notes":""},
+            {"name":"web.png", "subtitle":"", "title":"Web Security", "notes":"SHA \n RSA \n SSH"}
+        ],
+        "children": []
+    },
+    {
+        "node": "Humane => Progress",
+        "weight": 50,
+        "widgets":[
+            {"name":"tautology.png", "title":"The Tautology", "subtitle":"if it wasn't humane, it would kill us!", "notes": ""},
+            {"name":"unhumane1.png", "subtitle":"", "title":"Example 1", "notes":""}, 
+            {"name": "unhumane2.png", "subtitle":"", "notes":"", "title":""}
+        ],
+        "children": []
+    },
+    {
+        "node": "Motivation",
+        "weight": 90,
+        "children": [
+            {
+                "node":"Humanoid Robots",
+                "weight":70,
+                "widgets":[
+                    {"name":"https://www.youtube.com/watch?v=eCNVet_wXGA", "title":"Tesla Optimus", "subtitle":"... a bit more than a sideshow now", "notes": ""},
+                    {"name":"https://www.youtube.com/shorts/EdIAA1zROiA", "subtitle":"", "title":"NVIDIA NEO", "notes":""},
+                    {"name": "https://www.youtube.com/watch?v=I44_zbEwz_w", "subtitle":"", "title":"Boston Dynamics Atlas", "notes":""},
+                    {"name":"https://www.youtube.com/watch?v=mSPxRVTJW1I", "title":"Unitree", "subtitle":"", "notes":""},
+                    {"name":"robotic_companies.png", "title":"Dominance of China", "subtitle":"", "notes":""}
+                ],
+                "children": [
+                    {"node":"Why Humanoid?", "weight":30, "widgets":[
+                        {"name":"humanoid.png", "title":"Asimov's Argument", "subtitle":"", "notes":""},
+                        {"name":"humanoid2.png", "title":"We like it? (see integration below)", "subtitle":"", "notes":""}
+                    ]
+                    },
+                    {"node":"Robotic Rights", "weight":20, "widgets":[
+                      {"name":"robotic-udrr.png", "title":"Universal Declation of Robotic Rights", "subtitle":"", "notes":""},
+                      {"name":"https://www.youtube.com/watch?v=mSPxRVTJW1I", "title":"Abuse is Happening", "subtitle":"Would you stand for this?", "notes":"1:33"}
+                      ]}
+                ]
+            },
+            {"node":"Aliens", "weight":30, "widgets":[
+                {"name":"aliens.png", "title":"Are we alone?", "subtitle":"", "notes":""},
+                {"name":"aliens2.png", "title":"The Fermi Paradox", "subtitle":"", "notes":""},
+                {"name":"aliens3.png", "title":"The Great Filter", "subtitle":"", "notes":""},
+                {"name":"aliens4.png", "title":"We'll see their robots first", "subtitle":"", "notes":""},
+                {"name":"aliens5.png", "title":"Or maybe no warning instant annihilation", "subtitle":"", "notes":""}
+            ]},
+            {"node":"The next ChatGPT Moment", "weight":70, "widgets":[]},
+            {"node":"What if we don't deal with this?", "weight":10, "widgets":[], "children":[]},
+            {
+                "node":"How do we deal with this?", 
+                "weight":60,
+                "widgets":[],
+                "children":[
+                    {"node":"Controls, Bounds, Accountability", "weight":50, 
+                    "children":[
+                          {"node":"Governance", "weight":20, "widgets":[{"name":"training.png", "title":"Training + Filters + Guardrails + Explainability", "subtitle":"", "notes":""}]},
+                          {"node":"IronAction AI", "weight":30, "widgets":[{"name":"ironaction_ai.png", "title":"IronAction AI", "subtitle":"", "notes":""}]},
+                          {"node":"Explainable AI", "weight":50, "children":[
+                            {"node":"Explainable AI", "weight":20, "widgets":[
+                            {"name":"explainable_ai2.png", "title":"What is an Explanation?", "subtitle":"", "notes":""}
+                            ]},
+                            {"node":"How do you want them to explain?", "weight":20, "widgets":[
+                            {"name":"explainable_ai4.png", "title":"How do you want them to explain?", "subtitle":"", "notes":""},
+                            {"name":"explainable_ai5.png", "title":"How do you want them to explain?", "subtitle":"", "notes":""}],
+                            "children": [
+                              {"node":"The Chinese Room", "weight":10, "widgets":[
+                                {"name":"chinese-room.png", "title":"A Chinese Room", "subtitle":"", "notes":""},
+                                {"name":"chinese-room2.png", "title":"A Chinese Room with a Window", "subtitle":"", "notes":""},
+                                {"name":"chinese-room3.png", "title":"A Chinese Room with a Window and a Door", "subtitle":"", "notes":""}
+                              ]
+                            },
+                            {"node":"The Turing Test", "weight":10, "widgets":[
+                                {"name":"turing-test.png", "title":"The Turing Test", "subtitle":"", "notes":""},
+                                {"name":"turing-test2.png", "title":"The Turing Test is a Game", "subtitle":"", "notes":""}
+                              ]}
+                            ]},
+                            
+                            {"node":"What is an Explanation?", "weight":10, "widgets":[
+                            {"name":"explainable_ai6.png", "title":"What is an Explanation?", "subtitle":"", "notes":""},
+                            {"name":"explainable_ai7.png", "title":"What is an Explanation?", "subtitle":"", "notes":""}
+                            ]},
+                            {"node":"Do LLMs Think?", "weight":40, "widgets":[
+                              {"name":"thought.png", "title":"What is Thought, Anyway?", "subtitle":"", "notes":""},
+                              {"name":"do-we-care.png", "title":"Do We Care?", "subtitle":"", "notes":""}
+                            ], "children":[
+                              {"node":"Grokking", "weight":10, "widgets":[
+                                {"name":"grok.png", "title":"Grokking1", "subtitle":"", "notes":""},
+                                {"name":"grok2.png", "title":"Grokking2", "subtitle":"", "notes":""}
+                              ]},
+                            {"node":"Interpolation Power", "weight":30, "widgets":[
+                                {"name":"manifold.png", "title":"The Manifold of Truth", "subtitle":"", "notes":""},
+                                {"name":"vector-sequence.png", "title":"Measuring the Manifold", "subtitle":"", "notes":""}
+                              ]}
+                          ]}
+                    
+                          ]},
+                          {"node":"AI Alignment", "weight":30, "widgets":[{"name":"ai_alignment.png", "title":"AI Alignment", "subtitle":"", "notes":""}
+                          ]},
+                          {"node":"AI Ethics", "weight":10, "widgets":[{"name":"ai_ethics.png", "title":"AI Ethics", "subtitle":"", "notes":""}]},
+                          {"node":"Positronic Brain Shutoffs", "weight":10, "widgets":[{"name":"positronic_brain_shutoffs.png", "title":"Positronic Brain Shutoffs", "subtitle":"", "notes":""}]},
+                          {"node":"Regulation", "weight":10, "widgets":[{"name":"regulation.png", "title":"Regulation of AI and Robotics", "subtitle":"", "notes":""}]}
+                      ]},
+                    {"node":"MCP Agentic AI", "weight":10, "widgets":[{"name":"mcp_agentic_ai.png", "title":"MCP Agentic AI", "subtitle":"see my MCP server", "notes":""}]},
+                    {"node":"LLM Hallucination", "weight":40, "widgets":[
+                      {"name":"llm_hallucination.png", "title":"LLM Hallucination", "subtitle":"a symptom of deeper disease", "notes":""}]},
+                  
+                    {"node":"Integration", "weight":40, "widgets":[{"name":"integration.png", "title":"Integration of AI and Robotics", "subtitle":"", "notes":""}],
+                        "children":[
+                            {"node":"Historical Precedent", "weight":20, "widgets":[
+                                                        {"name":"history1.png", "title":"Pacemakers", "subtitle":"", "notes":""},
+                                                        {"name":"history2.png", "title":"Prosthetic Limbs", "subtitle":"", "notes":""},
+                                                        {"name":"history3.png", "title":"ChatGPT in your Life", "subtitle":"", "notes":""}]},
+                            {"node":"The Remedy to Superintelligence", "weight":20, "widgets":[
+                              {"name":"superintelligence.png", "title":"Dealing with Superintelligence", "subtitle":"You can't beat it", "notes":"Nick Bostrom ..."},
+                              {"name":"superintelligence2.png", "title":"Superintelligence and Integration", "subtitle":"", "notes":""},
+                              {"name": "superintelligence3.png", "title":"Might is Right", "subtitle":"...what choice do you really have?", "notes":""},
+                              {"name":"https://www.youtube.com/watch?v=2rhbh6BpxVc&list=LL&index=138&pp=gAQBiAQB", "title":"Transhumanism", "subtitle":"", "notes":""},
+                              {"name":"https://www.youtube.com/watch?v=imNtSPM3-r4&list=LL&index=89&t=300s&pp=gAQBiAQB", "title":"All Tomorrows?", "subtitle":"", "notes":""},
+                              {"name":"superintelligence3.png", "title":"Might is Right", "subtitle":"...what choice do you really have?", "notes":""}
+                              ]}
+                        ]
+                    },
+                    {"node":"Losing Control", "weight":20, "widgets":[
+                      {"name":"losing_control.png", "title":"Humanity Enslaved", "subtitle":"", "notes":""},
+                      {"name":"losing_control2.png", "title":"Humanity Eliminated", "subtitle":"", "notes":""},
+                      {"name":"losing_control3.png", "title":"Chaos", "subtitle":"", "notes":""}
+                      ]},
+                    {"node":"Religion, Acceptance", "weight":10, "widgets":[
+                      {"name":"religion_acceptance.png", "title":"Ignoring It All", "subtitle":"", "notes":""},
+                      {"name":"religion_acceptance2.png", "title":"Acceptance of AI as the new God", "subtitle":"", "notes":""},
+                      {"name":"religion_acceptance3.png", "title":"Acceptance of AI as our new Master", "subtitle":"", "notes":""}
+                      ]}
+                ]
+            }
+        ]
+    },
+    {
+        "node":"Proposal", 
+        "weight":90, 
+        "children":[
+            {"node":"natural safeguards", "weight":50, "widgets":[
+                {"name":"natural_safeguards.png", "title":"Physical Limits", "subtitle":"", "notes":""},
+                {"name":"natural_safeguards2.png", "title":"Manifolds of Truth", "subtitle":"", "notes":""},
+                {"name":"natural_safeguards3.png", "title":"Expiration", "subtitle":"", "notes":""}
+            ]},
+            {"node": "low-tech", "weight":50, "widgets":[
+                {"name":"land-rover.png", "title":"Classic Cars", "subtitle":"", "notes":""},
+                {"name":"nuclear-tapes.png", "title":"Legacy Data Formats", "subtitle":"", "notes":""}
+            ]},
+            {"node": "kung-fu", "weight":50, "widgets":[
+                {"name":"kung_fu.png", "title":"Efficient and Responsible Motion", "subtitle":"", "notes":""},
+                {"name":"kung_fu2.png", "title":"Doing Good Work", "subtitle":"", "notes":""}
+            ]},
+            {"node": "communication", "weight":50, "widgets":[
+                {"name":"communication.png", "title":"Internet", "subtitle":"", "notes":""},
+                {"name":"communication2.png", "title":"Phone", "subtitle":"", "notes":""},
+                {"name":"communication3.png", "title":"Radio", "subtitle":"", "notes":""},
+                {"name":"communication4.png", "title":"Telegraph", "subtitle":"", "notes":""},
+                {"name":"communication5.png", "title":"Voice", "subtitle":"", "notes":""},
+                {"name":"communication5.png", "title":"Smoke Signals", "subtitle":"", "notes":""},
+                {"name":"communication6.png", "title":"Carrier Pigeons", "subtitle":"", "notes":""},
+                {"name":"communication7.png", "title":"Papyrus", "subtitle":"", "notes":""},
+                {"name":"communication8.png", "title":"Stone Tablets", "subtitle":"", "notes":""}               
+            ],
+          "children":[
+            {"node":"Privacy", "weight":30, "widgets":[
+              {"name":"privacy.png", "title":"Privacy", "subtitle":"", "notes":""},
+              {"name":"algorithmic.png", "title":"Quantum Repoire", "subtitle":"", "notes":""}
+            ]},
+            {"node":"Security", "weight":30, "widgets":[
+              {"name":"security.png", "title":"Security", "subtitle":"", "notes":""},
+              {"name":"security2.png", "title":"Encryption", "subtitle":"", "notes":""}
+            ]},
+            {"node":"Integrity", "weight":30, "widgets":[
+              {"name":"integrity.png", "title":"How do we know it's Human?", "subtitle":"", "notes":""},
+              {"name":"integrity2.png", "title":"Data Integrity", "subtitle":"", "notes":""}
+            ]}          
+          ]
+        }
+      ]     
+    }
 ]
   }
 }
-
-
-   
 

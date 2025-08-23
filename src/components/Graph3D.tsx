@@ -95,8 +95,8 @@ function build3DLayout(root: KnowledgeNode) {
         const siblingWeights = (n.children || []).map(child => normalizeWeight(child.weight));
         const averageSize = ([parentWeight, ...siblingWeights].reduce((sum, w) => sum + w, 0)) / (siblingWeights.length + 1);
         
-        const radius = calculateOptimalRadius(totalSiblings, minNodeDistance, averageSize);
-        const angle = (siblingIndex / totalSiblings) * Math.PI * 4; // Wider spread (4π instead of 3π)
+        const radius = calculateOptimalRadius(totalSiblings, minNodeDistance, 0.2 * averageSize * normalizeWeight(n.weight) * normalizeWeight(n.weight));
+        const angle = (siblingIndex / totalSiblings) * Math.PI * 15; // Wider spread 
         x = parentPos[0] + Math.cos(angle) * radius;
         y = parentPos[1] + Math.sin(angle) * radius;
       }
@@ -768,8 +768,8 @@ function TaperedEdge({
   isFocused: boolean;
 }) {
   // Calculate line thickness based on node weights
-  const sourceThickness = normalizeWeight(sourceWeight) * 0.15 + 0.05; // 0.05 to 0.2
-  const targetThickness = normalizeWeight(targetWeight) * 0.15 + 0.05; // 0.05 to 0.2
+  const sourceThickness = normalizeWeight(sourceWeight) * 0.35 + 0.01; 
+  const targetThickness = normalizeWeight(targetWeight) * 0.35 + 0.01; 
   
   // Create tapered line geometry
   const segments = 20; // Number of segments for smooth tapering

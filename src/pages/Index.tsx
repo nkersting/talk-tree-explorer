@@ -40,11 +40,10 @@ const Index = () => {
             }}
           />
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            Particle Physics Knowledge Tree
+            {knowledgeData["seo"].title}
           </h1>
           <p className="mt-3 text-lg text-muted-foreground">
-            A clear, bottom-up view of your JSON-defined knowledge tree with tooltips on each node.
-          </p>
+          {knowledgeData["seo"].description}          </p>
         </div>
       </header>
       <main className="relative min-h-screen h-[calc(100vh+8rem)]">
