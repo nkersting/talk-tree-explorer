@@ -16,6 +16,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useFocus } from '@/contexts/FocusContext';
+import TaperedEdge from './TaperedEdge';
 
 export type KnowledgeNode = {
   node: string;
@@ -30,7 +31,7 @@ type PositionedNode = KnowledgeNode & {
   radius: number;
 };
 
-// Custom node component with handles
+// Custom node component without handles for center connections
 function KnowledgeNodeComponent({ data }: { data: any }) {
   const radius = data.radius || 20;
   const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
@@ -50,56 +51,34 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
   };
   
   return (
-    <>
-      {/* Input handle (top) */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ 
-          background: 'hsl(var(--primary))', 
-          border: '2px solid hsl(var(--background))',
-          width: '8px',
-          height: '8px'
-        }}
-      />
-      
-      <Tooltip>
-        <TooltipTrigger asChild>
-            <div
-            className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
-              isFocused ? 'scale-110 ring-8 ring-blue-500' : ''
-            }`}
-            style={{
-              width: radius * 2,
-              height: radius * 2,
-              fontSize: Math.max(8, radius / 3),
-            }}
-            title={data.label}
-            onClick={handleNodeClick}
-            >
-            {data.label}
-            </div>
-        </TooltipTrigger>
-        <TooltipContent>{data.label}</TooltipContent>
-      </Tooltip>
-      
-      {/* Output handle (bottom) */}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ 
-          background: 'hsl(var(--primary))', 
-          border: '2px solid hsl(var(--background))',
-          width: '8px',
-          height: '8px'
-        }}
-      />
-    </>
+    <Tooltip>
+      <TooltipTrigger asChild>
+          <div
+          className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
+            isFocused ? 'scale-110 ring-8 ring-blue-500' : ''
+          }`}
+          style={{
+            width: radius * 2,
+            height: radius * 2,
+            fontSize: Math.max(8, radius / 3),
+          }}
+          title={data.label}
+          onClick={handleNodeClick}
+          >
+          {data.label}
+          </div>
+      </TooltipTrigger>
+      <TooltipContent>{data.label}</TooltipContent>
+    </Tooltip>
   );
 }
 
 const nodeTypes: NodeTypes = {
   knowledge: KnowledgeNodeComponent,
+};
+
+const edgeTypes = {
+  tapered: TaperedEdge,
 };
 
 function convertTreeToReactFlow(root: KnowledgeNode) {
@@ -168,14 +147,16 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
     });
 
     if (parentId) {
+      const parentWeight = nodeWeightMap.get(parentId) || 1;
       edges.push({
         id: `edge-${parentId}-${currentNodeId}`,
         source: parentId,
         target: currentNodeId,
-        type: 'straight',
-        style: { 
-          stroke: 'hsl(var(--muted-foreground))', 
-          strokeWidth: 1 // Will be updated after all nodes are processed
+        type: 'tapered',
+        data: {
+          sourceWeight: parentWeight,
+          targetWeight: node.weight || 1,
+          edgeId: `edge-${parentId}-${currentNodeId}`,
         },
       });
     }
@@ -184,19 +165,6 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
   }
 
   processNode(root, 0);
-  
-  // Update edge thickness based on average weight of connected nodes
-  edges.forEach(edge => {
-    const sourceWeight = nodeWeightMap.get(edge.source) || 1;
-    const targetWeight = nodeWeightMap.get(edge.target) || 1;
-    const averageWeight = (sourceWeight + targetWeight) / 2;
-    const strokeWidth = Math.max(1.5, Math.min(12, averageWeight * 1.2)); // More pronounced scaling
-    
-    edge.style = {
-      ...edge.style,
-      strokeWidth: strokeWidth
-    };
-  });
   
   return { nodes, edges };
 }
@@ -278,6 +246,7 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
           onNodesChange={handleNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           fitView
           fitViewOptions={{ padding: 0.1 }}
           minZoom={0.1}
