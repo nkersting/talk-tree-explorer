@@ -33,8 +33,9 @@ export default function TaperedEdge({
     <BaseEdge
       path={edgePath}
       style={{
-        stroke: 'hsl(var(--muted-foreground))',
+        stroke: 'hsl(var(--foreground))',
         strokeWidth: averageStrokeWidth,
+        opacity: 0.6,
       }}
     />
   );
