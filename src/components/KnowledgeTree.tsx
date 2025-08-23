@@ -109,10 +109,10 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
   const nodeWeightMap = new Map<string, number>();
   
   function weightToRadius(w?: number) {
-    if (w === undefined || Number.isNaN(w)) return 20;
+    if (w === undefined || Number.isNaN(w)) return 25;
     const clamped = Math.max(1, Math.min(10, w));
     const t = (clamped - 1) / 9;
-    return 12 + t * 16; // 12-28px radius
+    return 15 + t * 25; // 15-40px radius for more visible scaling
   }
 
   function computeDepth(n: KnowledgeNode): number {
@@ -190,7 +190,7 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
     const sourceWeight = nodeWeightMap.get(edge.source) || 1;
     const targetWeight = nodeWeightMap.get(edge.target) || 1;
     const averageWeight = (sourceWeight + targetWeight) / 2;
-    const strokeWidth = Math.max(1, Math.min(8, averageWeight * 0.8));
+    const strokeWidth = Math.max(1.5, Math.min(12, averageWeight * 1.2)); // More pronounced scaling
     
     edge.style = {
       ...edge.style,
