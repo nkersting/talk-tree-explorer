@@ -22,9 +22,9 @@ export default function TaperedEdge({
   const sourceWeight = typeof data?.sourceWeight === 'number' ? data.sourceWeight : 1;
   const targetWeight = typeof data?.targetWeight === 'number' ? data.targetWeight : 1;
   
-  // Calculate stroke widths based on weights
-  const sourceStrokeWidth = Math.max(1.5, Math.min(12, sourceWeight * 1.2));
-  const targetStrokeWidth = Math.max(1.5, Math.min(12, targetWeight * 1.2));
+  // Calculate stroke widths based on weights - make them more visible
+  const sourceStrokeWidth = Math.max(3, Math.min(15, sourceWeight * 2));
+  const targetStrokeWidth = Math.max(3, Math.min(15, targetWeight * 2));
   
   // Use average for now - true tapering would require more complex SVG
   const averageStrokeWidth = (sourceStrokeWidth + targetStrokeWidth) / 2;
@@ -33,9 +33,9 @@ export default function TaperedEdge({
     <BaseEdge
       path={edgePath}
       style={{
-        stroke: 'hsl(var(--foreground))',
+        stroke: '#374151', // Use a direct color to ensure visibility
         strokeWidth: averageStrokeWidth,
-        opacity: 0.6,
+        opacity: 0.8,
       }}
     />
   );
