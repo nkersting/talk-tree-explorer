@@ -31,11 +31,12 @@ type PositionedNode = KnowledgeNode & {
   radius: number;
 };
 
-// Custom node component without handles for center connections
+// Custom node component with handles
 function KnowledgeNodeComponent({ data }: { data: any }) {
   const radius = data.radius || 20;
   const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
   
+  // Determine if this node is currently focused
   const isFocused = focusedNodeLabel === data.label;
   
   // Handle click on the node
@@ -51,28 +52,55 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
   };
   
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
+    <>
+      {/* Input handle (top) */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{ 
+          background: 'hsl(var(--primary))', 
+          border: '2px solid hsl(var(--background))',
+          width: '8px',
+          height: '8px'
+        }}
+      />
+      
+      <Tooltip>
+        <TooltipTrigger asChild>
           <div
-          className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 transition-all duration-200 ${
-            isFocused ? 'scale-125 ring-4 ring-accent shadow-lg shadow-accent/50 bg-accent text-accent-foreground' : 'hover:scale-105'
-          }`}
-          style={{
-            width: radius * 2,
-            height: radius * 2,
-            fontSize: Math.max(8, radius / 3),
-          }}
-          title={data.label}
-          onClick={handleNodeClick}
+            // Updated styling for focused node with THICKER light blue border
+            className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] transition-transform duration-400 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
+              isFocused 
+              ? 'scale-210 animate-[pulse_2s_ease-in-out_infinite]' 
+              : 'ring-1 ring-ring'
+            }`}
+            style={{
+              width: radius * 2,
+              height: radius * 2,
+              fontSize: Math.max(8, radius / 3),
+              ...(isFocused ? { boxShadow: '0 0 0 18px rgb(125 211 252)' } : {}) // 8px thick sky-300 border
+            }}
+            title={data.label}
+            onClick={handleNodeClick}
           >
-          {data.label}
-          {/* Invisible handles to allow edges to attach */}
-          <Handle type="target" position={Position.Left} isConnectable={false} style={{ opacity: 0, width: 1, height: 1, border: 'none', background: 'transparent' }} />
-          <Handle type="source" position={Position.Right} isConnectable={false} style={{ opacity: 0, width: 1, height: 1, border: 'none', background: 'transparent' }} />
+            {data.label}
           </div>
-      </TooltipTrigger>
-      <TooltipContent>{data.label}</TooltipContent>
-    </Tooltip>
+        </TooltipTrigger>
+        <TooltipContent>{data.label}</TooltipContent>
+      </Tooltip>
+      
+      {/* Output handle (bottom) */}
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{ 
+          background: 'hsl(var(--primary))', 
+          border: '2px solid hsl(var(--background))',
+          width: '8px',
+          height: '8px'
+        }}
+      />
+    </>
   );
 }
 
