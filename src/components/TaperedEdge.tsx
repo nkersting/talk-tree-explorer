@@ -33,9 +33,9 @@ export default function TaperedEdge({
     <BaseEdge
       path={edgePath}
       style={{
-        stroke: '#374151', // Use a direct color to ensure visibility
-        strokeWidth: averageStrokeWidth,
-        opacity: 0.8,
+        stroke: '#ff0000', // Bright red for maximum visibility
+        strokeWidth: Math.max(8, averageStrokeWidth), // Minimum 8px width
+        opacity: 1, // Full opacity
       }}
     />
   );
