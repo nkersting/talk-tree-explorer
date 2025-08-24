@@ -977,7 +977,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
         enableZoom={true}
         enableRotate={true}
         minDistance={2}
-        maxDistance={30}
+        maxDistance={1000}
         dampingFactor={0.1}
         rotateSpeed={0.7}
         panSpeed={0.5}
@@ -1294,7 +1294,7 @@ function GraphSceneWithDrawer({
         enableZoom={true}
         enableRotate={true}
         minDistance={2}
-        maxDistance={30}
+        maxDistance={1000}
         dampingFactor={0.1}
         rotateSpeed={0.7}
         panSpeed={0.5}
