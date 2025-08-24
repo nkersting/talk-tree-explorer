@@ -9,6 +9,7 @@ interface FocusContextType {
   bfsTraversal: string[];
   currentBfsIndex: number;
   focusNextNode: () => void;
+  focusPreviousNode: () => void;
   initializeBfsTraversal: (data: KnowledgeNode) => void;
 }
 
@@ -61,6 +62,17 @@ export function FocusProvider({ children }: { children: ReactNode }) {
     setFocusSource('graph3d');
   };
 
+  const focusPreviousNode = () => {
+    if (bfsTraversal.length === 0) return;
+    
+    const prevIndex = currentBfsIndex <= 0 ? bfsTraversal.length - 1 : currentBfsIndex - 1;
+    const prevNodeLabel = bfsTraversal[prevIndex];
+    
+    setCurrentBfsIndex(prevIndex);
+    setFocusedNodeLabel(prevNodeLabel);
+    setFocusSource('graph3d');
+  };
+
   return (
     <FocusContext.Provider value={{ 
       focusedNodeLabel, 
@@ -70,6 +82,7 @@ export function FocusProvider({ children }: { children: ReactNode }) {
       bfsTraversal,
       currentBfsIndex,
       focusNextNode,
+      focusPreviousNode,
       initializeBfsTraversal
     }}>
       {children}
