@@ -1026,7 +1026,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const card = useCssHsl("--card", "hsl(0 0% 100%)");
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
-  const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(false);
+  const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(true);
   
   return (
     <>
@@ -1046,9 +1046,6 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               Focus mode
             </label>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Show widgets only for focused node
-          </p>
         </div>
         
         <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
