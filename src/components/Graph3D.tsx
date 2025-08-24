@@ -1305,7 +1305,8 @@ function GraphSceneWithDrawer({
         const targetNode = idToNode.get(e.target);
         if (!sourceNode || !targetNode) return null;
         
-        const isFocusedEdge = focusId === e.source || focusId === e.target;
+        // Explicitly check for null focusId to ensure proper unfocusing
+        const isFocusedEdge = focusId !== null && (focusId === e.source || focusId === e.target);
         const lineColor = isFocusedEdge ? focusedEdgeColor : muted;
         
         return (
