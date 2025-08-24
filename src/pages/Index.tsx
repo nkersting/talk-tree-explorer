@@ -1,17 +1,23 @@
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useEffect } from "react";
 import { ReactFlowProvider } from "@xyflow/react";
 import knowledgeData from "../../data/knowledge.json";
 import { Graph3D } from "@/components/Graph3D";
 import { SEO } from "@/components/SEO";
 import { KnowledgeNode } from "../types"; 
 import { KnowledgeTree } from "@/components/KnowledgeTree";
-import { FocusProvider } from '@/contexts/FocusContext';
+import { FocusProvider, useFocus } from '@/contexts/FocusContext';
+import { NavigationButton } from "@/components/NavigationButton";
 
 
 const particleData = knowledgeData.knowledgeTree as KnowledgeNode;
- 
 
-const Index = () => {
+function IndexContent() {
+  const { initializeBfsTraversal } = useFocus();
+  
+  useEffect(() => {
+    initializeBfsTraversal(particleData);
+  }, [initializeBfsTraversal]);
+
   const [spot, setSpot] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
 
   const onMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -47,18 +53,25 @@ const Index = () => {
         </div>
       </header>
       <main className="relative min-h-screen h-[calc(100vh+8rem)]">
-        <FocusProvider>
-          <ReactFlowProvider>
-            <div className="absolute top-4 left-4 w-96 h-80 bg-background border border-border rounded-lg shadow-lg z-10 overflow-hidden">
-              <KnowledgeTree data={particleData} />
-            </div>
-          </ReactFlowProvider>
-          <div className="w-full h-full">
-            <Graph3D data={particleData} />
+        <ReactFlowProvider>
+          <div className="absolute top-4 left-4 w-96 h-80 bg-background border border-border rounded-lg shadow-lg z-10 overflow-hidden">
+            <KnowledgeTree data={particleData} />
           </div>
-        </FocusProvider>
+        </ReactFlowProvider>
+        <div className="w-full h-full">
+          <Graph3D data={particleData} />
+        </div>
+        <NavigationButton />
       </main>
     </>
+  );
+}
+
+const Index = () => {
+  return (
+    <FocusProvider>
+      <IndexContent />
+    </FocusProvider>
   );
 };
 
