@@ -166,6 +166,9 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
 
   processNode(root, 0);
   
+  console.log('Generated nodes:', nodes.map(n => ({ id: n.id, label: n.data.label })));
+  console.log('Generated edges:', edges.map(e => ({ id: e.id, source: e.source, target: e.target, type: e.type })));
+  
   return { nodes, edges };
 }
 
