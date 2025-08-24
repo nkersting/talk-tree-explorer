@@ -249,7 +249,6 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
           edgeTypes={edgeTypes}
           fitView
           fitViewOptions={{ padding: 0.1 }}
-          minZoom={0.1}
           maxZoom={2}
           defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
           style={{ backgroundColor: 'hsl(var(--card))' }}
