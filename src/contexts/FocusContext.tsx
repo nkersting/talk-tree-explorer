@@ -6,11 +6,11 @@ interface FocusContextType {
   setFocusedNodeLabel: (label: string | null) => void;
   focusSource: 'graph2d' | 'graph3d' | null;
   setFocusSource: (source: 'graph2d' | 'graph3d' | null) => void;
-  bfsTraversal: string[];
-  currentBfsIndex: number;
+  dfsTraversal: string[];
+  currentDfsIndex: number;
   focusNextNode: () => void;
   focusPreviousNode: () => void;
-  initializeBfsTraversal: (data: KnowledgeNode) => void;
+  initializeDfsTraversal: (data: KnowledgeNode) => void;
 }
 
 const FocusContext = createContext<FocusContextType | undefined>(undefined);
@@ -23,16 +23,19 @@ export function useFocus() {
   return context;
 }
 
-function createBfsTraversal(data: KnowledgeNode): string[] {
+function createDfsTraversal(data: KnowledgeNode): string[] {
   const result: string[] = [];
-  const queue: KnowledgeNode[] = [data];
+  const stack: KnowledgeNode[] = [data];
   
-  while (queue.length > 0) {
-    const node = queue.shift()!;
+  while (stack.length > 0) {
+    const node = stack.pop()!;
     result.push(node.node);
     
     if (node.children) {
-      queue.push(...node.children);
+      // Add children in reverse order so we visit them in the correct order
+      for (let i = node.children.length - 1; i >= 0; i--) {
+        stack.push(node.children[i]);
+      }
     }
   }
   
@@ -42,33 +45,33 @@ function createBfsTraversal(data: KnowledgeNode): string[] {
 export function FocusProvider({ children }: { children: ReactNode }) {
   const [focusedNodeLabel, setFocusedNodeLabel] = useState<string | null>(null);
   const [focusSource, setFocusSource] = useState<'graph2d' | 'graph3d' | null>(null);
-  const [bfsTraversal, setBfsTraversal] = useState<string[]>([]);
-  const [currentBfsIndex, setCurrentBfsIndex] = useState<number>(-1);
+  const [dfsTraversal, setDfsTraversal] = useState<string[]>([]);
+  const [currentDfsIndex, setCurrentDfsIndex] = useState<number>(-1);
 
-  const initializeBfsTraversal = (data: KnowledgeNode) => {
-    const traversal = createBfsTraversal(data);
-    setBfsTraversal(traversal);
-    setCurrentBfsIndex(-1);
+  const initializeDfsTraversal = (data: KnowledgeNode) => {
+    const traversal = createDfsTraversal(data);
+    setDfsTraversal(traversal);
+    setCurrentDfsIndex(-1);
   };
 
   const focusNextNode = () => {
-    if (bfsTraversal.length === 0) return;
+    if (dfsTraversal.length === 0) return;
     
-    const nextIndex = (currentBfsIndex + 1) % bfsTraversal.length;
-    const nextNodeLabel = bfsTraversal[nextIndex];
+    const nextIndex = (currentDfsIndex + 1) % dfsTraversal.length;
+    const nextNodeLabel = dfsTraversal[nextIndex];
     
-    setCurrentBfsIndex(nextIndex);
+    setCurrentDfsIndex(nextIndex);
     setFocusedNodeLabel(nextNodeLabel);
     setFocusSource('graph3d');
   };
 
   const focusPreviousNode = () => {
-    if (bfsTraversal.length === 0) return;
+    if (dfsTraversal.length === 0) return;
     
-    const prevIndex = currentBfsIndex <= 0 ? bfsTraversal.length - 1 : currentBfsIndex - 1;
-    const prevNodeLabel = bfsTraversal[prevIndex];
+    const prevIndex = currentDfsIndex <= 0 ? dfsTraversal.length - 1 : currentDfsIndex - 1;
+    const prevNodeLabel = dfsTraversal[prevIndex];
     
-    setCurrentBfsIndex(prevIndex);
+    setCurrentDfsIndex(prevIndex);
     setFocusedNodeLabel(prevNodeLabel);
     setFocusSource('graph3d');
   };
@@ -79,11 +82,11 @@ export function FocusProvider({ children }: { children: ReactNode }) {
       setFocusedNodeLabel,
       focusSource,
       setFocusSource,
-      bfsTraversal,
-      currentBfsIndex,
+      dfsTraversal,
+      currentDfsIndex,
       focusNextNode,
       focusPreviousNode,
-      initializeBfsTraversal
+      initializeDfsTraversal
     }}>
       {children}
     </FocusContext.Provider>

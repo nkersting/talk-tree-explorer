@@ -12,10 +12,10 @@ import { NavigationButton } from "@/components/NavigationButton";
 const particleData = knowledgeData.knowledgeTree as KnowledgeNode;
 
 function IndexContent() {
-  const { initializeBfsTraversal } = useFocus();
+  const { initializeDfsTraversal } = useFocus();
   
   useEffect(() => {
-    initializeBfsTraversal(particleData);
+    initializeDfsTraversal(particleData);
   }, []);
 
   const [spot, setSpot] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
