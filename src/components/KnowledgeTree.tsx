@@ -54,7 +54,7 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
     <Tooltip>
       <TooltipTrigger asChild>
           <div
-          className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring transition-transform duration-200 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
+          className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
             isFocused ? 'scale-110 ring-8 ring-blue-500' : ''
           }`}
           style={{
@@ -66,6 +66,9 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
           onClick={handleNodeClick}
           >
           {data.label}
+          {/* Invisible handles to allow edges to attach */}
+          <Handle type="target" position={Position.Left} isConnectable={false} style={{ opacity: 0, width: 1, height: 1, border: 'none', background: 'transparent' }} />
+          <Handle type="source" position={Position.Right} isConnectable={false} style={{ opacity: 0, width: 1, height: 1, border: 'none', background: 'transparent' }} />
           </div>
       </TooltipTrigger>
       <TooltipContent>{data.label}</TooltipContent>
