@@ -1002,7 +1002,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
             sourceWeight={sourceNode.weight}
             targetWeight={targetNode.weight}
             color={lineColor}
-            opacity={isFocusedEdge ? 1.0 : 0.6}
+            opacity={isFocusedEdge ? 0.7 : 0.3}
             isFocused={isFocusedEdge}
           />
         );
@@ -1317,7 +1317,7 @@ function GraphSceneWithDrawer({
             sourceWeight={sourceNode.weight}
             targetWeight={targetNode.weight}
             color={lineColor}
-            opacity={isFocusedEdge ? 1.0 : 0.6}
+            opacity={isFocusedEdge ? 0.7 : 0.3}
             isFocused={isFocusedEdge}
           />
         );
