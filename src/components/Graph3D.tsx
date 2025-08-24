@@ -862,15 +862,15 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   
   // Listen for changes to focusedNodeLabel and update the 3D focus when coming from 2D view
   useEffect(() => {
-    if (focusedNodeLabel && focusSource === 'graph2d') {
+    if (focusedNodeLabel) {
       const matchingId = labelToId.get(focusedNodeLabel);
       if (matchingId) {
         setFocusId(matchingId);
       }
-    } else if (!focusedNodeLabel) {
+    } else {
       setFocusId(null);
     }
-  }, [focusedNodeLabel, labelToId, focusSource]);
+  }, [focusedNodeLabel, labelToId]);
   
   // Update the node click handler
   const handleNodeClick = (id: string) => {
@@ -1176,15 +1176,15 @@ function GraphSceneWithDrawer({
   
   // Listen for changes to focusedNodeLabel and update the 3D focus when coming from 2D view
   useEffect(() => {
-    if (focusedNodeLabel && focusSource === 'graph2d') {
+    if (focusedNodeLabel) {
       const matchingId = labelToId.get(focusedNodeLabel);
       if (matchingId) {
         setFocusId(matchingId);
       }
-    } else if (!focusedNodeLabel) {
+    } else {
       setFocusId(null);
     }
-  }, [focusedNodeLabel, labelToId, focusSource]);
+  }, [focusedNodeLabel, labelToId]);
   
   // Update the node click handler
   const handleNodeClick = (id: string) => {
