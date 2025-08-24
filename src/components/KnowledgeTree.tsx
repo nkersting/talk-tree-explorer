@@ -54,8 +54,8 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
     <Tooltip>
       <TooltipTrigger asChild>
           <div
-          className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
-            isFocused ? 'scale-110 ring-8 ring-blue-500' : ''
+          className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-ring cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 transition-all duration-200 ${
+            isFocused ? 'scale-125 ring-4 ring-accent shadow-lg shadow-accent/50 bg-accent text-accent-foreground' : 'hover:scale-105'
           }`}
           style={{
             width: radius * 2,
