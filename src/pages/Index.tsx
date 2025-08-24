@@ -16,7 +16,7 @@ function IndexContent() {
   
   useEffect(() => {
     initializeBfsTraversal(particleData);
-  }, [initializeBfsTraversal]);
+  }, []);
 
   const [spot, setSpot] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
 
