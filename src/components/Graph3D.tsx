@@ -560,8 +560,10 @@ function NodeMesh({
   showOnlyFocusedWidgets?: boolean;
   focusedNodeId?: string | null;
 }) {
-  const primary = useCssHsl("--primary", "hsl(262 83% 58%)");
+  const primary = useCssHsl("--primary", "hsl(210 100% 70%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
+  const focusColor = "hsl(210 100% 50%)"; // Bright blue for focused nodes
+  const focusEmissive = "hsl(210 100% 70%)"; // Lighter blue for glow effect
   const textColor = useCssHsl("--foreground", "hsl(222 47% 11%)");
   const weightN = normalizeWeight(node.weight);
   const depth = Math.max(0, node.position[2] / 6);
@@ -640,23 +642,24 @@ function NodeMesh({
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
         <sphereGeometry args={[1, 32, 32]} />
         <meshStandardMaterial 
-          color={primary} 
-          emissive={ring}
-          emissiveIntensity={isFocused ? 0.4 : 0.15} 
-          metalness={0.1} 
-          roughness={0.4} 
+          color={isFocused ? focusColor : primary} 
+          emissive={isFocused ? focusEmissive : ring}
+          emissiveIntensity={isFocused ? 0.6 : 0.15} 
+          metalness={isFocused ? 0.3 : 0.1} 
+          roughness={isFocused ? 0.3 : 0.4} 
         />
       </mesh>
       <Html center distanceFactor={6} style={{ pointerEvents: "none" }}>
         <div style={{
-          background: "hsl(var(--card) / 0.8)",
-          color: textColor,
-          border: "1px solid hsl(var(--border))",
+          background: isFocused ? "rgba(30, 144, 255, 0.8)" : "hsl(var(--card) / 0.8)",
+          color: isFocused ? "white" : textColor,
+          border: isFocused ? "1px solid rgba(135, 206, 250, 0.8)" : "1px solid hsl(var(--border))",
           borderRadius: 8,
           padding: "2px 6px",
           fontSize: 12,
           whiteSpace: "nowrap",
           fontWeight: isFocused ? "bold" : "normal",
+          boxShadow: isFocused ? "0 0 8px rgba(30, 144, 255, 0.5)" : "none",
         }}>
           {node.label}
         </div>
