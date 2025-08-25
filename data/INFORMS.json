@@ -822,13 +822,19 @@
                 "name": "human_industry.png",
                 "title": "What We Do",
                 "subtitle": "",
-                "notes": ""
+                "notes": "Elevating, meaningful work \n Healthful work \n Necessary Work \n Sometimes just Fun work"
               },
               {
                 "name": "human_industry2.png",
                 "title": "How We Do it",
                 "subtitle": "",
-                "notes": ""
+                "notes": "Working bosonically (not fermionically) \n Degree of Selflessness \n "
+              },
+              {
+                "name": "human_industry3.png",
+                "title": "We already know this",
+                "subtitle": "",
+                "notes": "Most belief systems of the world have these ideas at their core"
               }
             ],
             "children":[
@@ -839,7 +845,7 @@
                   {
                     "name": "art-defn.png",
                     "title": "What is Art",
-                    "subtitle": "",
+                    "subtitle": "Arbitrary Creation",
                     "notes": ""
                   },
                   {
@@ -906,16 +912,16 @@
                 "weight": 20,
                 "widgets": [
                   {
+                    "name": "disruption.png",
+                    "title": "What is Disruption",
+                    "subtitle": "Arbitrary Destruction",
+                    "notes": "Can't really pin down a definition, because that is the core of disruption itself! \n Revolution \n Counter-culture \n The Unpalatable Valley"
+                  },
+                  {
                     "name": "need-for-disruption.png",
                     "title": "Why do we need disruption?",
                     "subtitle": "(no one really understands the universe)",
                     "notes": "Realization of early 21st century in business/economics \n Evolution requires some disruption or mutation \n Machines / AI by itself does not have enough (we hope)"
-                  },
-                  {
-                    "name": "naughty.png",
-                    "title": "Why are we so disruptive/naughty?",
-                    "subtitle": "",
-                    "notes": ""
                   },
                   {
                     "name": "drop-out.png",
@@ -927,7 +933,7 @@
                     "name": "human-disruption.png",
                     "title": "Why are Humans best fit for this?",
                     "subtitle": "(we are quite random and noisy)",
-                    "notes": "Asimov's argument: our short lifespans and decent reproductive ratio"
+                    "notes": "Asimov's argument: our short lifespans and decent reproductive ratio \n We get bored with regularity (Variety is the Spice of Life) \n We are naturally curious \n But not too much (we have some need for safety and self-preservation)"
                   }
                 ]
               }
