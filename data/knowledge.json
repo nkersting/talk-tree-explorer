@@ -238,7 +238,7 @@
                         "name": "ironaction_ai.png",
                         "title": "IronAction AI",
                         "subtitle": "",
-                        "notes": ""
+                        "notes": "Iron: the most stable element in the universe \n Action: average (PE - KE), optimal dynamic"
                       }
                     ]
                   },
@@ -689,6 +689,12 @@
                 "title": "Doing Good Work",
                 "subtitle": "",
                 "notes": ""
+              },
+              {
+                "name": "kung_fu2.png",
+                "title": "Work with your Environment",
+                "subtitle": "",
+                "notes": ""
               }
             ]
           },
@@ -807,6 +813,125 @@
                 ]
               }
             ]
+          },
+          {
+            "node": "Human Industry",
+            "weight": 50,
+            "widgets": [
+              {
+                "name": "human_industry.png",
+                "title": "What We Do",
+                "subtitle": "",
+                "notes": ""
+              },
+              {
+                "name": "human_industry2.png",
+                "title": "How We Do it",
+                "subtitle": "",
+                "notes": ""
+              }
+            ],
+            "children":[
+              {
+                "node": "Art",
+                "weight": 30,
+                "widgets": [
+                  {
+                    "name": "art-defn.png",
+                    "title": "What is Art",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "science-defn.png",
+                    "title": "What is Science?",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "math-defn.png",
+                    "title": "What is Math?",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "human-art.png",
+                    "title": "Why are Humans best fit for this?",
+                    "subtitle": "(we are quite random and noisy)",
+                    "notes": "Asimov's argument: our short lifespans and decent reproductive ratio"
+                  }
+                ],
+                "children":[
+                   {"node": "Music", "weight":20, "widgets":[
+                    {"name": "classical.png", "title": "Classical Music", "subtitle": "", "notes": ""},
+                    {"name": "jazz.png", "title": "Jazz", "subtitle": "", "notes": ""},
+                    {"name": "rock.png", "title": "Rock", "subtitle": "", "notes": ""},
+                    {"name": "pop.png", "title": "Pop", "subtitle": "", "notes": ""},
+                    {"name": "hiphop.png", "title": "Hip Hop", "subtitle": "", "notes": ""},
+                    {"name": "experimental-music.png", "title": "Experimental Music", "subtitle": "", "notes": ""}
+                   ]},
+                   {"node": "Literature", "weight":20, "widgets":[
+                    {"name": "poetry.png", "title": "Poetry", "subtitle": "", "notes": ""},
+                    {"name": "fiction.png", "title": "Fiction", "subtitle": "", "notes": ""},
+                    {"name": "non-fiction.png", "title": "Non-Fiction", "subtitle": "", "notes": ""},
+                    {"name": "drama.png", "title": "Drama", "subtitle": "", "notes": ""},
+                    {"name": "experimental-lit.png", "title": "Experimental Music", "subtitle": "", "notes": ""}
+                   ]},
+                   {"node": "Visual Arts", "weight":20, "widgets":[
+                    {"name": "painting.png", "title": "Painting", "subtitle": "", "notes": ""},
+                    {"name": "sculpture.png", "title": "Sculpture", "subtitle": "", "notes": ""},
+                    {"name": "photography.png", "title": "Photography", "subtitle": "", "notes": ""},
+                    {"name": "digital-art.png", "title": "Digital Art", "subtitle": "", "notes": ""},
+                    {"name": "street-art.png", "title": "Street Art", "subtitle": "", "notes": ""},
+                    {"name": "experimental-visual.png", "title": "Experimental Visual", "subtitle": "", "notes": ""}
+                   ]},
+                   {"node": "Performing Arts", "weight":20, "widgets":[
+                    {"name": "theatre.png", "title": "Theatre", "subtitle": "", "notes": ""},
+                    {"name": "dance.png", "title": "Dance", "subtitle": "", "notes": ""},
+                    {"name": "magic.png", "title": "Magic", "subtitle": "", "notes": ""},
+                    {"name": "vaudeville.png", "title": "Vaudeville", "subtitle": "", "notes": ""},
+                    {"name": "martial-arts.png", "title": "Martial Arts", "subtitle": "", "notes": ""},
+                    {"name": "experimental-performance.png", "title": "Experimental Performance", "subtitle": "", "notes": ""}
+                   ]},
+                   {"node": "Infinite Arts", "weight":20, "widgets":[
+                    {"name": "infinite-art1.png", "title": "Fermionic Matter", "subtitle": "", "notes": ""},
+                    {"name": "infinite-art2.png", "title": "Bosonic Matter", "subtitle": "", "notes": "Elementary (e.g., Higgs) \n Composite (e.g., Pion)"},
+                    {"name": "infinite-art3.png", "title": "Force Carriers", "subtitle": "", "notes": ""},
+                    {"name": "infinite-art4.png", "title": "Other Stuff?", "subtitle": "", "notes": "Dark Matter \n Dark Energy \n Exotic Matter \n etc."}
+                   ]}
+                ]
+              },
+              {
+                "node": "Disruption",
+                "weight": 20,
+                "widgets": [
+                  {
+                    "name": "need-for-disruption.png",
+                    "title": "Why do we need disruption?",
+                    "subtitle": "(no one really understands the universe)",
+                    "notes": "Realization of early 21st century in business/economics \n Evolution requires some disruption or mutation \n Machines / AI by itself does not have enough (we hope)"
+                  },
+                  {
+                    "name": "naughty.png",
+                    "title": "Why are we so disruptive/naughty?",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "drop-out.png",
+                    "title": "Dropping Out",
+                    "subtitle": "(not just for high school)",
+                    "notes": "It was discovered early on that Neural Nets with drop-out perform better \n Drop-out is a form of regularization \n It is a form of noise \n Noise is good for us"
+                  },
+                  {
+                    "name": "human-disruption.png",
+                    "title": "Why are Humans best fit for this?",
+                    "subtitle": "(we are quite random and noisy)",
+                    "notes": "Asimov's argument: our short lifespans and decent reproductive ratio"
+                  }
+                ]
+              }
+            ] 
           }
         ]
       }
