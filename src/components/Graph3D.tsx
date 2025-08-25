@@ -562,8 +562,8 @@ function NodeMesh({
 }) {
   const primary = useCssHsl("--primary", "hsl(210 100% 70%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
-  const focusColor = "hsl(210 100% 50%)"; // Bright blue for focused nodes
-  const focusEmissive = "hsl(210 100% 70%)"; // Lighter blue for glow effect
+  const focusColor = "hsl(210 80% 90%)"; // Very light blue for focused nodes
+  const focusEmissive = "hsl(210 70% 85%)"; // Light blue for glow effect
   const textColor = useCssHsl("--foreground", "hsl(222 47% 11%)");
   const weightN = normalizeWeight(node.weight);
   const depth = Math.max(0, node.position[2] / 6);
