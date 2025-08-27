@@ -314,6 +314,197 @@ function YouTubePreview({
   );
 }
 
+// Website Preview component for URL widgets
+function WebsitePreview({ 
+  url, 
+  position, 
+  index, 
+  notes,
+  widget,
+  onWidgetClick 
+}: { 
+  url: string; 
+  position: [number, number, number]; 
+  index: number;
+  notes?: string;
+  widget: Widget;
+  onWidgetClick: (widget: Widget) => void;
+}) {
+  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  
+  // Use the position passed from parent
+  const imagePos: [number, number, number] = position;
+  
+  // Fetch website screenshot on component mount
+  useEffect(() => {
+    const fetchScreenshot = async () => {
+      try {
+        setIsLoading(true);
+        // Simulate fetching screenshot - in a real implementation you'd call your screenshot service
+        // For now, we'll use a placeholder that suggests a website preview
+        setScreenshotUrl(`https://api.screenshotone.com/take?access_key=demo&url=${encodeURIComponent(url)}&viewport_width=1200&viewport_height=800&device_scale_factor=1&format=png&image_quality=80&block_ads=true&block_cookie_banners=true&block_banners_by_heuristics=true&block_trackers=true&delay=0&timeout=60`);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch website screenshot:', err);
+        setError(true);
+        setIsLoading(false);
+      }
+    };
+    
+    fetchScreenshot();
+  }, [url]);
+  
+  // Handle image loading
+  const handleImageLoad = () => {
+    console.log(`✅ Website screenshot loaded: ${url}`);
+    setIsVisible(true);
+    setError(false);
+  };
+  
+  const handleImageError = () => {
+    console.error(`❌ Failed to load website screenshot: ${url}`);
+    setError(true);
+  };
+  
+  // Handle visibility based on camera position
+  const { camera } = useThree();
+  useFrame(() => {
+    if (!imageRef.current) return;
+    
+    // Calculate distance to camera
+    const distance = new THREE.Vector3(...imagePos).distanceTo(camera.position);
+    
+    // Only show images that are reasonably close to the camera
+    if (distance < 30) {
+      imageRef.current.style.opacity = "1";
+    } else {
+      imageRef.current.style.opacity = "0";
+    }
+  });
+  
+  // Open URL when clicked
+  const openWebsite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onWidgetClick(widget);
+  };
+  
+  return (
+    <>
+      {/* Website Screenshot Preview */}
+      <Html
+        key={`website-${index}`}
+        position={imagePos}
+        transform
+        occlude
+        sprite
+      >
+        <div 
+          ref={imageRef}
+          className="website-preview-container"
+          style={{
+            width: '120px',
+            height: '80px',
+            cursor: 'pointer',
+            opacity: 0,
+            transition: 'opacity 0.3s ease',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            border: '2px solid rgba(255, 255, 255, 0.8)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+            background: 'rgba(255, 255, 255, 0.95)',
+          }}
+          onClick={openWebsite}
+        >
+          {isLoading ? (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              background: 'linear-gradient(45deg, #f0f0f0, #e0e0e0)',
+              color: '#666',
+              fontSize: '12px',
+            }}>
+              Loading...
+            </div>
+          ) : error || !screenshotUrl ? (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              background: 'linear-gradient(45deg, #4A90E2, #357ABD)',
+              color: 'white',
+              fontSize: '10px',
+              textAlign: 'center',
+              padding: '8px',
+            }}>
+              <div style={{ fontSize: '16px', marginBottom: '4px' }}>🌐</div>
+              <div>Website</div>
+              <div style={{ fontSize: '8px', opacity: 0.8, marginTop: '2px' }}>Click to open</div>
+            </div>
+          ) : (
+            <img
+              src={screenshotUrl}
+              alt="Website preview"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '6px',
+              }}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          )}
+          
+          {/* Hover overlay */}
+          <div 
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: 0,
+              transition: 'opacity 0.2s ease',
+              fontSize: '10px',
+              textAlign: 'center',
+              padding: '8px',
+              borderRadius: '6px',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '1';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '0';
+            }}
+          >
+            <div style={{ fontSize: '14px', marginBottom: '4px' }}>🔗</div>
+            <div>Open Website</div>
+            {notes && (
+              <div style={{ fontSize: '8px', marginTop: '4px', opacity: 0.8 }}>
+                {notes.length > 40 ? `${notes.substring(0, 40)}...` : notes}
+              </div>
+            )}
+          </div>
+        </div>
+      </Html>
+    </>
+  );
+}
+
 // Completely reworked Image Preview component
 function ImagePreview({ 
   src, 
@@ -697,13 +888,26 @@ function NodeMesh({
         // Extract notes from widget object
         const widgetNotes = widget.notes || '';
         
-        // Check if it's a YouTube video or image
+        // Check if it's a YouTube video, website URL, or image
         const isYoutube = isYouTubeUrl(widgetSrc);
+        const isWebsiteUrl = widgetSrc.startsWith('http://') || widgetSrc.startsWith('https://');
         
         if (isYoutube) {
           return (
             <YouTubePreview 
               key={`${node.id}-youtube-${index}`}
+              url={widgetSrc} 
+              position={widgetPosition} 
+              index={index}
+              notes={widgetNotes}
+              widget={widget}
+              onWidgetClick={onWidgetClick}
+            />
+          );
+        } else if (isWebsiteUrl && !isYoutube) {
+          return (
+            <WebsitePreview 
+              key={`${node.id}-website-${index}`}
               url={widgetSrc} 
               position={widgetPosition} 
               index={index}
