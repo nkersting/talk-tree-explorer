@@ -770,6 +770,7 @@
                 "widgets": [
                   {
                     "name": "https://quantumrepoire.com/",
+                    "preview": "qr.png", 
                     "title": "Quantum Repoire",
                     "subtitle": "",
                     "notes": ""
