@@ -156,12 +156,12 @@ function build3DLayout(root: KnowledgeNode) {
   return { nodes, edges };
 }
 
-// Debug indicator to show positions
+// Debug indicator to show positions - make more visible
 function DebugMarker({ position }: { position: [number, number, number] }) {
   return (
-    <mesh position={position} scale={[0.2, 0.2, 0.2]}>
+    <mesh position={position} scale={[0.3, 0.3, 0.3]}>
       <sphereGeometry />
-      <meshBasicMaterial color="red" />
+      <meshBasicMaterial color="lime" />
     </mesh>
   );
 }
@@ -545,6 +545,8 @@ function ImagePreview({
   const handleImageError = () => {
     console.error(`❌ Failed to load image: ${imagePath}`);
     setImageError(true);
+    // Still show a placeholder even on error
+    setIsVisible(true);
   };
   
   // Handle visibility based on camera position
@@ -555,11 +557,14 @@ function ImagePreview({
     // Calculate distance to camera
     const distance = new THREE.Vector3(...imagePos).distanceTo(camera.position);
     
-    // Only show images that are reasonably close to the camera
-    if (distance < 30) {
+    // Always show images when reasonably close - increased range and always visible when loaded
+    if (distance < 50) {
       imageRef.current.style.opacity = "1";
+      if (!isVisible && !imageError) {
+        setIsVisible(true); // Force visibility
+      }
     } else {
-      imageRef.current.style.opacity = "0";
+      imageRef.current.style.opacity = "0.5"; // Still partially visible at distance
     }
   });
   
@@ -625,13 +630,13 @@ function ImagePreview({
                 position: "relative",
                 cursor: "pointer",
                 borderRadius: "5px",
-                opacity: isVisible ? 1 : 0,
+                opacity: 1, // Always visible - remove conditional opacity
                 transition: "opacity 0.3s",
                 overflow: "hidden",
-                border: "2px solid white",
-                boxShadow: "0 0 10px rgba(0,0,0,0.7)",
-                // Add this style to fix the inversion
-                transform: "scaleX(-1)"
+                border: "2px solid cyan", // More visible border color
+                boxShadow: "0 0 15px rgba(0,255,255,0.7)", // Cyan glow
+                transform: "scaleX(-1)",
+                backgroundColor: imageError ? "rgba(255,0,0,0.3)" : "rgba(255,255,255,0.1)"
               }}
               onClick={openSidePanel}
             >
