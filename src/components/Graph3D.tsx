@@ -908,8 +908,17 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
 
   // Handle widget clicks
   const handleWidgetClick = (widget: Widget) => {
-    setSelectedWidget(widget);
-    setSidePanelOpen(true);
+    // Check if widget name is a URL
+    const isUrl = widget.name.startsWith('http://') || widget.name.startsWith('https://');
+    
+    if (isUrl) {
+      // Open URL in new tab
+      window.open(widget.name, '_blank');
+    } else {
+      // Open side panel for non-URL widgets
+      setSelectedWidget(widget);
+      setSidePanelOpen(true);
+    }
   };
   
   // Handle focus animation when node is clicked
@@ -1222,8 +1231,17 @@ function GraphSceneWithDrawer({
 
   // Handle widget clicks
   const handleWidgetClick = (widget: Widget) => {
-    setSelectedWidget(widget);
-    setSidePanelOpen(true);
+    // Check if widget name is a URL
+    const isUrl = widget.name.startsWith('http://') || widget.name.startsWith('https://');
+    
+    if (isUrl) {
+      // Open URL in new tab
+      window.open(widget.name, '_blank');
+    } else {
+      // Open side panel for non-URL widgets
+      setSelectedWidget(widget);
+      setSidePanelOpen(true);
+    }
   };
   
   // Handle focus animation when node is clicked
