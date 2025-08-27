@@ -344,10 +344,25 @@ function WebsitePreview({
     const fetchScreenshot = async () => {
       try {
         setIsLoading(true);
-        // Simulate fetching screenshot - in a real implementation you'd call your screenshot service
-        // For now, we'll use a placeholder that suggests a website preview
-        setScreenshotUrl(`https://api.screenshotone.com/take?access_key=demo&url=${encodeURIComponent(url)}&viewport_width=1200&viewport_height=800&device_scale_factor=1&format=png&image_quality=80&block_ads=true&block_cookie_banners=true&block_banners_by_heuristics=true&block_trackers=true&delay=0&timeout=60`);
-        setIsLoading(false);
+        // Use a more reliable screenshot service - screenshot.machine with a working demo
+        const screenshotServiceUrl = `https://screenshot.machine/screenshot?url=${encodeURIComponent(url)}&width=1200&height=800&timeout=30000&format=png&quality=80`;
+        
+        // Test if the screenshot loads
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          setScreenshotUrl(screenshotServiceUrl);
+          setIsLoading(false);
+          setError(false);
+        };
+        img.onerror = () => {
+          // If screenshot service fails, show fallback
+          console.log('Screenshot service failed, using fallback for:', url);
+          setError(true);
+          setIsLoading(false);
+        };
+        img.src = screenshotServiceUrl;
+        
       } catch (err) {
         console.error('Failed to fetch website screenshot:', err);
         setError(true);
@@ -378,11 +393,15 @@ function WebsitePreview({
     // Calculate distance to camera
     const distance = new THREE.Vector3(...imagePos).distanceTo(camera.position);
     
-    // Only show images that are reasonably close to the camera
-    if (distance < 30) {
+    // Show images that are reasonably close to the camera - increased range for better visibility
+    if (distance < 50) {
       imageRef.current.style.opacity = "1";
+      // Also ensure it's initially visible if this is the first frame
+      if (!isVisible) {
+        setIsVisible(true);
+      }
     } else {
-      imageRef.current.style.opacity = "0";
+      imageRef.current.style.opacity = "0.3"; // Keep slightly visible even at distance
     }
   });
   
@@ -438,15 +457,18 @@ function WebsitePreview({
               alignItems: 'center',
               justifyContent: 'center',
               height: '100%',
-              background: 'linear-gradient(45deg, #4A90E2, #357ABD)',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               color: 'white',
-              fontSize: '10px',
+              fontSize: '11px',
               textAlign: 'center',
               padding: '8px',
             }}>
-              <div style={{ fontSize: '16px', marginBottom: '4px' }}>🌐</div>
-              <div>Website</div>
-              <div style={{ fontSize: '8px', opacity: 0.8, marginTop: '2px' }}>Click to open</div>
+              <div style={{ fontSize: '24px', marginBottom: '6px' }}>🌐</div>
+              <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>Website</div>
+              <div style={{ fontSize: '9px', opacity: 0.9, lineHeight: '1.2' }}>
+                {url.length > 25 ? url.substring(8, 25) + '...' : url.replace(/^https?:\/\//, '')}
+              </div>
+              <div style={{ fontSize: '8px', opacity: 0.7, marginTop: '4px' }}>Click to open</div>
             </div>
           ) : (
             <img
@@ -891,6 +913,8 @@ function NodeMesh({
         // Check if it's a YouTube video, website URL, or image
         const isYoutube = isYouTubeUrl(widgetSrc);
         const isWebsiteUrl = widgetSrc.startsWith('http://') || widgetSrc.startsWith('https://');
+        
+        console.log(`Processing widget for ${node.label}: "${widgetSrc}" - isYoutube: ${isYoutube}, isWebsiteUrl: ${isWebsiteUrl}`);
         
         if (isYoutube) {
           return (
