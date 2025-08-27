@@ -769,8 +769,8 @@
                 "weight": 30,
                 "widgets": [
                   {
-                    "name": "https://quantumrepoire.com/",
-                    "preview": "qr.png", 
+                    "url": "https://quantumrepoire.com/",
+                    "name": "qr.png", 
                     "title": "Quantum Repoire",
                     "subtitle": "",
                     "notes": ""
