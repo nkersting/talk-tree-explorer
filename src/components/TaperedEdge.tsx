@@ -33,7 +33,7 @@ export default function TaperedEdge({
     <BaseEdge
       path={edgePath}
       style={{
-        stroke: '#ff0000', // Bright red for maximum visibility
+        stroke: '#76cc76', // Slightly darker mint green
         strokeWidth: Math.max(8, averageStrokeWidth), // Minimum 8px width
         opacity: 1, // Full opacity
       }}
