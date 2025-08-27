@@ -639,16 +639,30 @@ function NodeMesh({
       onClick={(e) => { e.stopPropagation(); onClick(node.id); }}
       scale={[pulseScale, pulseScale, pulseScale]}
     >
+      {/* Main node sphere */}
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
         <sphereGeometry args={[1, 32, 32]} />
         <meshStandardMaterial 
           color={isFocused ? focusColor : primary} 
-          emissive={isFocused ? focusEmissive : ring}
-          emissiveIntensity={isFocused ? 0.6 : 0.15} 
+          emissive={isFocused ? "hsl(220 100% 50%)" : ring}
+          emissiveIntensity={isFocused ? 1.2 : 0.15} 
           metalness={isFocused ? 0.3 : 0.1} 
-          roughness={isFocused ? 0.3 : 0.4} 
+          roughness={isFocused ? 0.2 : 0.4} 
         />
       </mesh>
+      
+      {/* Glow halo for focused nodes */}
+      {isFocused && (
+        <mesh scale={[scale * 1.8, scale * 1.8, scale * 1.8]}>
+          <sphereGeometry args={[1, 16, 16]} />
+          <meshBasicMaterial 
+            color="hsl(220 100% 60%)"
+            transparent
+            opacity={0.3}
+            side={2} // DoubleSide
+          />
+        </mesh>
+      )}
       <Html center distanceFactor={6} style={{ pointerEvents: "none" }}>
         <div style={{
           background: isFocused ? "rgba(30, 144, 255, 0.8)" : "hsl(var(--card) / 0.8)",
