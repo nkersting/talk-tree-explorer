@@ -330,59 +330,37 @@ function WebsitePreview({
   widget: Widget;
   onWidgetClick: (widget: Widget) => void;
 }) {
-  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [imageError, setImageError] = useState(false);
   
   // Use the position passed from parent
   const imagePos: [number, number, number] = position;
   
-  // Fetch website screenshot on component mount
+  // Get preview image from widget's preview attribute
   useEffect(() => {
-    const fetchScreenshot = async () => {
-      try {
-        setIsLoading(true);
-        // Use a more reliable screenshot service - screenshot.machine with a working demo
-        const screenshotServiceUrl = `https://screenshot.machine/screenshot?url=${encodeURIComponent(url)}&width=1200&height=800&timeout=30000&format=png&quality=80`;
-        
-        // Test if the screenshot loads
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          setScreenshotUrl(screenshotServiceUrl);
-          setIsLoading(false);
-          setError(false);
-        };
-        img.onerror = () => {
-          // If screenshot service fails, show fallback
-          console.log('Screenshot service failed, using fallback for:', url);
-          setError(true);
-          setIsLoading(false);
-        };
-        img.src = screenshotServiceUrl;
-        
-      } catch (err) {
-        console.error('Failed to fetch website screenshot:', err);
-        setError(true);
-        setIsLoading(false);
-      }
-    };
-    
-    fetchScreenshot();
-  }, [url]);
+    if (widget.preview) {
+      // Resolve preview image path
+      const imagePath = widget.preview.startsWith('http') 
+        ? widget.preview 
+        : widget.preview.startsWith('/') 
+          ? widget.preview 
+          : `/data/${widget.preview}`;
+      setPreviewImageUrl(imagePath);
+    }
+  }, [widget.preview]);
   
   // Handle image loading
   const handleImageLoad = () => {
-    console.log(`✅ Website screenshot loaded: ${url}`);
+    console.log(`✅ Website preview loaded: ${url}`);
     setIsVisible(true);
-    setError(false);
+    setImageError(false);
   };
   
   const handleImageError = () => {
-    console.error(`❌ Failed to load website screenshot: ${url}`);
-    setError(true);
+    console.error(`❌ Failed to load website preview: ${url}`);
+    setImageError(true);
   };
   
   // Handle visibility based on camera position
@@ -405,8 +383,8 @@ function WebsitePreview({
     }
   });
   
-  // Open URL when clicked
-  const openWebsite = (e: React.MouseEvent) => {
+  // Open sidebar when clicked
+  const openSidebar = (e: React.MouseEvent) => {
     e.stopPropagation();
     onWidgetClick(widget);
   };
@@ -436,21 +414,22 @@ function WebsitePreview({
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
             background: 'rgba(255, 255, 255, 0.95)',
           }}
-          onClick={openWebsite}
+          onClick={openSidebar}
         >
-          {isLoading ? (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              background: 'linear-gradient(45deg, #f0f0f0, #e0e0e0)',
-              color: '#666',
-              fontSize: '12px',
-            }}>
-              Loading...
-            </div>
-          ) : error || !screenshotUrl ? (
+          {previewImageUrl && !imageError ? (
+            <img
+              src={previewImageUrl}
+              alt="Website preview"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '6px',
+              }}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          ) : (
             <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -470,19 +449,6 @@ function WebsitePreview({
               </div>
               <div style={{ fontSize: '8px', opacity: 0.7, marginTop: '4px' }}>Click to open</div>
             </div>
-          ) : (
-            <img
-              src={screenshotUrl}
-              alt="Website preview"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                borderRadius: '6px',
-              }}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
           )}
           
           {/* Hover overlay */}
@@ -1345,6 +1311,16 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                       allowFullScreen
                     />
                   </div>
+                ) : selectedWidget.name.startsWith('http://') || selectedWidget.name.startsWith('https://') ? (
+                  /* Website iframe for URLs */
+                  <div className="w-full">
+                    <iframe 
+                      src={selectedWidget.name}
+                      title="Website"
+                      className="w-full h-96 rounded-lg border border-border"
+                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                    />
+                  </div>
                 ) : (
                   /* Full-size widget image */
                   <div className="w-full">
@@ -1459,17 +1435,9 @@ function GraphSceneWithDrawer({
 
   // Handle widget clicks
   const handleWidgetClick = (widget: Widget) => {
-    // Check if widget name is a URL
-    const isUrl = widget.name.startsWith('http://') || widget.name.startsWith('https://');
-    
-    if (isUrl) {
-      // Open URL in new tab
-      window.open(widget.name, '_blank');
-    } else {
-      // Open side panel for non-URL widgets
-      setSelectedWidget(widget);
-      setSidePanelOpen(true);
-    }
+    // Open side panel for all widgets (including URLs)
+    setSelectedWidget(widget);
+    setSidePanelOpen(true);
   };
   
   // Handle focus animation when node is clicked
