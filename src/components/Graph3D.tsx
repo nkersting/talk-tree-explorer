@@ -1107,17 +1107,9 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
 
   // Handle widget clicks
   const handleWidgetClick = (widget: Widget) => {
-    // Check if widget name is a URL
-    const isUrl = widget.name.startsWith('http://') || widget.name.startsWith('https://');
-    
-    if (isUrl) {
-      // Open URL in new tab
-      window.open(widget.name, '_blank');
-    } else {
-      // Open side panel for non-URL widgets
-      setSelectedWidget(widget);
-      setSidePanelOpen(true);
-    }
+    // Open side panel for all widgets (including URLs)
+    setSelectedWidget(widget);
+    setSidePanelOpen(true);
   };
   
   // Handle focus animation when node is clicked
@@ -1298,8 +1290,18 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
           <div className="p-4 flex-1 overflow-auto">
             {selectedWidget && (
               <div className="space-y-4">
-                {/* Check if it's a YouTube video and render accordingly */}
-                {selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
+                {/* Check if widget has url attribute or if name contains URL */}
+                {selectedWidget.url ? (
+                  /* Widget has url attribute - load that URL in iframe */
+                  <div className="w-full">
+                    <iframe 
+                      src={selectedWidget.url}
+                      title="Website"
+                      className="w-full h-96 rounded-lg border border-border"
+                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                    />
+                  </div>
+                ) : selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
                   <div className="w-full">
                     <iframe 
                       src={(() => {
