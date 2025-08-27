@@ -1280,7 +1280,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
 
       {/* Side panel drawer */}
       <Drawer open={sidePanelOpen} onOpenChange={setSidePanelOpen}>
-        <DrawerContent className="max-w-md ml-auto h-full">
+        <DrawerContent className="max-w-4xl ml-auto h-full">
           <DrawerHeader className="text-left">
             <DrawerTitle>{selectedWidget?.title || 'Widget Details'}</DrawerTitle>
             <DrawerDescription>
