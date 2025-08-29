@@ -16,6 +16,8 @@ import {
 import "@xyflow/react/dist/style.css";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import { useFocus } from '@/contexts/FocusContext';
 import TaperedEdge from './TaperedEdge';
 
@@ -211,6 +213,7 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
 
 export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
   
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => 
     convertTreeToReactFlow(data), [data]
@@ -293,16 +296,18 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
   return (
     <section aria-label="Knowledge tree" className="w-full h-full">
       <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
-        {/* Search Bar */}
-        <div className="p-4 border-b border-border bg-card">
-          <Input
-            placeholder="Search nodes..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full max-w-md"
-          />
-        </div>
-        <div className="w-full" style={{ height: 'calc(100% - 80px)' }}>
+        {/* Conditional Search Bar */}
+        {isSearchVisible && (
+          <div className="p-4 border-b border-border bg-card">
+            <Input
+              placeholder="Search nodes..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full max-w-md"
+            />
+          </div>
+        )}
+        <div className="w-full" style={{ height: isSearchVisible ? 'calc(100% - 80px)' : '100%' }}>
           <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -322,6 +327,17 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
         >
             <Background color="hsl(var(--muted))" gap={20} />
             <Controls showInteractive={false} />
+            {/* Custom Search Button */}
+            <div className="absolute bottom-16 left-2 z-10">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setIsSearchVisible(!isSearchVisible)}
+                className="bg-card border-border shadow-md"
+              >
+                <Search size={16} />
+              </Button>
+            </div>
           </ReactFlow>
         </div>
       </div>
