@@ -326,18 +326,16 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
           elementsSelectable
         >
             <Background color="hsl(var(--muted))" gap={20} />
-            <Controls showInteractive={false} />
-            {/* Custom Search Button */}
-            <div className="absolute bottom-16 left-2 z-10">
+            <Controls showInteractive={false}>
               <Button
-                variant="outline"
-                size="icon"
+                variant="outline" 
+                size="sm"
                 onClick={() => setIsSearchVisible(!isSearchVisible)}
-                className="bg-card border-border shadow-md"
+                className="bg-card border-border shadow-sm h-8 w-8 p-0"
               >
-                <Search size={16} />
+                <Search size={14} />
               </Button>
-            </div>
+            </Controls>
           </ReactFlow>
         </div>
       </div>
