@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect } from "react";
+import { useCallback, useMemo, useEffect, useState } from "react";
 import { 
   ReactFlow, 
   Node, 
@@ -15,6 +15,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
 import { useFocus } from '@/contexts/FocusContext';
 import TaperedEdge from './TaperedEdge';
 
@@ -38,6 +39,9 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
   
   // Determine if this node is currently focused
   const isFocused = focusedNodeLabel === data.label;
+  
+  // Check if this node matches the search term
+  const isSearchMatch = data.searchTerm && data.label.toLowerCase().includes(data.searchTerm.toLowerCase());
   
   // Handle click on the node
   const handleNodeClick = () => {
@@ -68,11 +72,13 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
       <Tooltip>
         <TooltipTrigger asChild>
           <div
-            // Updated styling for focused node with THICKER light blue border
-            className={`rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)] transition-transform duration-400 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
+            // Updated styling for focused node with THICKER light blue border and yellow highlight for search matches
+            className={`rounded-full shadow-[var(--shadow-glow)] transition-transform duration-400 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
               isFocused 
-              ? 'scale-210 animate-[pulse_2s_ease-in-out_infinite]' 
-              : 'ring-1 ring-ring'
+              ? 'scale-210 animate-[pulse_2s_ease-in-out_infinite] bg-primary text-primary-foreground' 
+              : isSearchMatch
+              ? 'bg-yellow-400 text-black ring-2 ring-yellow-500'
+              : 'bg-primary text-primary-foreground ring-1 ring-ring'
             }`}
             style={{
               width: radius * 2,
@@ -204,6 +210,8 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
 }
 
 export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => 
     convertTreeToReactFlow(data), [data]
   );
@@ -211,6 +219,17 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { fitView } = useReactFlow();
+
+  // Update nodes with search term
+  useEffect(() => {
+    setNodes(nds => nds.map(node => ({
+      ...node,
+      data: {
+        ...node.data,
+        searchTerm: searchTerm
+      }
+    })));
+  }, [searchTerm, setNodes]);
 
   // Dynamic repositioning based on node movements
   const handleNodesChange = useCallback((changes: NodeChange[]) => {
@@ -274,7 +293,17 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
   return (
     <section aria-label="Knowledge tree" className="w-full h-full">
       <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
-        <ReactFlow
+        {/* Search Bar */}
+        <div className="p-4 border-b border-border bg-card">
+          <Input
+            placeholder="Search nodes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full max-w-md"
+          />
+        </div>
+        <div className="w-full" style={{ height: 'calc(100% - 80px)' }}>
+          <ReactFlow
           nodes={nodes}
           edges={edges}
           onNodesChange={handleNodesChange}
@@ -291,9 +320,10 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
           nodesConnectable={false}
           elementsSelectable
         >
-          <Background color="hsl(var(--muted))" gap={20} />
-          <Controls showInteractive={false} />
-        </ReactFlow>
+            <Background color="hsl(var(--muted))" gap={20} />
+            <Controls showInteractive={false} />
+          </ReactFlow>
+        </div>
       </div>
     </section>
   );
