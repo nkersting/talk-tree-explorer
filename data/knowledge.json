@@ -245,6 +245,12 @@
                         "title": "IronAction AI",
                         "subtitle": "",
                         "notes": "Iron: the most stable element in the universe \n Action: average (PE - KE), optimal dynamic"
+                      },
+                      {
+                        "name": "harmonic.png",
+                        "title": "Manifold of Safety",
+                        "subtitle": "(start with Harmonic Functions)",
+                        "notes": "Stable \n Predictable \n Accountable"
                       }
                     ]
                   },
@@ -537,8 +543,8 @@
                     "notes": "Nick Bostrom ..."
                   },
                   {
-                    "name": "superintelligence2.png",
-                    "title": "Superintelligence and Integration",
+                    "name": "uncanny.png",
+                    "title": "Navigating the Uncannny Valley",
                     "subtitle": "",
                     "notes": ""
                   },
