@@ -328,10 +328,10 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
             <Background color="hsl(var(--muted))" gap={20} />
             <Controls showInteractive={false}>
               <Button
-                variant="outline" 
+                variant="ghost" 
                 size="sm"
                 onClick={() => setIsSearchVisible(!isSearchVisible)}
-                className="bg-card border-border shadow-sm h-8 w-8 p-0"
+                className="h-8 w-8 p-0"
               >
                 <Search size={14} />
               </Button>
