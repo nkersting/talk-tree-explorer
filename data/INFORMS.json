@@ -413,6 +413,12 @@
                                 "title": "Measuring the Manifold",
                                 "subtitle": "",
                                 "notes": ""
+                              },
+                              {
+                                "name": "vector-sequence2.png",
+                                "title": "The Age of Interpolation",
+                                "subtitle": "discovering ourselves",
+                                "notes": "LLMs are giving us ideas 'between the lines' \n May discover new ethics, mathematics, aesthetics, etc. \n Next 5-10 years may see much discovery here \n We will quickly max out on currently availble data"
                               }
                             ]
                           }
@@ -596,6 +602,12 @@
                         "title": "Evolved Creatures",
                         "subtitle": "",
                         "notes": ""
+                      },
+                      {
+                        "name": "pose.png",
+                        "title": "An LLM for Motion?",
+                        "subtitle": "Sequences of Words -> Sequences of Poses",
+                        "notes": "First make for Humans \n Consider other body topologies as needed"
                       }
                     ]
                   }
@@ -829,6 +841,57 @@
                     "title": "Data Integrity",
                     "subtitle": "",
                     "notes": ""
+                  }
+                ]
+              },
+              {
+                "node": "P2P",
+                "weight": 10,
+                "widgets": [
+                  {
+                    "name": "P2P.png",
+                    "title": "Peer to Peer (P2P) Networks",
+                    "subtitle": "moving away from centralized servers",
+                    "notes": "Problems with Centralized Compute: \n Expensive \n Vulnerable \n Despotic"
+                  }
+                ]
+              },             
+              {
+                "node": "New Methods from AI",
+                "weight": 10,
+                "widgets": [
+                  {
+                    "name": "ai_comm_methods.png",
+                    "title": "New Methosd from AI",
+                    "subtitle": "Can AI Make us better communicators?",
+                    "notes": "AI can give us new variations on present methods \n (see Interpolation disussion above) "
+                  }
+                ],
+                "children":[
+                  {
+                    "node": "This Talk",
+                    "weight": 5,
+                    "widgets": [
+                      {
+                        "name": "Lovable.png",
+                        "url": "https://lovable.dev/",
+                        "title": "Lovable",
+                        "subtitle": "",
+                        "notes": "A platform for webapp development \n Powered by LLMs \n Generates code from natural language \n Commits to GitHub automatically \n Makes web development accessible to everyone"
+                      },
+                      {
+                        "name": "githubcopilot.png",
+                        "title": "GitHub Copilot",
+                        "subtitle": "(AI generation is not the panacea we thought)",
+                        "notes": "Human needs to get involved with the code \n Lovable is not perfect \n Some things easier to do by hand (save credits!)"
+                      },
+                      {
+                        "name": "KnowledgeTree.png",
+                        "title": "Knowledge Tree",
+                        "subtitle": "",
+                        "notes": "Thought starts out as a structured graph \n Put talk in structured JSON \n DIY works, or ... \n AI can do this for you from prose text"
+                      }
+                    ]
                   }
                 ]
               }
