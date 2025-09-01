@@ -735,7 +735,8 @@ function NodeMesh({
   isFocused = false,
   onWidgetClick,
   showOnlyFocusedWidgets = false,
-  focusedNodeId
+  focusedNodeId,
+  sidePanelOpen = false
 }: { 
   node: Node3D; 
   onClick: (id: string) => void;
@@ -743,6 +744,7 @@ function NodeMesh({
   onWidgetClick: (widget: Widget) => void;
   showOnlyFocusedWidgets?: boolean;
   focusedNodeId?: string | null;
+  sidePanelOpen?: boolean;
 }) {
   const primary = useCssHsl("--primary", "hsl(210 100% 70%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
@@ -864,7 +866,7 @@ function NodeMesh({
       </Html>
       
       {/* Render widget previews symmetrically around the node */}
-      {shouldShowWidgets && allWidgets.map((widget, index) => {
+      {shouldShowWidgets && !sidePanelOpen && allWidgets.map((widget, index) => {
         const angle = (index / allWidgets.length) * Math.PI * 2; // Distribute evenly in a circle
         const radius = 2.0; // Radius around the node
         const widgetPosition: [number, number, number] = [
@@ -1273,6 +1275,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               setSidePanelOpen={setSidePanelOpen}
               setSelectedWidget={setSelectedWidget}
               showOnlyFocusedWidgets={showOnlyFocusedWidgets}
+              sidePanelOpen={sidePanelOpen}
             />
           </Canvas>
         </div>
@@ -1370,12 +1373,14 @@ function GraphSceneWithDrawer({
   data, 
   setSidePanelOpen, 
   setSelectedWidget,
-  showOnlyFocusedWidgets 
+  showOnlyFocusedWidgets,
+  sidePanelOpen
 }: { 
   data: KnowledgeNode;
   setSidePanelOpen: (open: boolean) => void;
   setSelectedWidget: (widget: Widget | null) => void;
   showOnlyFocusedWidgets: boolean;
+  sidePanelOpen: boolean;
 }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -1570,6 +1575,7 @@ function GraphSceneWithDrawer({
           onWidgetClick={handleWidgetClick}
           showOnlyFocusedWidgets={showOnlyFocusedWidgets}
           focusedNodeId={focusId}
+          sidePanelOpen={sidePanelOpen}
         />
       ))}
     </>
