@@ -1354,7 +1354,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 {selectedWidget.notes && (
                   <div className="space-y-2">
                     <h3 className="font-semibold text-foreground">Notes:</h3>
-                    <div className="text-muted-foreground whitespace-pre-wrap bg-muted/50 p-3 rounded-lg">
+                    <div className="text-lg font-bold text-foreground whitespace-pre-wrap bg-muted/50 p-3 rounded-lg">
                       {selectedWidget.notes}
                     </div>
                   </div>
