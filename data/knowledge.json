@@ -558,6 +558,46 @@
                     "subtitle": "measure the degree of violation",
                     "notes": ""
                   }
+                ],
+                "children": [
+                  {
+                    "node": "Stability as a Proxy for Trustworthiness",
+                    "weight": 20,
+                    "widgets": [
+                      {
+                        "name": "harmonic_LLM.png",
+                        "title": "Should LLMs live on Harmonic Manifolds?",
+                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
+                        "name": "gamma.png",
+                        "title": "Trustworthy -> low Gamma",
+                        "subtitle": "",
+                        "notes": ""
+                      }, 
+                      {
+                        "name": "gamma_1.png",
+                        "title": "Untrustworthy/Ambiguous -> high Gamma",
+                        "subtitle": "",
+                        "notes": ""
+                      }, 
+                      {
+                        "name": "gamma_trends.png",
+                        "title": "Statistically Makes Sense",
+                        "subtitle": "the higher gamma is, more likely to be hallucination",
+                        "notes": ""
+                      },
+                      {
+                        "name": "visa_olympics.png",
+                        "title": "At the 2024 Olympics",
+                        "subtitle": "(we used gamma to filter out bad answers)",
+                        "notes": "Here we got away with N=1 ! \n In general, need larger N \n Further work needed to maximize potential"
+                      }
+
+
+                    ]
+                  }
                 ]
               }
             ]
