@@ -159,6 +159,12 @@
                     "notes": ""
                   },
                   {
+                    "name": "foundation.png",
+                    "title": "Asimov anticipated this",
+                    "subtitle": "(70 years ago)",
+                    "notes": "Robotic servants/slaves \n Robotic spouses"
+                  },
+                  {
                     "name": "https://www.youtube.com/watch?v=mSPxRVTJW1I",
                     "title": "Abuse is Happening",
                     "subtitle": "Would you stand for this?",
@@ -229,8 +235,26 @@
                     "weight": 20,
                     "widgets": [
                       {
+                        "name": "predictive_AI.png",
+                        "title": "Traditional Metrics",
+                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
                         "name": "training.png",
                         "title": "Training + Filters + Guardrails + Explainability",
+                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
+                        "name": "irobot.png",
+                        "title": "The Three Laws of Robotics",
+                        "subtitle": "(Asimov, 1942)",
+                        "notes": "1. A robot may not injure a human being or, through inaction, allow a human being to come to harm. \n 2. A robot must obey the orders given it by human beings except where such orders would conflict with the First Law. \n 3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Law."
+                      },
+                      {
+                        "name": "accountability.png",
+                        "title": "Accountability",
                         "subtitle": "",
                         "notes": ""
                       }
@@ -279,6 +303,24 @@
                             "title": "What is an Explanation?",
                             "subtitle": "",
                             "notes": ""
+                          },
+                          {
+                            "name": "traditional_explain.png",
+                            "title": "Traditional Explainability",
+                            "subtitle": "(sometimes the model provides)",
+                            "notes": ""
+                          },
+                          {
+                            "name": "general_explain.png",
+                            "title": "General Techniques",
+                            "subtitle": "(still traditionally-based)",
+                            "notes": ""
+                          },
+                          {
+                            "name": "stability.png",
+                            "title": "Stability as a proxy for Explainability",
+                            "subtitle": "(e.g., Harmoniticity)",
+                            "notes": "Predictions on a Manifold that we Trust \n Harmonic Functions are explainable and minimal"
                           }
                         ]
                       },
@@ -455,7 +497,7 @@
                     "weight": 10,
                     "widgets": [
                       {
-                        "name": "positronic_brain_shutoffs.png",
+                        "name": "irobot.png",
                         "title": "Positronic Brain Shutoffs",
                         "subtitle": "",
                         "notes": ""
