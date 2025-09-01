@@ -321,6 +321,12 @@
                             "title": "Stability as a proxy for Explainability",
                             "subtitle": "(e.g., Harmoniticity)",
                             "notes": "Predictions on a Manifold that we Trust \n Harmonic Functions are explainable and minimal"
+                          },
+                          {
+                            "name": "harmonic_ML.png",
+                            "title": "Harmonic Machine Learning",
+                            "subtitle": "(a principle for explainability)",
+                            "notes": "Measure departure from harmoniticity \n Useful as a validation metric \n Useful in real-time drift detection"
                           }
                         ]
                       },
