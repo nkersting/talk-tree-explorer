@@ -849,23 +849,21 @@ function NodeMesh({
           />
         </mesh>
       )}
-      {!sidePanelOpen && (
-        <Html center distanceFactor={6} style={{ pointerEvents: "none" }}>
-          <div style={{
-            background: isFocused ? "rgba(30, 144, 255, 0.8)" : "hsl(var(--card) / 0.8)",
-            color: isFocused ? "white" : textColor,
-            border: isFocused ? "1px solid rgba(135, 206, 250, 0.8)" : "1px solid hsl(var(--border))",
-            borderRadius: 8,
-            padding: "2px 6px",
-            fontSize: 12,
-            whiteSpace: "nowrap",
-            fontWeight: isFocused ? "bold" : "normal",
-            boxShadow: isFocused ? "0 0 8px rgba(30, 144, 255, 0.5)" : "none",
-          }}>
-            {node.label}
-          </div>
-        </Html>
-      )}
+      <Html center distanceFactor={6} style={{ pointerEvents: "none" }}>
+        <div style={{
+          background: isFocused ? "rgba(30, 144, 255, 0.8)" : "hsl(var(--card) / 0.8)",
+          color: isFocused ? "white" : textColor,
+          border: isFocused ? "1px solid rgba(135, 206, 250, 0.8)" : "1px solid hsl(var(--border))",
+          borderRadius: 8,
+          padding: "2px 6px",
+          fontSize: 12,
+          whiteSpace: "nowrap",
+          fontWeight: isFocused ? "bold" : "normal",
+          boxShadow: isFocused ? "0 0 8px rgba(30, 144, 255, 0.5)" : "none",
+        }}>
+          {node.label}
+        </div>
+      </Html>
       
       {/* Render widget previews symmetrically around the node */}
       {shouldShowWidgets && !sidePanelOpen && allWidgets.map((widget, index) => {
