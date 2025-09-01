@@ -54,7 +54,7 @@ function IndexContent() {
       </header>
       <main className="relative min-h-screen h-[calc(100vh+8rem)]">
         <ReactFlowProvider>
-          <div className="absolute top-4 left-4 w-96 h-80 bg-background border border-border rounded-lg shadow-lg z-10 overflow-hidden">
+          <div className="absolute top-4 left-4 w-96 h-80 bg-background border border-border rounded-lg shadow-lg z-[95] overflow-hidden">
             <KnowledgeTree data={particleData} />
           </div>
         </ReactFlowProvider>
