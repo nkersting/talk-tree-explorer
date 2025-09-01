@@ -38,6 +38,8 @@ const DrawerContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
+    {/* Additional overlay specifically for 3D content */}
+    <div className="fixed inset-0 z-[9998] bg-black/50" style={{ backdropFilter: 'blur(2px)' }} />
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
@@ -45,6 +47,7 @@ const DrawerContent = React.forwardRef<
         className
       )}
       {...props}
+      style={{ position: 'fixed', isolation: 'isolate' }}
     >
       <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
       {children}
