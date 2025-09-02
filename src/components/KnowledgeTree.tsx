@@ -166,7 +166,7 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
       x = childPositions.reduce((sum, pos) => sum + pos.x, 0) / childPositions.length;
     }
 
-    const y = (depthCount - 1 - depth) * vGap + vGap / 2;
+    const y = 3 * (depthCount - 1 - depth) * vGap + vGap / 2;
     nodeMap.set(currentNodeId, { x, y, depth });
     
     // Store node weight for edge thickness calculation
