@@ -130,7 +130,7 @@ function convertTreeToReactFlow(root: KnowledgeNode) {
     if (w === undefined || Number.isNaN(w)) return 25;
     const clamped = Math.max(1, Math.min(100, w));
     const t = (clamped - 1) / 99;
-    return 15 + t * 35; // 15-40px radius for more visible scaling
+    return 15 + t * 95; 
   }
 
   function computeDepth(n: KnowledgeNode): number {
