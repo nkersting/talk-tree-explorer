@@ -728,7 +728,7 @@ function ImagePreview({
   );
 }
 
-// Generate a consistent random 3D icon for each node based on node ID
+// Generate a consistent random 3D treasure icon for each node based on node ID
 function getNodeGeometry(nodeId: string) {
   // Use node ID to generate consistent random choice
   const hash = nodeId.split('').reduce((a, b) => {
@@ -736,67 +736,69 @@ function getNodeGeometry(nodeId: string) {
     return a & a;
   }, 0);
   
-  const shapeIndex = Math.abs(hash) % 20;
+  const treasureIndex = Math.abs(hash) % 20;
   
-  switch (shapeIndex) {
-    // Basic shapes
+  switch (treasureIndex) {
+    // Gold coins and doubloons
     case 0:
-      return { geometry: <boxGeometry args={[1.2, 1.2, 1.2]} />, name: "cube" };
+      return { geometry: <cylinderGeometry args={[0.8, 0.8, 0.15, 16]} />, name: "gold_coin" };
     case 1:
-      return { geometry: <sphereGeometry args={[1, 16, 16]} />, name: "sphere" };
+      return { geometry: <cylinderGeometry args={[0.6, 0.6, 0.1, 12]} />, name: "doubloon" };
+    
+    // Precious gems and jewels
     case 2:
-      return { geometry: <coneGeometry args={[0.8, 1.6, 8]} />, name: "cone" };
+      return { geometry: <octahedronGeometry args={[0.9]} />, name: "diamond" };
     case 3:
-      return { geometry: <cylinderGeometry args={[0.6, 0.6, 1.4, 12]} />, name: "cylinder" };
-    
-    // Geometric shapes
+      return { geometry: <dodecahedronGeometry args={[0.7]} />, name: "ruby" };
     case 4:
-      return { geometry: <octahedronGeometry args={[1]} />, name: "octahedron" };
+      return { geometry: <icosahedronGeometry args={[0.8]} />, name: "emerald" };
     case 5:
-      return { geometry: <dodecahedronGeometry args={[0.8]} />, name: "dodecahedron" };
+      return { geometry: <tetrahedronGeometry args={[1.1]} />, name: "sapphire" };
+    
+    // Gold bars and ingots
     case 6:
-      return { geometry: <icosahedronGeometry args={[0.9]} />, name: "icosahedron" };
+      return { geometry: <boxGeometry args={[1.4, 0.4, 0.8]} />, name: "gold_bar" };
     case 7:
-      return { geometry: <tetrahedronGeometry args={[1.1]} />, name: "tetrahedron" };
+      return { geometry: <boxGeometry args={[1.0, 0.3, 0.6]} />, name: "silver_ingot" };
     
-    // Ring and torus shapes
+    // Pearls and orbs
     case 8:
-      return { geometry: <torusGeometry args={[0.8, 0.3, 8, 16]} />, name: "torus" };
+      return { geometry: <sphereGeometry args={[0.7, 12, 8]} />, name: "pearl" };
     case 9:
-      return { geometry: <torusKnotGeometry args={[0.6, 0.2, 64, 8]} />, name: "torus_knot" };
+      return { geometry: <sphereGeometry args={[0.9, 16, 12]} />, name: "crystal_orb" };
     
-    // Flattened shapes
+    // Treasure chests and containers
     case 10:
-      return { geometry: <boxGeometry args={[1.5, 0.3, 1.5]} />, name: "platform" };
+      return { geometry: <boxGeometry args={[1.2, 0.8, 0.9]} />, name: "treasure_chest" };
     case 11:
-      return { geometry: <cylinderGeometry args={[1, 1, 0.3, 16]} />, name: "disk" };
+      return { geometry: <cylinderGeometry args={[0.6, 0.8, 1.0, 8]} />, name: "chalice" };
     
-    // Elongated shapes
+    // Jewelry and accessories
     case 12:
-      return { geometry: <boxGeometry args={[0.4, 2, 0.4]} />, name: "pillar" };
+      return { geometry: <torusGeometry args={[0.7, 0.2, 8, 16]} />, name: "gold_ring" };
     case 13:
-      return { geometry: <cylinderGeometry args={[0.3, 0.3, 2, 8]} />, name: "rod" };
+      return { geometry: <torusGeometry args={[0.9, 0.15, 12, 20]} />, name: "bracelet" };
     
-    // Complex geometric shapes
+    // Crowns and royal items
     case 14:
-      return { geometry: <coneGeometry args={[1.2, 0.6, 6]} />, name: "hexagonal_cone" };
+      return { geometry: <coneGeometry args={[0.8, 1.2, 6]} />, name: "crown" };
     case 15:
-      return { geometry: <cylinderGeometry args={[0.8, 0.4, 1.2, 6]} />, name: "hexagonal_prism" };
+      return { geometry: <cylinderGeometry args={[0.4, 0.7, 1.5, 8]} />, name: "goblet" };
     
-    // Pyramid-like shapes
+    // Medallions and tokens
     case 16:
-      return { geometry: <coneGeometry args={[1, 1.5, 4]} />, name: "pyramid" };
+      return { geometry: <cylinderGeometry args={[0.9, 0.9, 0.2, 8]} />, name: "medallion" };
     case 17:
-      return { geometry: <coneGeometry args={[0.6, 1.8, 3]} />, name: "triangular_cone" };
+      return { geometry: <cylinderGeometry args={[0.5, 0.5, 0.08, 16]} />, name: "token" };
     
-    // Rounded and abstract shapes
+    // Crystal formations and rare stones
     case 18:
-      return { geometry: <sphereGeometry args={[0.8, 8, 6]} />, name: "low_poly_sphere" };
+      return { geometry: <coneGeometry args={[0.4, 1.8, 6]} />, name: "crystal_formation" };
     case 19:
-      return { geometry: <cylinderGeometry args={[1.2, 0.8, 1, 8]} />, name: "truncated_cone" };
+      return { geometry: <torusKnotGeometry args={[0.5, 0.15, 32, 6]} />, name: "jeweled_ornament" };
     
     default:
-      return { geometry: <sphereGeometry args={[1, 16, 16]} />, name: "sphere" };
+      return { geometry: <cylinderGeometry args={[0.8, 0.8, 0.15, 16]} />, name: "gold_coin" };
   }
 }
 
