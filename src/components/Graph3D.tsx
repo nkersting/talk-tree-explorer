@@ -736,27 +736,67 @@ function getNodeGeometry(nodeId: string) {
     return a & a;
   }, 0);
   
-  const shapeIndex = Math.abs(hash) % 8;
+  const shapeIndex = Math.abs(hash) % 20;
   
   switch (shapeIndex) {
+    // Basic shapes
     case 0:
       return { geometry: <boxGeometry args={[1.2, 1.2, 1.2]} />, name: "cube" };
     case 1:
-      return { geometry: <coneGeometry args={[0.8, 1.6, 8]} />, name: "cone" };
+      return { geometry: <sphereGeometry args={[1, 16, 16]} />, name: "sphere" };
     case 2:
-      return { geometry: <cylinderGeometry args={[0.6, 0.6, 1.4, 12]} />, name: "cylinder" };
+      return { geometry: <coneGeometry args={[0.8, 1.6, 8]} />, name: "cone" };
     case 3:
-      return { geometry: <octahedronGeometry args={[1]} />, name: "octahedron" };
+      return { geometry: <cylinderGeometry args={[0.6, 0.6, 1.4, 12]} />, name: "cylinder" };
+    
+    // Geometric shapes
     case 4:
-      return { geometry: <dodecahedronGeometry args={[0.8]} />, name: "dodecahedron" };
+      return { geometry: <octahedronGeometry args={[1]} />, name: "octahedron" };
     case 5:
-      return { geometry: <icosahedronGeometry args={[0.9]} />, name: "icosahedron" };
+      return { geometry: <dodecahedronGeometry args={[0.8]} />, name: "dodecahedron" };
     case 6:
-      return { geometry: <torusGeometry args={[0.8, 0.3, 8, 16]} />, name: "torus" };
+      return { geometry: <icosahedronGeometry args={[0.9]} />, name: "icosahedron" };
     case 7:
       return { geometry: <tetrahedronGeometry args={[1.1]} />, name: "tetrahedron" };
+    
+    // Ring and torus shapes
+    case 8:
+      return { geometry: <torusGeometry args={[0.8, 0.3, 8, 16]} />, name: "torus" };
+    case 9:
+      return { geometry: <torusKnotGeometry args={[0.6, 0.2, 64, 8]} />, name: "torus_knot" };
+    
+    // Flattened shapes
+    case 10:
+      return { geometry: <boxGeometry args={[1.5, 0.3, 1.5]} />, name: "platform" };
+    case 11:
+      return { geometry: <cylinderGeometry args={[1, 1, 0.3, 16]} />, name: "disk" };
+    
+    // Elongated shapes
+    case 12:
+      return { geometry: <boxGeometry args={[0.4, 2, 0.4]} />, name: "pillar" };
+    case 13:
+      return { geometry: <cylinderGeometry args={[0.3, 0.3, 2, 8]} />, name: "rod" };
+    
+    // Complex geometric shapes
+    case 14:
+      return { geometry: <coneGeometry args={[1.2, 0.6, 6]} />, name: "hexagonal_cone" };
+    case 15:
+      return { geometry: <cylinderGeometry args={[0.8, 0.4, 1.2, 6]} />, name: "hexagonal_prism" };
+    
+    // Pyramid-like shapes
+    case 16:
+      return { geometry: <coneGeometry args={[1, 1.5, 4]} />, name: "pyramid" };
+    case 17:
+      return { geometry: <coneGeometry args={[0.6, 1.8, 3]} />, name: "triangular_cone" };
+    
+    // Rounded and abstract shapes
+    case 18:
+      return { geometry: <sphereGeometry args={[0.8, 8, 6]} />, name: "low_poly_sphere" };
+    case 19:
+      return { geometry: <cylinderGeometry args={[1.2, 0.8, 1, 8]} />, name: "truncated_cone" };
+    
     default:
-      return { geometry: <sphereGeometry args={[1, 32, 32]} />, name: "sphere" };
+      return { geometry: <sphereGeometry args={[1, 16, 16]} />, name: "sphere" };
   }
 }
 
