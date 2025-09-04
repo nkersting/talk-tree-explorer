@@ -728,6 +728,38 @@ function ImagePreview({
   );
 }
 
+// Generate a consistent random 3D icon for each node based on node ID
+function getNodeGeometry(nodeId: string) {
+  // Use node ID to generate consistent random choice
+  const hash = nodeId.split('').reduce((a, b) => {
+    a = ((a << 5) - a) + b.charCodeAt(0);
+    return a & a;
+  }, 0);
+  
+  const shapeIndex = Math.abs(hash) % 8;
+  
+  switch (shapeIndex) {
+    case 0:
+      return { geometry: <boxGeometry args={[1.2, 1.2, 1.2]} />, name: "cube" };
+    case 1:
+      return { geometry: <coneGeometry args={[0.8, 1.6, 8]} />, name: "cone" };
+    case 2:
+      return { geometry: <cylinderGeometry args={[0.6, 0.6, 1.4, 12]} />, name: "cylinder" };
+    case 3:
+      return { geometry: <octahedronGeometry args={[1]} />, name: "octahedron" };
+    case 4:
+      return { geometry: <dodecahedronGeometry args={[0.8]} />, name: "dodecahedron" };
+    case 5:
+      return { geometry: <icosahedronGeometry args={[0.9]} />, name: "icosahedron" };
+    case 6:
+      return { geometry: <torusGeometry args={[0.8, 0.3, 8, 16]} />, name: "torus" };
+    case 7:
+      return { geometry: <tetrahedronGeometry args={[1.1]} />, name: "tetrahedron" };
+    default:
+      return { geometry: <sphereGeometry args={[1, 32, 32]} />, name: "sphere" };
+  }
+}
+
 // Update the NodeMesh component to handle widgets as dictionaries with "name" attribute
 function NodeMesh({ 
   node, 
@@ -755,6 +787,9 @@ function NodeMesh({
   const depth = Math.max(0, node.position[2] / 6);
   const size = 0.35 + weightN * 0.6; // base by weight (heavier = larger)
   const scale = size / (1 + depth * 0.25); // smaller with distance
+  
+  // Get the 3D geometry for this node
+  const nodeShape = useMemo(() => getNodeGeometry(node.id), [node.id]);
   
   // Add slight pulsing effect for focused node
   const [pulseScale, setPulseScale] = useState(1);
@@ -825,9 +860,9 @@ function NodeMesh({
       onClick={(e) => { e.stopPropagation(); onClick(node.id); }}
       scale={[pulseScale, pulseScale, pulseScale]}
     >
-      {/* Main node sphere */}
+      {/* Main node with random 3D geometry */}
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
-        <sphereGeometry args={[1, 32, 32]} />
+        {nodeShape.geometry}
         <meshStandardMaterial 
           color={isFocused ? focusColor : primary} 
           emissive={isFocused ? "hsl(220 100% 50%)" : ring}
