@@ -13,7 +13,6 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -45,29 +44,6 @@ function normalizeWeight(w?: number) {
   const clamped = Math.max(1, Math.min(100, w));
   return (clamped - 1) / 99; // 0..1
 }
-
-// Simple string hash function for consistent building selection
-function hashCode(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  return Math.abs(hash);
-}
-
-// Building types for Road View
-const BUILDING_TYPES = [
-  { name: 'house', color: '#8B4513', height: 1.5, width: 1.2 },
-  { name: 'office', color: '#4682B4', height: 3, width: 1.5 },
-  { name: 'skyscraper', color: '#2F4F4F', height: 5, width: 2 },
-  { name: 'church', color: '#DAA520', height: 2.5, width: 1.8 },
-  { name: 'school', color: '#CD853F', height: 2, width: 2.2 },
-  { name: 'hospital', color: '#DC143C', height: 2.8, width: 2 },
-  { name: 'mall', color: '#9370DB', height: 1.8, width: 3 },
-  { name: 'factory', color: '#696969', height: 2.2, width: 2.5 },
-];
 
 function build3DLayout(root: KnowledgeNode) {
   const nodes: Node3D[] = [];
@@ -760,8 +736,7 @@ function NodeMesh({
   onWidgetClick,
   showOnlyFocusedWidgets = false,
   focusedNodeId,
-  sidePanelOpen = false,
-  isRoadView = false
+  sidePanelOpen = false
 }: { 
   node: Node3D; 
   onClick: (id: string) => void;
@@ -770,7 +745,6 @@ function NodeMesh({
   showOnlyFocusedWidgets?: boolean;
   focusedNodeId?: string | null;
   sidePanelOpen?: boolean;
-  isRoadView?: boolean;
 }) {
   const primary = useCssHsl("--primary", "hsl(210 100% 70%)");
   const ring = useCssHsl("--ring", "hsl(262 90% 66%)");
@@ -845,57 +819,23 @@ function NodeMesh({
   // Determine if widgets should be visible
   const shouldShowWidgets = !showOnlyFocusedWidgets || (showOnlyFocusedWidgets && node.id === focusedNodeId);
   
-  // Get building type for road view
-  const buildingType = BUILDING_TYPES[hashCode(node.id) % BUILDING_TYPES.length];
-  
   return (
     <group 
       position={node.position} 
       onClick={(e) => { e.stopPropagation(); onClick(node.id); }}
       scale={[pulseScale, pulseScale, pulseScale]}
     >
-      {/* Main node - either sphere or building */}
-      {isRoadView ? (
-        /* Building geometry for road view */
-        <group>
-          {/* Main building */}
-          <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
-            <boxGeometry args={[buildingType.width, buildingType.height, buildingType.width]} />
-            <meshStandardMaterial 
-              color={isFocused ? focusColor : buildingType.color} 
-              emissive={isFocused ? "hsl(220 100% 50%)" : "#222"}
-              emissiveIntensity={isFocused ? 0.8 : 0.1} 
-              metalness={0.2} 
-              roughness={0.8} 
-            />
-          </mesh>
-          {/* Roof */}
-          {buildingType.name === 'house' && (
-            <mesh castShadow position={[0, buildingType.height * scale / 2 + 0.2, 0]} scale={[scale, scale, scale]}>
-              <coneGeometry args={[buildingType.width * 0.8, 0.8, 4]} />
-              <meshStandardMaterial color="#8B0000" />
-            </mesh>
-          )}
-          {buildingType.name === 'church' && (
-            <mesh castShadow position={[0, buildingType.height * scale / 2 + 0.5, 0]} scale={[scale, scale, scale]}>
-              <cylinderGeometry args={[0.2, 0.2, 1, 8]} />
-              <meshStandardMaterial color="#B8860B" />
-            </mesh>
-          )}
-        </group>
-      ) : (
-        /* Standard sphere for normal view */
-        <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
-          <sphereGeometry args={[1, 32, 32]} />
-          <meshStandardMaterial 
-            color={isFocused ? focusColor : primary} 
-            emissive={isFocused ? "hsl(220 100% 50%)" : ring}
-            emissiveIntensity={isFocused ? 1.2 : 0.15} 
-            metalness={isFocused ? 0.3 : 0.1} 
-            roughness={isFocused ? 0.2 : 0.4} 
-          />
-        </mesh>
-      )}
+      {/* Main node sphere */}
+      <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshStandardMaterial 
+          color={isFocused ? focusColor : primary} 
+          emissive={isFocused ? "hsl(220 100% 50%)" : ring}
+          emissiveIntensity={isFocused ? 1.2 : 0.15} 
+          metalness={isFocused ? 0.3 : 0.1} 
+          roughness={isFocused ? 0.2 : 0.4} 
+        />
+      </mesh>
       
       {/* Glow halo for focused nodes */}
       {isFocused && (
@@ -1035,8 +975,7 @@ function TaperedEdge({
   targetWeight,
   color, 
   opacity, 
-  isFocused,
-  isRoadView = false
+  isFocused 
 }: {
   sourcePos: [number, number, number];
   targetPos: [number, number, number];
@@ -1045,7 +984,6 @@ function TaperedEdge({
   color: string;
   opacity: number;
   isFocused: boolean;
-  isRoadView?: boolean;
 }) {
   // Calculate line thickness based on node weights
   const sourceThickness = normalizeWeight(sourceWeight) * 0.35 + 0.01; 
@@ -1106,53 +1044,6 @@ function TaperedEdge({
   positionAttribute.needsUpdate = true;
   tubeGeometry.computeVertexNormals();
   
-  if (isRoadView) {
-    // Create asphalt road geometry that connects nodes at ground level
-    const sourceGround: [number, number, number] = [sourcePos[0], -2.5, sourcePos[2]];
-    const targetGround: [number, number, number] = [targetPos[0], -2.5, targetPos[2]];
-    
-    const direction = new THREE.Vector3()
-      .subVectors(new THREE.Vector3(...targetGround), new THREE.Vector3(...sourceGround))
-      .normalize();
-    
-    const roadWidth = Math.max(1.5, (sourceThickness + targetThickness) * 6); // Minimum road width
-    const roadLength = new THREE.Vector3(...sourceGround).distanceTo(new THREE.Vector3(...targetGround));
-    const midPoint = new THREE.Vector3()
-      .addVectors(new THREE.Vector3(...sourceGround), new THREE.Vector3(...targetGround))
-      .multiplyScalar(0.5);
-    
-    // Calculate rotation to align road with direction
-    const angle = Math.atan2(direction.x, direction.z);
-    
-    return (
-      <group position={[midPoint.x, midPoint.y, midPoint.z]} rotation={[0, -angle, 0]}>
-        {/* Road surface */}
-        <mesh receiveShadow>
-          <boxGeometry args={[roadWidth, 0.15, roadLength]} />
-          <meshStandardMaterial 
-            color={isFocused ? "#2C2C2C" : "#404040"}
-            roughness={0.9}
-            metalness={0.1}
-          />
-        </mesh>
-        {/* Road lines */}
-        <mesh position={[0, 0.08, 0]}>
-          <boxGeometry args={[0.15, 0.01, roadLength * 0.95]} />
-          <meshStandardMaterial color="#FFFF00" />
-        </mesh>
-        {/* Road edge lines */}
-        <mesh position={[-roadWidth/2 + 0.05, 0.08, 0]}>
-          <boxGeometry args={[0.05, 0.01, roadLength * 0.95]} />
-          <meshStandardMaterial color="#FFFFFF" />
-        </mesh>
-        <mesh position={[roadWidth/2 - 0.05, 0.08, 0]}>
-          <boxGeometry args={[0.05, 0.01, roadLength * 0.95]} />
-          <meshStandardMaterial color="#FFFFFF" />
-        </mesh>
-      </group>
-    );
-  }
-
   return (
     <mesh>
       <primitive object={tubeGeometry} />
@@ -1355,14 +1246,12 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
   const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(true);
-  const [isRoadView, setIsRoadView] = useState(false);
   
   return (
     <>
       <section aria-label="3D knowledge tree" className="w-full h-[800px] mt-10 relative">
-        {/* Control panel */}
-        <div className="absolute top-4 right-4 z-10 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg space-y-3">
-          {/* Widget visibility toggle */}
+        {/* Widget visibility toggle */}
+        <div className="absolute top-4 right-4 z-10 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg">
           <div className="flex items-center space-x-2">
             <Switch
               id="widget-visibility"
@@ -1376,18 +1265,6 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               Focus mode
             </label>
           </div>
-          
-          {/* Road view toggle */}
-          <div className="flex items-center space-x-2">
-            <Button
-              variant={isRoadView ? "default" : "outline"}
-              size="sm"
-              onClick={() => setIsRoadView(!isRoadView)}
-              className="text-xs"
-            >
-              🏘️ {isRoadView ? "Exit Road View" : "Road View"}
-            </Button>
-          </div>
         </div>
         
         <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
@@ -1399,7 +1276,6 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               setSelectedWidget={setSelectedWidget}
               showOnlyFocusedWidgets={showOnlyFocusedWidgets}
               sidePanelOpen={sidePanelOpen}
-              isRoadView={isRoadView}
             />
           </Canvas>
         </div>
@@ -1498,15 +1374,13 @@ function GraphSceneWithDrawer({
   setSidePanelOpen, 
   setSelectedWidget,
   showOnlyFocusedWidgets,
-  sidePanelOpen,
-  isRoadView
+  sidePanelOpen
 }: { 
   data: KnowledgeNode;
   setSidePanelOpen: (open: boolean) => void;
   setSelectedWidget: (widget: Widget | null) => void;
   showOnlyFocusedWidgets: boolean;
   sidePanelOpen: boolean;
-  isRoadView: boolean;
 }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -1688,7 +1562,6 @@ function GraphSceneWithDrawer({
             color={lineColor}
             opacity={isFocusedEdge ? 0.7 : 0.3}
             isFocused={isFocusedEdge}
-            isRoadView={isRoadView}
           />
         );
       })}
@@ -1703,7 +1576,6 @@ function GraphSceneWithDrawer({
           showOnlyFocusedWidgets={showOnlyFocusedWidgets}
           focusedNodeId={focusId}
           sidePanelOpen={sidePanelOpen}
-          isRoadView={isRoadView}
         />
       ))}
     </>
