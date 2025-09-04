@@ -1107,25 +1107,28 @@ function TaperedEdge({
   tubeGeometry.computeVertexNormals();
   
   if (isRoadView) {
-    // Create asphalt road geometry
+    // Create asphalt road geometry that connects nodes at ground level
+    const sourceGround: [number, number, number] = [sourcePos[0], -2.5, sourcePos[2]];
+    const targetGround: [number, number, number] = [targetPos[0], -2.5, targetPos[2]];
+    
     const direction = new THREE.Vector3()
-      .subVectors(new THREE.Vector3(...targetPos), new THREE.Vector3(...sourcePos))
+      .subVectors(new THREE.Vector3(...targetGround), new THREE.Vector3(...sourceGround))
       .normalize();
     
-    const roadWidth = (sourceThickness + targetThickness) * 8; // Wider roads
-    const roadLength = new THREE.Vector3(...sourcePos).distanceTo(new THREE.Vector3(...targetPos));
+    const roadWidth = Math.max(1.5, (sourceThickness + targetThickness) * 6); // Minimum road width
+    const roadLength = new THREE.Vector3(...sourceGround).distanceTo(new THREE.Vector3(...targetGround));
     const midPoint = new THREE.Vector3()
-      .addVectors(new THREE.Vector3(...sourcePos), new THREE.Vector3(...targetPos))
+      .addVectors(new THREE.Vector3(...sourceGround), new THREE.Vector3(...targetGround))
       .multiplyScalar(0.5);
     
     // Calculate rotation to align road with direction
     const angle = Math.atan2(direction.x, direction.z);
     
     return (
-      <group position={[midPoint.x, midPoint.y - 0.8, midPoint.z]} rotation={[0, -angle, 0]}>
+      <group position={[midPoint.x, midPoint.y, midPoint.z]} rotation={[0, -angle, 0]}>
         {/* Road surface */}
         <mesh receiveShadow>
-          <boxGeometry args={[roadWidth, 0.1, roadLength]} />
+          <boxGeometry args={[roadWidth, 0.15, roadLength]} />
           <meshStandardMaterial 
             color={isFocused ? "#2C2C2C" : "#404040"}
             roughness={0.9}
@@ -1133,9 +1136,18 @@ function TaperedEdge({
           />
         </mesh>
         {/* Road lines */}
-        <mesh position={[0, 0.06, 0]}>
-          <boxGeometry args={[0.1, 0.01, roadLength]} />
+        <mesh position={[0, 0.08, 0]}>
+          <boxGeometry args={[0.15, 0.01, roadLength * 0.95]} />
           <meshStandardMaterial color="#FFFF00" />
+        </mesh>
+        {/* Road edge lines */}
+        <mesh position={[-roadWidth/2 + 0.05, 0.08, 0]}>
+          <boxGeometry args={[0.05, 0.01, roadLength * 0.95]} />
+          <meshStandardMaterial color="#FFFFFF" />
+        </mesh>
+        <mesh position={[roadWidth/2 - 0.05, 0.08, 0]}>
+          <boxGeometry args={[0.05, 0.01, roadLength * 0.95]} />
+          <meshStandardMaterial color="#FFFFFF" />
         </mesh>
       </group>
     );
