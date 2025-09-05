@@ -1326,6 +1326,9 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
   const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(true);
   
+  // Get the current focus from context
+  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
+  
   return (
     <>
       <section aria-label="3D knowledge tree" className="w-full h-[800px] mt-10 relative">
@@ -1355,6 +1358,10 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               setSelectedWidget={setSelectedWidget}
               showOnlyFocusedWidgets={showOnlyFocusedWidgets}
               sidePanelOpen={sidePanelOpen}
+              focusedNodeLabel={focusedNodeLabel}
+              setFocusedNodeLabel={setFocusedNodeLabel}
+              focusSource={focusSource}
+              setFocusSource={setFocusSource}
             />
           </Canvas>
         </div>
@@ -1453,13 +1460,21 @@ function GraphSceneWithDrawer({
   setSidePanelOpen, 
   setSelectedWidget,
   showOnlyFocusedWidgets,
-  sidePanelOpen
+  sidePanelOpen,
+  focusedNodeLabel,
+  setFocusedNodeLabel,
+  focusSource,
+  setFocusSource
 }: { 
   data: KnowledgeNode;
   setSidePanelOpen: (open: boolean) => void;
   setSelectedWidget: (widget: Widget | null) => void;
   showOnlyFocusedWidgets: boolean;
   sidePanelOpen: boolean;
+  focusedNodeLabel: string | null;
+  setFocusedNodeLabel: (label: string | null) => void;
+  focusSource: 'graph2d' | 'graph3d' | null;
+  setFocusSource: (source: 'graph2d' | 'graph3d' | null) => void;
 }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -1485,8 +1500,7 @@ function GraphSceneWithDrawer({
     }
   }, [rootNode]);
   
-  // Get the current focus from context
-  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
+  // Focus values are now passed as props from the parent component
   
   // Create a map of node labels to IDs for quick lookup
   const labelToId = useMemo(() => {
