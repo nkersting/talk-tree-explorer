@@ -1327,7 +1327,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(true);
   
   // Get the current focus from context
-  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
+  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource, setDfsIndexByLabel } = useFocus();
   
   return (
     <>
@@ -1362,6 +1362,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               setFocusedNodeLabel={setFocusedNodeLabel}
               focusSource={focusSource}
               setFocusSource={setFocusSource}
+              setDfsIndexByLabel={setDfsIndexByLabel}
             />
           </Canvas>
         </div>
@@ -1464,8 +1465,9 @@ function GraphSceneWithDrawer({
   focusedNodeLabel,
   setFocusedNodeLabel,
   focusSource,
-  setFocusSource
-}: { 
+  setFocusSource,
+  setDfsIndexByLabel
+}: {
   data: KnowledgeNode;
   setSidePanelOpen: (open: boolean) => void;
   setSelectedWidget: (widget: Widget | null) => void;
@@ -1475,6 +1477,7 @@ function GraphSceneWithDrawer({
   setFocusedNodeLabel: (label: string | null) => void;
   focusSource: 'graph2d' | 'graph3d' | null;
   setFocusSource: (source: 'graph2d' | 'graph3d' | null) => void;
+  setDfsIndexByLabel: (label: string) => void;
 }) {
   const [focusId, setFocusId] = useState<string | null>(null);
   const { nodes, edges } = useMemo(() => build3DLayout(data), [data]);
@@ -1535,6 +1538,8 @@ function GraphSceneWithDrawer({
       setFocusId(id);
       setFocusedNodeLabel(clickedNode.label);
       setFocusSource('graph3d');
+      // Set DFS to resume from this node
+      setDfsIndexByLabel(clickedNode.label);
     }
   };
 
