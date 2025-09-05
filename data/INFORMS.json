@@ -25,6 +25,12 @@
         "name": "safety3.png",
         "subtitle": "src...",
         "notes": "bravado and machismo, disregard all protocol!"
+      },
+      {
+        "name": "safety-damce.png",
+        "subtitle": "(some satire here)",
+        "title": "Let's Safety Dance",
+        "notes": "safety as a euphemism for xenophobia, protectionism, isolationism"
       }
     ],
     "children": [
@@ -92,6 +98,37 @@
             "subtitle": "",
             "notes": "",
             "title": ""
+          }
+        ],
+        "children": []
+      },
+      {
+        "node": "Safety ~ Classical Physics",
+        "weight": 30,
+        "widgets": [
+          {
+            "name": "classical-physics.png",
+            "title": "Classical = Minimze Action",
+            "subtitle": "",
+            "notes": ""
+          },
+          {
+            "name": "quantum-physics.png",
+            "title": "Quantum = Deviations from Classical",
+            "subtitle": "",
+            "notes": ""
+          },
+          {
+            "name": "safety-first.png",
+            "title": "This is Why Safety First",
+            "subtitle": "",
+            "notes": "The lowest order (classical) solution should be paramount \n Then add perturbations (quantum) as needed"
+          },
+          {
+            "name": "banking.png",
+            "title": "A Banking Analogy",
+            "subtitle": "(don't spend what you don't have)",
+            "notes": "Classical: buy only what you can afford \n Quantum: use credit (in moderation ... that's why Planck's Constant is small!)"
           }
         ],
         "children": []
@@ -696,12 +733,56 @@
                         "title": "Evolved Creatures",
                         "subtitle": "",
                         "notes": ""
+                      }
+                    ]
+                  },
+                  {
+                    "node": "Variety",
+                    "weight": 20,
+                    "widgets": [
+                      {
+                        "name": "variety.png",
+                        "url": "https://medium.com/@1054h34/identifying-chatgpt-with-variety-ce392b09e38e",
+                        "title": "Variety is the Spice of Life",
+                        "subtitle": "(from which it gets its flavor)",
+                        "notes": ""
                       },
+                      {
+                        "name": "energy.png",
+                        "url": "https://medium.com/@1054h34/identifying-ai-content-with-variety-128b4c728724",
+                        "title": "Don't Spend Too Much Energy",
+                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
+                        "name": "https://www.youtube.com/watch?v=kwW0g3aF1pE",
+                        "title": "Synchron Demonstration",
+                        "subtitle": "",
+                        "notes": ""
+                      }
+                    ]
+                  },
+                  { 
+                    "node": "An LLM for Motion?",
+                    "weight": 10,
+                    "widgets": [
                       {
                         "name": "pose.png",
                         "title": "An LLM for Motion?",
                         "subtitle": "Sequences of Words -> Sequences of Poses",
                         "notes": "First make for Humans \n Consider other body topologies as needed"
+                      },
+                      {
+                        "name": "https://www.youtube.com/watch?v=zV1qLYukTH8",
+                        "title": "Dance",
+                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
+                        "name": "https://www.youtube.com/watch?v=3uHxgQ_hHs8",
+                        "title": "Wushu (Kungfu)",
+                        "subtitle": "(martial arts in general)",
+                        "notes": ""
                       }
                     ]
                   }
