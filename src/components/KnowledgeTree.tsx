@@ -37,7 +37,7 @@ type PositionedNode = KnowledgeNode & {
 // Custom node component with handles
 function KnowledgeNodeComponent({ data }: { data: any }) {
   const radius = data.radius || 20;
-  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
+  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource, setDfsIndexByLabel } = useFocus();
   
   // Determine if this node is currently focused
   const isFocused = focusedNodeLabel === data.label;
@@ -54,6 +54,8 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
     } else {
       setFocusedNodeLabel(data.label);
       setFocusSource('graph2d');
+      // Set DFS to resume from this node
+      setDfsIndexByLabel(data.label);
     }
   };
   
