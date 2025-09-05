@@ -11,6 +11,7 @@ interface FocusContextType {
   focusNextNode: () => void;
   focusPreviousNode: () => void;
   initializeDfsTraversal: (data: KnowledgeNode) => void;
+  setDfsIndexByLabel: (label: string) => void;
 }
 
 const FocusContext = createContext<FocusContextType | undefined>(undefined);
@@ -76,6 +77,13 @@ export function FocusProvider({ children }: { children: ReactNode }) {
     setFocusSource('graph3d');
   };
 
+  const setDfsIndexByLabel = (label: string) => {
+    const index = dfsTraversal.findIndex(nodeLabel => nodeLabel === label);
+    if (index !== -1) {
+      setCurrentDfsIndex(index);
+    }
+  };
+
   return (
     <FocusContext.Provider value={{ 
       focusedNodeLabel, 
@@ -86,7 +94,8 @@ export function FocusProvider({ children }: { children: ReactNode }) {
       currentDfsIndex,
       focusNextNode,
       focusPreviousNode,
-      initializeDfsTraversal
+      initializeDfsTraversal,
+      setDfsIndexByLabel
     }}>
       {children}
     </FocusContext.Provider>

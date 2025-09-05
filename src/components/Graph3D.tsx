@@ -1146,7 +1146,7 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   const { camera } = useThree();
   
   // Get the current focus from context
-  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource } = useFocus();
+  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource, setDfsIndexByLabel } = useFocus();
   
   // Create a map of node labels to IDs for quick lookup
   const labelToId = useMemo(() => {
@@ -1181,6 +1181,8 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
       setFocusId(id);
       setFocusedNodeLabel(clickedNode.label);
       setFocusSource('graph3d');
+      // Set DFS to resume from this node
+      setDfsIndexByLabel(clickedNode.label);
     }
   };
 
