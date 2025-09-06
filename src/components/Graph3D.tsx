@@ -1386,7 +1386,6 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                   /* Widget has url attribute - load that URL in iframe */
                   <div className="w-full">
                     <div className="mb-2 flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Loading website...</span>
                       <Button
                         variant="outline"
                         size="sm"
@@ -1405,9 +1404,6 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                         console.log('Failed to load iframe:', selectedWidget.url);
                       }}
                     />
-                    <p className="text-xs text-muted-foreground mt-2">
-                      If the website doesn't load, it may block embedding for security reasons. Use "Open in New Tab" instead.
-                    </p>
                   </div>
                 ) : selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
                   <div className="w-full">
@@ -1430,7 +1426,6 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                   /* Website iframe for URLs */
                   <div className="w-full">
                     <div className="mb-2 flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Loading website...</span>
                       <Button
                         variant="outline"
                         size="sm"

@@ -405,7 +405,7 @@
                         "name": "harmonic_ML.png",
                         "url":"https://github.com/nkersting/harmonic_robustness",
                         "title": "Direct Application to Machine Learning",
-                        "subtitle": "(this is OPEN SOURCE)",
+                        "subtitle": "(this is OPEN SOURCE: https://github.com/nkersting/harmonic_robustness)",
                         "notes": "Training/Validation \n Drift Detection \n Real-time Monitoring"
                       },
                       {
