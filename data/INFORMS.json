@@ -27,7 +27,7 @@
         "notes": "bravado and machismo, disregard all protocol!"
       },
       {
-        "name": "safety-damce.png",
+        "name": "safety-dance.png",
         "subtitle": "(some satire here)",
         "title": "Let's Safety Dance",
         "notes": "safety as a euphemism for xenophobia, protectionism, isolationism"
@@ -402,7 +402,7 @@
                         "notes": "Minimizing Surface Tension \n Heat Exchange \n Electrostatic Potential Drop"
                       },
                       {
-                        "name": "harmonic_ML.png",
+                        "name": "harmonic_measure.png",
                         "url":"https://github.com/nkersting/harmonic_robustness",
                         "title": "Direct Application to Machine Learning",
                         "subtitle": "(this is OPEN SOURCE: https://github.com/nkersting/harmonic_robustness)",
