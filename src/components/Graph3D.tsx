@@ -13,6 +13,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -1384,12 +1385,29 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 {selectedWidget.url ? (
                   /* Widget has url attribute - load that URL in iframe */
                   <div className="w-full">
+                    <div className="mb-2 flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Loading website...</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(selectedWidget.url, '_blank')}
+                      >
+                        Open in New Tab
+                      </Button>
+                    </div>
                     <iframe 
                       src={selectedWidget.url}
                       title="Website"
                       className="w-full h-96 rounded-lg border border-border"
                       sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                      onError={() => {
+                        // Handle iframe loading errors
+                        console.log('Failed to load iframe:', selectedWidget.url);
+                      }}
                     />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      If the website doesn't load, it may block embedding for security reasons. Use "Open in New Tab" instead.
+                    </p>
                   </div>
                 ) : selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
                   <div className="w-full">
@@ -1411,12 +1429,28 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 ) : selectedWidget.name.startsWith('http://') || selectedWidget.name.startsWith('https://') ? (
                   /* Website iframe for URLs */
                   <div className="w-full">
+                    <div className="mb-2 flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Loading website...</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(selectedWidget.name, '_blank')}
+                      >
+                        Open in New Tab
+                      </Button>
+                    </div>
                     <iframe 
                       src={selectedWidget.name}
                       title="Website"
                       className="w-full h-96 rounded-lg border border-border"
                       sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                      onError={() => {
+                        console.log('Failed to load iframe:', selectedWidget.name);
+                      }}
                     />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      If the website doesn't load, it may block embedding for security reasons. Use "Open in New Tab" instead.
+                    </p>
                   </div>
                 ) : (
                   /* Full-size widget image */
