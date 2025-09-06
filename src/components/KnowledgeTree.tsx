@@ -88,7 +88,7 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
               width: radius * 2,
               height: radius * 2,
               fontSize: Math.max(8, radius / 3),
-              ...(isFocused ? { boxShadow: '0 0 0 18px rgb(125 211 252)' } : {}) // 8px thick sky-300 border
+              ...(isFocused ? { boxShadow: '0 0 0 48px rgb(249 115 22)' } : {}) // 8px thick sky-300 border
             }}
             title={data.label}
             onClick={handleNodeClick}

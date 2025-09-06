@@ -134,7 +134,7 @@
         "children": []
       },
       {
-        "node": "Motivation",
+        "node": "Motivation/Urgency",
         "weight": 90,
         "children": [
           {
@@ -250,7 +250,89 @@
           {
             "node": "The next ChatGPT Moment",
             "weight": 70,
-            "widgets": []
+            "widgets": [
+              {
+                "name": "chatgpt_moment.png",
+                "title": "The next ChatGPT Moment",
+                "subtitle": "",
+                "notes": ""
+              },
+              {
+                "name": "chatgpt_warnings.png",
+                "title": "Warnings and Precursors to the ChatGPT Moment",
+                "subtitle": "",
+                "notes": "BERT \n GAN"
+              }
+            ],
+            "children": [
+              {
+                "node": "Robo Moment",
+                "weight": 60,
+                "widgets": [
+                  {
+                    "name": "robots_at_work.png",
+                    "title": "Robots at Work",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "robots_at_home.png",
+                    "title": "Robots in the Home",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "robots_street.png",
+                    "title": "Robots in the Street",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "robot_warnings.png",
+                    "title": "Warnings and Precursors to the Robo Moment",
+                    "subtitle": "",
+                    "notes": "Agentic AI \n Drone warfare \n Autonomous vehicles"
+                  }
+                ]
+              },
+              {
+                "node": "Autonomous Vehicles",
+                "weight": 30,
+                "widgets": [
+                  {
+                    "name": "autonomous_vehicles.png",
+                    "title": "Autonomous Vehicles",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "autonomous_vehicles2.png",
+                    "title": "Autonomous Vehicles",
+                    "subtitle": "",
+                    "notes": ""
+                  }
+                ]
+              },
+              {
+                "node": "Drones",
+                "weight": 20,
+                "widgets": [
+                  {
+                    "name": "drones.png",
+                    "title": "Drones",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "drones2.png",
+                    "title": "Drones",
+                    "subtitle": "",
+                    "notes": ""
+                  }
+                ]
+              }
+
+            ]
           },
           {
             "node": "What if we don't deal with this?",
@@ -302,7 +384,7 @@
                     "weight": 30,
                     "widgets": [
                       {
-                        "name": "ironaction_ai.png",
+                        "name": "ironaction.jpeg",
                         "title": "IronAction AI",
                         "subtitle": "",
                         "notes": "Iron: the most stable element in the universe \n Action: average (PE - KE), optimal dynamic"
@@ -314,7 +396,20 @@
                         "notes": "Stable \n Predictable \n Minimal"
                       },
                       {
-                        "name": "harmonic2.png",
+                        "name": "harmonic_examples.png",
+                        "title": "Nature Likes Harmonic Functions",
+                        "subtitle": "(the laziness principle)",
+                        "notes": "Minimizing Surface Tension \n Heat Exchange \n Electrostatic Potential Drop"
+                      },
+                      {
+                        "name": "harmonic_ML.png",
+                        "url":"https://github.com/nkersting/harmonic_robustness",
+                        "title": "Direct Application to Machine Learning",
+                        "subtitle": "(this is OPEN SOURCE)",
+                        "notes": "Training/Validation \n Drift Detection \n Real-time Monitoring"
+                      },
+                      {
+                        "name": "blackbox.png",
                         "title": "Blackbox Metrics",
                         "subtitle": "(everyone must be empowered to measure safety)",
                         "notes": "Simple \n Affordable \n Effective"
@@ -1028,6 +1123,104 @@
                     "title": "Peer to Peer (P2P) Networks",
                     "subtitle": "moving away from centralized servers",
                     "notes": "Problems with Centralized Compute: \n Expensive \n Vulnerable \n Despotic"
+                  },
+                  {
+                    "name": "SLM.png",
+                    "title": "Small Language Models",
+                    "subtitle": "the many small beat the few large",
+                    "notes": ""
+                  },
+                  {
+                    "name": "datacenters.png",
+                    "title": "Pending Energy Crisis",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "catastrophe.png",
+                    "title": "Catastrophe Theory",
+                    "subtitle": "",
+                    "notes": "Large central systems are single points of failure"
+                  }
+                ],
+                "children": [
+                  {
+                    "node": "Virtual Currency",
+                    "weight": 5,
+                    "widgets": [
+                      {
+                        "name": "bitcoin.png",
+                        "title": "Bitcoin",
+                        "subtitle": "The most popular Blockchain",
+                        "notes": ""
+                      },
+                      {
+                        "name": "ethereum.png",
+                        "title": "Ethereum",
+                        "subtitle": "Smart Contracts",
+                        "notes": ""
+                      },
+                      {
+                        "name": "blockchain.png",
+                        "title": "Blockchatin",
+                        "subtitle": "Essential Technology",
+                        "notes": ""
+                      },
+                      {
+                        "name": "marsmoney.png",
+                        "title": "Space-Friendly Currency",
+                        "subtitle": "how else are you going to send cash to Mars?",
+                        "notes": ""
+                      }
+                    ]
+                  },
+                  {
+                    "node": "Distributed Compute",
+                    "weight": 5,
+                    "widgets": [
+                      {
+                        "name": "federated.png",
+                        "title": "Federated Learning",
+                        "subtitle": "",
+                        "notes": "Financial Institutions / Credit Card Companies like this"
+                      },
+                      {
+                        "name": "v.png",
+                        "title": "Distributed Data",
+                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
+                        "name": "seti.png",
+                        "title": "SETI",
+                        "subtitle": "(the canonical example of Crowd Compute)",
+                        "notes": "But probably best to turn it off!"
+                      }
+                    ]
+                  },
+                  {
+                    "node": "Digital Democracy",
+                    "weight": 3,
+                    "widgets": [
+                      {
+                        "name": "internet.png",
+                        "title": "The Internet",
+                        "subtitle": "(aspired to be digitally democratic)",
+                        "notes": "Anyone can make and serve a website \n DNS is centralized \n ISPs are centralized \n Cloud providers are centralized"
+                      },
+                      {
+                        "name": "smartphones.png",
+                        "title": "Edge Compute",
+                        "subtitle": "We are all carrying supercomputers in our pockets",
+                        "notes": ""
+                      },
+                      {
+                        "name": "democracy.png",
+                        "title": "Is Pure Democracy really the best system?",
+                        "subtitle": "(we like to think so)",
+                        "notes": "A lot of totalitarianism lately \n Oligarchy is a natural attractor \n Republic is a compromise"
+                      }
+                    ]
                   }
                 ]
               },             
@@ -1162,7 +1355,25 @@
                     {"name": "infinite-art2.png", "title": "Bosonic Matter", "subtitle": "", "notes": "Elementary (e.g., Higgs) \n Composite (e.g., Pion)"},
                     {"name": "infinite-art3.png", "title": "Force Carriers", "subtitle": "", "notes": ""},
                     {"name": "infinite-art4.png", "title": "Other Stuff?", "subtitle": "", "notes": "Dark Matter \n Dark Energy \n Exotic Matter \n etc."}
-                   ]}
+                   ]},
+                   {
+                    "node": "Art is Satisfying",
+                    "weight":20,
+                    "widgets":[
+                      {"name": "freedom.png", 
+                      "title": "Is it all about Freedom?",
+                       "subtitle": "",
+                        "notes": "Prove your freedom -> Try something new"},
+                      {"name": "gallery.png", 
+                      "title": "Art Galleries", 
+                      "subtitle": "", 
+                      "notes": ""},
+                      {"name": "concert.png",
+                       "title": "Concerts",
+                        "subtitle": "", 
+                        "notes": ""}
+                    ]
+                   }
                 ]
               },
               {
