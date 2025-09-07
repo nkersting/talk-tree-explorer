@@ -41,38 +41,41 @@
           {
             "name": "tautology.png",
             "title": "The Tautology",
-            "subtitle": "if it wasn't safe, it would kill us!",
+            "subtitle": "if it weren't safe, it would kill us!",
             "notes": ""
           },
           {
-            "name": "sword.png",
+            "name": "sword.jpg",
             "subtitle": "",
             "title": "Sword Hilts",
-            "notes": "without a hand, you can't use a sword"
+            "notes": "without a hand, you can't use a sword",
+            "ref": "https://www.metmuseum.org/art/collection/search/35367"
           },
           {
-            "name": "guns.png",
+            "name": "gun_safety.jpg",
             "subtitle": "",
-            "notes": "without a hand, you can't use a gun",
-            "title": "Gun Safeties"
+            "notes": "accidental discharge = bad \n accidental gun deaths down 4x since 1980s \n applies to other triggered devices (table saws, gas stoves, etc.)",
+            "title": "Gun Safeties",
+            "ref":"https://www.gunfacts.info/wp-content/uploads/2025/02/ACCIDENTAL-GUN-DEATHS-U.S.-Accidental-Firearm-Death-Count-and-Rate-1981-through-2016-b.png"
           },
           {
-            "name": "seatbelt.png",
+            "name": "seatbelt.jpg",
             "subtitle": "",
             "title": "Seat Belts",
-            "notes": ""
+            "notes": "seatbelts reduce the risk of fatal injury to front-seat occupants by 45%",
+            "ref":"https://www.nhtsa.gov/book/countermeasures-that-work/seat-belts-and-child-restraints"
           },
           {
             "name": "web.png",
             "subtitle": "",
             "title": "Web Security",
-            "notes": "SHA \n RSA \n SSH"
+            "notes": "0-1 type enabler \n SSL/TLS \n SHA \n RSA \n e-commerce depends on this"
           },
           {
-            "name": "quitsave.png",
+            "name": "ultima.png",
             "subtitle": "(in gaming)",
             "title": "Quit and Save",
-            "notes": "Civilization \n Zork \n ..."
+            "notes": "Zork (1980) \n Ultima \n Civilization ..."
           }
         ],
         "children": []
