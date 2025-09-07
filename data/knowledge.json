@@ -10,39 +10,62 @@
     "weight": 100,
     "widgets": [
       {
-        "name": "safety.png",
-        "title": "The Reputation of Safety",
-        "subtitle": "slightly negative ...",
-        "notes": "Historically we don't see safety mentioned until ... \n Gradual institutionalization \n Satire \n Intentional violation (machismo) \n Current political connotations"
+        "name": "agc.jpg",
+        "title": "Frequent Recalibration",
+        "subtitle": "avoid metric drift",
+        "notes": "e.g. continual recalibration of Apollo Guidance Computer (AGC) \n without updating Inertial Measurement Unit (IMU), errors accumulate unacceptably"
       },
       {
-        "name": "safety2.png",
-        "subtitle": "src...",
-        "title": "Satire",
-        "notes": "seen as overly cautious"
+        "name": "gemini.jpeg",
+        "title": "Loose Coupling",
+        "subtitle": "accommodate imperfection",
+        "notes": "Avoid single points of failure \n Avoid domino effects \n e.g. Gemini spacecraft magnetic docking"
       },
       {
-        "name": "safety3.png",
-        "subtitle": "src...",
-        "notes": "bravado and machismo, disregard all protocol!"
-      },
-      {
-        "name": "safety-dance.png",
-        "subtitle": "(some satire here)",
-        "title": "Let's Safety Dance",
-        "notes": "safety as a euphemism for xenophobia, protectionism, isolationism"
+        "name": "Apollo_Pad_Abort_Test_-2.jpg",
+        "title": "A Backup Plan for Everything",
+        "subtitle": "don't be caught without a parachute (or two)",
+        "notes": "e.g. Apollo Launch Escape System",
+        "url":"https://spaceflighthistory.blogspot.com/2015/08/failure-was-option-what-if-apollo.html"
       }
     ],
     "children": [
+      {
+        "node": "Back-reaction to Safety",
+        "weight": 50,
+        "widgets": [
+          {
+            "name": "safety_satire.png",
+            "subtitle": "(all over the mainstream culture)",
+            "title": "Satire",
+            "notes": "seen as overly cautious"
+          },
+          {
+            "name": "top_gun.png",
+            "subtitle": "(Top Gun and MI, etc.) ",
+            "title": "Glorification of Risk",
+            "notes": "bravado and machismo, disregard all protocol! \n Deepwater Horizon oil rig disaster"
+          },
+          {
+            "name": "safety_dance.png",
+            "subtitle": "(some satire here)",
+            "title": "Let's Safety Dance",
+            "notes": "safety as a euphemism for xenophobia, protectionism, isolationism"
+          }
+        ],
+        "children": []
+      },
       {
         "node": "Safety => Progress",
         "weight": 50,
         "widgets": [
           {
-            "name": "tautology.png",
+            "name": "note7.jpg",
             "title": "The Tautology",
-            "subtitle": "if it weren't safe, it would kill us!",
-            "notes": ""
+            "subtitle": "unsafe tech is naturally selected away",
+            "notes": "No one will use it if they have a choice \n e.g., Samsung Galaxy Note 7 \n Do not use the phone while charging (!)",
+            "ref":"https://blog.easyacc.com/2016/10/14/how-to-avoid-samsung-note-7-from-explosio/"
+  
           },
           {
             "name": "sword.jpg",
@@ -66,7 +89,7 @@
             "ref":"https://www.nhtsa.gov/book/countermeasures-that-work/seat-belts-and-child-restraints"
           },
           {
-            "name": "web.png",
+            "name": "internet.jpg",
             "subtitle": "",
             "title": "Web Security",
             "notes": "0-1 type enabler \n SSL/TLS \n SHA \n RSA \n e-commerce depends on this"
@@ -76,31 +99,6 @@
             "subtitle": "(in gaming)",
             "title": "Quit and Save",
             "notes": "Zork (1980) \n Ultima \n Civilization ..."
-          }
-        ],
-        "children": []
-      },
-      {
-        "node": "Humane => Progress",
-        "weight": 50,
-        "widgets": [
-          {
-            "name": "tautology.png",
-            "title": "The Tautology",
-            "subtitle": "if it wasn't humane, it would kill us!",
-            "notes": ""
-          },
-          {
-            "name": "unhumane1.png",
-            "subtitle": "",
-            "title": "Example 1",
-            "notes": ""
-          },
-          {
-            "name": "unhumane2.png",
-            "subtitle": "",
-            "notes": "",
-            "title": ""
           }
         ],
         "children": []
@@ -132,6 +130,31 @@
             "title": "A Banking Analogy",
             "subtitle": "(don't spend what you don't have)",
             "notes": "Classical: buy only what you can afford \n Quantum: use credit (in moderation ... that's why Planck's Constant is small!)"
+          }
+        ],
+        "children": []
+      },
+      {
+        "node": "Humane => Progress",
+        "weight": 50,
+        "widgets": [
+          {
+            "name": "tautology.png",
+            "title": "The Tautology",
+            "subtitle": "if it wasn't humane, it would kill us!",
+            "notes": ""
+          },
+          {
+            "name": "unhumane1.png",
+            "subtitle": "",
+            "title": "Example 1",
+            "notes": ""
+          },
+          {
+            "name": "unhumane2.png",
+            "subtitle": "",
+            "notes": "",
+            "title": ""
           }
         ],
         "children": []
