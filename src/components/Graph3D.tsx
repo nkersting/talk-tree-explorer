@@ -1400,16 +1400,38 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                         Open in New Tab
                       </Button>
                     </div>
-                    <iframe 
-                      src={selectedWidget.url}
-                      title="Website"
-                      className="w-full h-96 rounded-lg border border-border"
-                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                      onError={() => {
-                        // Handle iframe loading errors
-                        console.log('Failed to load iframe:', selectedWidget.url);
-                      }}
-                    />
+                    {!iframeError ? (
+                      <iframe 
+                        src={selectedWidget.url}
+                        title="Website"
+                        className="w-full h-96 rounded-lg border border-border"
+                        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                        onError={() => {
+                          console.log('Failed to load iframe:', selectedWidget.url);
+                          setIframeError(true);
+                        }}
+                      />
+                    ) : (
+                      (selectedWidget.preview || !selectedWidget.name.startsWith('http')) && (
+                        <img 
+                          src={selectedWidget.preview
+                            ? (selectedWidget.preview.startsWith('http')
+                              ? selectedWidget.preview
+                              : selectedWidget.preview.startsWith('/')
+                                ? selectedWidget.preview
+                                : `/data/${selectedWidget.preview}`)
+                            : (selectedWidget.name.startsWith('/')
+                              ? selectedWidget.name
+                              : `/data/${selectedWidget.name}`)
+                          }
+                          alt="Widget"
+                          className="w-full max-h-96 object-contain rounded-lg border border-border"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      )
+                    )}
                   </div>
                 ) : selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
                   <div className="w-full">
@@ -1465,11 +1487,13 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                             Open in New Tab
                           </Button>
                         </div>
-                        {!selectedWidget.name.startsWith('http') && (
+                        {selectedWidget.preview ? (
                           <img 
-                            src={selectedWidget.name.startsWith('/') 
-                              ? selectedWidget.name 
-                              : `/data/${selectedWidget.name}`
+                            src={selectedWidget.preview.startsWith('http') 
+                              ? selectedWidget.preview 
+                              : selectedWidget.preview.startsWith('/') 
+                                ? selectedWidget.preview 
+                                : `/data/${selectedWidget.preview}`
                             }
                             alt="Widget" 
                             className="w-full max-h-96 object-contain rounded-lg border border-border"
@@ -1477,6 +1501,20 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                               e.currentTarget.style.display = 'none';
                             }}
                           />
+                        ) : (
+                          !selectedWidget.name.startsWith('http') && (
+                            <img 
+                              src={selectedWidget.name.startsWith('/') 
+                                ? selectedWidget.name 
+                                : `/data/${selectedWidget.name}`
+                              }
+                              alt="Widget" 
+                              className="w-full max-h-96 object-contain rounded-lg border border-border"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          )
                         )}
                       </>
                     )}
