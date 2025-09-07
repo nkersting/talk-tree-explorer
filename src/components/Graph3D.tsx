@@ -1326,6 +1326,12 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
   const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(true);
+  const [iframeError, setIframeError] = useState(false);
+  
+  // Reset iframe error when widget changes
+  useEffect(() => {
+    setIframeError(false);
+  }, [selectedWidget]);
   
   // Get the current focus from context
   const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource, setDfsIndexByLabel } = useFocus();
@@ -1425,27 +1431,44 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 ) : selectedWidget.name.startsWith('http://') || selectedWidget.name.startsWith('https://') ? (
                   /* Website iframe for URLs */
                   <div className="w-full">
-                    <div className="mb-2 flex justify-between items-center">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => window.open(selectedWidget.name, '_blank')}
-                      >
-                        Open in New Tab
-                      </Button>
-                    </div>
-                    <iframe 
-                      src={selectedWidget.name}
-                      title="Website"
-                      className="w-full h-96 rounded-lg border border-border"
-                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                      onError={() => {
-                        console.log('Failed to load iframe:', selectedWidget.name);
-                      }}
-                    />
-                    <p className="text-xs text-muted-foreground mt-2">
-                      If the website doesn't load, it may block embedding for security reasons. Use "Open in New Tab" instead.
-                    </p>
+                    {!iframeError ? (
+                      <>
+                        <div className="mb-2 flex justify-between items-center">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => window.open(selectedWidget.name, '_blank')}
+                          >
+                            Open in New Tab
+                          </Button>
+                        </div>
+                        <iframe 
+                          src={selectedWidget.name}
+                          title="Website"
+                          className="w-full h-96 rounded-lg border border-border"
+                          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                          onError={() => {
+                            console.log('Failed to load iframe:', selectedWidget.name);
+                            setIframeError(true);
+                          }}
+                        />
+                      </>
+                    ) : (
+                      /* Show widget image when iframe fails */
+                      <img 
+                        src={selectedWidget.name.startsWith('http') 
+                          ? selectedWidget.name 
+                          : selectedWidget.name.startsWith('/') 
+                            ? selectedWidget.name 
+                            : `/data/${selectedWidget.name}`
+                        }
+                        alt="Widget" 
+                        className="w-full max-h-96 object-contain rounded-lg border border-border"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    )}
                   </div>
                 ) : (
                   /* Full-size widget image */
