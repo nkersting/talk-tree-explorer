@@ -863,6 +863,7 @@
                     "widgets": [
                       {
                         "name": "variety.png",
+                        "image_only": true,
                         "url": "https://medium.com/@1054h34/identifying-chatgpt-with-variety-ce392b09e38e",
                         "title": "Variety is the Spice of Life",
                         "subtitle": "(from which it gets its flavor)",
