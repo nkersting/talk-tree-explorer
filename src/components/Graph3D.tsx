@@ -1412,25 +1412,23 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                         }}
                       />
                     ) : (
-                      (selectedWidget.preview || !selectedWidget.name.startsWith('http')) && (
-                        <img 
-                          src={selectedWidget.preview
-                            ? (selectedWidget.preview.startsWith('http')
+                      <img 
+                        src={selectedWidget.preview
+                          ? (selectedWidget.preview.startsWith('http')
+                            ? selectedWidget.preview
+                            : selectedWidget.preview.startsWith('/')
                               ? selectedWidget.preview
-                              : selectedWidget.preview.startsWith('/')
-                                ? selectedWidget.preview
-                                : `/data/${selectedWidget.preview}`)
-                            : (selectedWidget.name.startsWith('/')
-                              ? selectedWidget.name
-                              : `/data/${selectedWidget.name}`)
-                          }
-                          alt="Widget"
-                          className="w-full max-h-96 object-contain rounded-lg border border-border"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      )
+                              : `/data/${selectedWidget.preview}`)
+                          : (selectedWidget.name.startsWith('/')
+                            ? selectedWidget.name
+                            : `/data/${selectedWidget.name}`)
+                        }
+                        alt="Widget"
+                        className="w-full max-h-96 object-contain rounded-lg border border-border"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
                     )}
                   </div>
                 ) : selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
