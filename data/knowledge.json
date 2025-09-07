@@ -19,7 +19,7 @@
         "name": "gemini.jpeg",
         "title": "Loose Coupling",
         "subtitle": "accommodate imperfection",
-        "notes": "Avoid single points of failure \n Avoid domino effects \n e.g. Gemini spacecraft magnetic docking"
+        "notes": "Moon Landing = Safety Critical \n Avoid single points of failure \n Avoid domino effects \n e.g. Gemini spacecraft magnetic docking"
       },
       {
         "name": "Apollo_Pad_Abort_Test_-2.jpg",
@@ -949,13 +949,13 @@
                 "name": "religion_acceptance2.png",
                 "title": "Acceptance of AI as the new God",
                 "subtitle": "",
-                "notes": ""
+                "notes": "Another Asimov prediction!"
               },
               {
                 "name": "religion_acceptance3.png",
                 "title": "Acceptance of AI as our new Master",
                 "subtitle": "",
-                "notes": ""
+                "notes": "Thresholds we cannot ignore: Kasparov losing to Deep Blue, Ken losing to IBM Watson in Jeopardy, AlphaGo ..."
               }
             ]
           }
