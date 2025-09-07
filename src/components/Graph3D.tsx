@@ -1389,29 +1389,18 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               <div className="space-y-4">
                 {/* Check if widget has url attribute or if name contains URL */}
                 {selectedWidget.url ? (
-                  /* Widget has url attribute - load that URL in iframe */
-                  <div className="w-full">
-                    <div className="mb-2 flex justify-between items-center">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => window.open(selectedWidget.url, '_blank')}
-                      >
-                        Open in New Tab
-                      </Button>
-                    </div>
-                    {!iframeError ? (
-                      <iframe 
-                        src={selectedWidget.url}
-                        title="Website"
-                        className="w-full h-96 rounded-lg border border-border"
-                        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                        onError={() => {
-                          console.log('Failed to load iframe:', selectedWidget.url);
-                          setIframeError(true);
-                        }}
-                      />
-                    ) : (
+                  selectedWidget.image_only ? (
+                    /* Widget has url and image_only flag - show image with open button */
+                    <div className="w-full">
+                      <div className="mb-2 flex justify-between items-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(selectedWidget.url, '_blank')}
+                        >
+                          Open in New Tab
+                        </Button>
+                      </div>
                       <img 
                         src={selectedWidget.preview
                           ? (selectedWidget.preview.startsWith('http')
@@ -1429,8 +1418,51 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                           e.currentTarget.style.display = 'none';
                         }}
                       />
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    /* Widget has url attribute - load that URL in iframe */
+                    <div className="w-full">
+                      <div className="mb-2 flex justify-between items-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(selectedWidget.url, '_blank')}
+                        >
+                          Open in New Tab
+                        </Button>
+                      </div>
+                      {!iframeError ? (
+                        <iframe 
+                          src={selectedWidget.url}
+                          title="Website"
+                          className="w-full h-96 rounded-lg border border-border"
+                          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                          onError={() => {
+                            console.log('Failed to load iframe:', selectedWidget.url);
+                            setIframeError(true);
+                          }}
+                        />
+                      ) : (
+                        <img 
+                          src={selectedWidget.preview
+                            ? (selectedWidget.preview.startsWith('http')
+                              ? selectedWidget.preview
+                              : selectedWidget.preview.startsWith('/')
+                                ? selectedWidget.preview
+                                : `/data/${selectedWidget.preview}`)
+                            : (selectedWidget.name.startsWith('/')
+                              ? selectedWidget.name
+                              : `/data/${selectedWidget.name}`)
+                          }
+                          alt="Widget"
+                          className="w-full max-h-96 object-contain rounded-lg border border-border"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      )}
+                    </div>
+                  )
                 ) : selectedWidget.name.includes('youtube.com') || selectedWidget.name.includes('youtu.be') ? (
                   <div className="w-full">
                     <iframe 
