@@ -429,6 +429,7 @@
                       },
                       {
                         "name": "harmonic_measure.png",
+                        "image_only": true,
                         "url":"https://github.com/nkersting/harmonic_robustness",
                         "title": "Direct Application to Machine Learning",
                         "subtitle": "(this is OPEN SOURCE: https://github.com/nkersting/harmonic_robustness)",
@@ -871,6 +872,7 @@
                       },
                       {
                         "name": "energy.png",
+                        "image_only": true,
                         "url": "https://medium.com/@1054h34/identifying-ai-content-with-variety-128b4c728724",
                         "title": "Don't Spend Too Much Energy",
                         "subtitle": "",
