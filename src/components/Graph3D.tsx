@@ -1455,19 +1455,30 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                       </>
                     ) : (
                       /* Show widget image when iframe fails */
-                      <img 
-                        src={selectedWidget.name.startsWith('http') 
-                          ? selectedWidget.name 
-                          : selectedWidget.name.startsWith('/') 
-                            ? selectedWidget.name 
-                            : `/data/${selectedWidget.name}`
-                        }
-                        alt="Widget" 
-                        className="w-full max-h-96 object-contain rounded-lg border border-border"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
+                      <>
+                        <div className="mb-2 flex justify-between items-center">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => window.open(selectedWidget.name, '_blank')}
+                          >
+                            Open in New Tab
+                          </Button>
+                        </div>
+                        {!selectedWidget.name.startsWith('http') && (
+                          <img 
+                            src={selectedWidget.name.startsWith('/') 
+                              ? selectedWidget.name 
+                              : `/data/${selectedWidget.name}`
+                            }
+                            alt="Widget" 
+                            className="w-full max-h-96 object-contain rounded-lg border border-border"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        )}
+                      </>
                     )}
                   </div>
                 ) : (
