@@ -1,4 +1,28 @@
-# Welcome to your Lovable project
+
+# Experimental Code for Tree-Based Immersive Presentations
+
+## To run in your own environment
+MAC OS:
+$ npm install
+$ npm run dev
+
+WINDOWS:
+(probably something similar but I hven't tested! Ask ChatGPT)
+
+Then open a browser and navigate to http://localhost:8080/.
+
+## To make your own presentation
+1. Start crafting your own version of data/knowledge.json by adding a directory to data/examples, following the formats there. Hopefully the schema is self-explanatory.
+2. Copy your main JSON file to data/knowledge.json and it should just work.
+3. Use an IDE such as VS Code with an AI Assistant (like Github Copilot) to make your life much easier
+
+
+======================================================================================
+======================================================================================
+======================================================================================
+======================================================================================
+
+# Lovable project info below:
 
 ## Project info
 
