@@ -1398,7 +1398,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                           size="sm"
                           onClick={() => window.open(selectedWidget.url, '_blank')}
                         >
-                          Open in New Tab
+                          Source
                         </Button>
                       </div>
                       <img 
@@ -1428,7 +1428,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                           size="sm"
                           onClick={() => window.open(selectedWidget.url, '_blank')}
                         >
-                          Open in New Tab
+                          Source
                         </Button>
                       </div>
                       {!iframeError ? (
@@ -1491,7 +1491,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                             size="sm"
                             onClick={() => window.open(selectedWidget.name, '_blank')}
                           >
-                            Open in New Tab
+                            Source
                           </Button>
                         </div>
                         <iframe 
@@ -1514,7 +1514,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                             size="sm"
                             onClick={() => window.open(selectedWidget.name, '_blank')}
                           >
-                            Open in New Tab
+                            Source
                           </Button>
                         </div>
                         {selectedWidget.preview ? (

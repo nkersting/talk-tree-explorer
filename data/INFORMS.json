@@ -1,7 +1,7 @@
 {
   "seo": {
-    "title": "Preserving Safety and Humanity in the Age of AI",
-    "description": "An upward-growing knowledge tree"
+    "title": "Safety and Humanity in the Age of AI",
+    "description": "Nick Kersting"
   },
   "pageTitle": "Preserving Safety and Humanity in the Age of AI",
   "pageDescription": "A clear, bottom-up view of your JSON-defined knowledge tree with tooltips on each node.",
@@ -13,12 +13,16 @@
         "name": "agc.jpg",
         "title": "Frequent Recalibration",
         "subtitle": "avoid metric drift",
-        "notes": "e.g. continual recalibration of Apollo Guidance Computer (AGC) \n without updating Inertial Measurement Unit (IMU), errors accumulate unacceptably"
+        "image_only": true,
+        "notes": "e.g. continual recalibration of Apollo Guidance Computer (AGC) \n without updating Inertial Measurement Unit (IMU), errors accumulate unacceptably \n\n e.g., 10% thrust for 30s to measure spaceship stability (P63 landing phase, 50k ft alt.)",
+        "url":"https://www.youtube.com/watch?v=B1J2RMorJXM&t=1410s"
       },
       {
         "name": "gemini.jpeg",
         "title": "Loose Coupling",
+        "image_only": true,
         "subtitle": "accommodate imperfection",
+        "url":"https://space1.com/pdf/gemini_docking_simV2_1.pdf",
         "notes": "Moon Landing = Safety Critical \n Avoid single points of failure \n Avoid domino effects \n e.g. Gemini spacecraft magnetic docking"
       },
       {
@@ -39,6 +43,20 @@
             "subtitle": "(all over the mainstream culture)",
             "title": "Satire",
             "notes": "seen as overly cautious"
+          },
+          {
+            "name": "sayno.png",
+            "subtitle": "(this kind of backfired)",
+            "url": "https://nationalaffairs.com/publications/detail/how-to-think-about-the-drug-crisis",
+            "image_only": true,
+            "title": "Just Say No",
+            "notes": "intent was good, but delivery too weak \n\n drug overdoses increasing exponentially since 1980s \n\n 'drug' = 'anything that chemically changes your body'"
+          },
+          {
+            "name": "lookma.png",
+            "subtitle": "(pride in the unsafe)",
+            "title": "Look Ma, No Hands!",
+            "notes": ""
           },
           {
             "name": "top_gun.png",
@@ -62,31 +80,35 @@
           {
             "name": "note7.jpg",
             "title": "The Tautology",
+            "image_only": true,
             "subtitle": "unsafe tech is naturally selected away",
             "notes": "No one will use it if they have a choice \n e.g., Samsung Galaxy Note 7 \n Do not use the phone while charging (!)",
-            "ref":"https://blog.easyacc.com/2016/10/14/how-to-avoid-samsung-note-7-from-explosio/"
+            "url":"https://blog.easyacc.com/2016/10/14/how-to-avoid-samsung-note-7-from-explosio/"
   
           },
           {
             "name": "sword.jpg",
             "subtitle": "",
             "title": "Sword Hilts",
+            "image_only": true,
             "notes": "without a hand, you can't use a sword",
-            "ref": "https://www.metmuseum.org/art/collection/search/35367"
+            "url": "https://www.metmuseum.org/art/collection/search/35367"
           },
           {
             "name": "gun_safety.jpg",
             "subtitle": "",
             "notes": "accidental discharge = bad \n accidental gun deaths down 4x since 1980s \n applies to other triggered devices (table saws, gas stoves, etc.)",
             "title": "Gun Safeties",
-            "ref":"https://www.gunfacts.info/wp-content/uploads/2025/02/ACCIDENTAL-GUN-DEATHS-U.S.-Accidental-Firearm-Death-Count-and-Rate-1981-through-2016-b.png"
+            "image_only": true,
+            "url":"https://www.gunfacts.info/wp-content/uploads/2025/02/ACCIDENTAL-GUN-DEATHS-U.S.-Accidental-Firearm-Death-Count-and-Rate-1981-through-2016-b.png"
           },
           {
             "name": "seatbelt.jpg",
             "subtitle": "",
             "title": "Seat Belts",
+            "image_only": true,
             "notes": "seatbelts reduce the risk of fatal injury to front-seat occupants by 45%",
-            "ref":"https://www.nhtsa.gov/book/countermeasures-that-work/seat-belts-and-child-restraints"
+            "url":"https://www.nhtsa.gov/book/countermeasures-that-work/seat-belts-and-child-restraints"
           },
           {
             "name": "internet.jpg",
@@ -108,19 +130,19 @@
         "weight": 30,
         "widgets": [
           {
-            "name": "classical-physics.png",
-            "title": "Classical = Minimze Action",
+            "name": "action.png",
+            "title": "Classical Physics = Minimal Action",
             "subtitle": "",
-            "notes": ""
+            "notes": "• S = <KE> – <PE> is minimal \n\n • Energy is Conserved at All Times \n\n • Deterministic Motion \n\n • Only One Path between A and B \n\n • e.g., ballistics, orbital motion, electricity, fluids, etc. "
           },
           {
-            "name": "quantum-physics.png",
-            "title": "Quantum = Deviations from Classical",
-            "subtitle": "",
-            "notes": ""
+            "name": "quantum.png",
+            "title": "Quantum Physics = Measured Deviations from Classical",
+            "subtitle": "(measured by Planck's Constant, h)",
+            "notes": "• S = <KE> – <PE> swings around minimum \n\n • Energy Can Be Violated (for short times) \n\n • Non-Deterministic Motion \n\n • Many Paths between A and B (all coexist) \n\n • e.g., decay of a Uranium atom, Casimir Effect, Hawking Radiation, etc. "
           },
           {
-            "name": "safety-first.png",
+            "name": "pipe.png",
             "title": "This is Why Safety First",
             "subtitle": "",
             "notes": "The lowest order (classical) solution should be paramount \n Then add perturbations (quantum) as needed"
@@ -145,13 +167,13 @@
             "notes": ""
           },
           {
-            "name": "unhumane1.png",
+            "name": "inhumane1.png",
             "subtitle": "",
             "title": "Example 1",
             "notes": ""
           },
           {
-            "name": "unhumane2.png",
+            "name": "inhumane2.png",
             "subtitle": "",
             "notes": "",
             "title": ""
@@ -198,13 +220,13 @@
                 "weight": 30,
                 "widgets": [
                   {
-                    "name": "humanoid.png",
+                    "name": "asimov-humanoid.png",
                     "title": "Asimov's Argument",
                     "subtitle": "",
                     "notes": ""
                   },
                   {
-                    "name": "humanoid2.png",
+                    "name": "life-humanoid.png",
                     "title": "We like it? (see integration below)",
                     "subtitle": "",
                     "notes": ""
@@ -218,6 +240,8 @@
                   {
                     "name": "robotic-udrr.png",
                     "title": "Universal Declation of Robotic Rights",
+                    "image_only": true,
+                    "url":"https://lawandthesenses.org/robot-rights-sentience-as-a-basis-for-moral-rights/",
                     "subtitle": "",
                     "notes": ""
                   },
@@ -231,7 +255,7 @@
                     "name": "https://www.youtube.com/watch?v=mSPxRVTJW1I",
                     "title": "Abuse is Happening",
                     "subtitle": "Would you stand for this?",
-                    "notes": "1:33"
+                    "notes": "• If this doesn't scare the hell out of you ... \n\n • Abuse at 1:33 \n\n • What if this weren't a robot, but a newly integrated human, or even (sub)human ? "
                   }
                 ]
               }
@@ -248,25 +272,25 @@
                 "notes": ""
               },
               {
-                "name": "aliens2.png",
+                "name": "drake.png",
                 "title": "The Fermi Paradox",
                 "subtitle": "",
                 "notes": ""
               },
               {
-                "name": "aliens3.png",
+                "name": "great-filter.png",
                 "title": "The Great Filter",
                 "subtitle": "",
                 "notes": ""
               },
               {
-                "name": "aliens4.png",
+                "name": "asimov-victory.png",
                 "title": "We'll see their robots first",
                 "subtitle": "",
                 "notes": ""
               },
               {
-                "name": "aliens5.png",
+                "name": "annihilation.png",
                 "title": "Or maybe no warning instant annihilation",
                 "subtitle": "",
                 "notes": ""
@@ -278,13 +302,13 @@
             "weight": 70,
             "widgets": [
               {
-                "name": "chatgpt_moment.png",
+                "name": "chatgpt.png",
                 "title": "The next ChatGPT Moment",
                 "subtitle": "",
                 "notes": ""
               },
               {
-                "name": "chatgpt_warnings.png",
+                "name": "chatgpt-warnings.png",
                 "title": "Warnings and Precursors to the ChatGPT Moment",
                 "subtitle": "",
                 "notes": "BERT \n GAN"
@@ -312,12 +336,18 @@
                     "title": "Robots in the Street",
                     "subtitle": "",
                     "notes": ""
-                  },
+                  }
+                ]
+              },
+              { 
+                "node": "AI-Robo Precursors",
+                "weight": 50,
+                "widgets": [
                   {
-                    "name": "robot_warnings.png",
-                    "title": "Warnings and Precursors to the Robo Moment",
+                    "name": "agentic.png",
+                    "title": "Agentic AI",
                     "subtitle": "",
-                    "notes": "Agentic AI \n Drone warfare \n Autonomous vehicles"
+                    "notes": "• Agentic AI is about organizing AI \n\n • Similar to industrial organization early 1900s \n\n • Like the app store revolution for iPhones"
                   }
                 ]
               },
@@ -363,7 +393,20 @@
           {
             "node": "What if we don't deal with this?",
             "weight": 10,
-            "widgets": [],
+            "widgets": [
+              {
+                "name": "ostrich.png",
+                "title": "Ignore It",
+                "subtitle": "",
+                "notes": "We also do this already with climate change, the inner workings of our bodies, etc."
+              },
+              {
+                "name": "fatalism.png",
+                "title": "塞翁失馬 (Sài Wēng Shī Mǎ)",
+                "subtitle": "",
+                "notes": "Some merit to this \n But, can we really just sit by and watch?"
+              }
+            ],
             "children": []
           },
           {
@@ -386,7 +429,7 @@
                         "notes": ""
                       },
                       {
-                        "name": "training.png",
+                        "name": "guardrails.png",
                         "title": "Training + Filters + Guardrails + Explainability",
                         "subtitle": "",
                         "notes": ""
@@ -442,7 +485,7 @@
                         "notes": "Simple \n Affordable \n Effective"
                       },
                       {
-                        "name": "harmonic3.png",
+                        "name": "empower.png",
                         "title": "Empowering Everyone",
                         "subtitle": "(again comes through safety)",
                         "notes": "Humanity \n Self-worth \n Motivation \n Ambition"
@@ -473,7 +516,7 @@
                             "name": "general_explain.png",
                             "title": "General Techniques",
                             "subtitle": "(still traditionally-based)",
-                            "notes": ""
+                            "notes": "LIME \n SHAP \n Saliency Maps"
                           },
                           {
                             "name": "stability.png",
@@ -494,14 +537,14 @@
                         "weight": 20,
                         "widgets": [
                           {
-                            "name": "explainable_ai4.png",
-                            "title": "How do you want them to explain?",
+                            "name": "explanation.png",
+                            "title": "What is an Explanation?",
                             "subtitle": "",
                             "notes": ""
                           },
                           {
-                            "name": "explainable_ai5.png",
-                            "title": "How do you want them to explain?",
+                            "name": "explanation_whom.png",
+                            "title": "To Whom?",
                             "subtitle": "",
                             "notes": ""
                           }
@@ -519,13 +562,9 @@
                               },
                               {
                                 "name": "chinese-room2.png",
-                                "title": "A Chinese Room with a Window",
-                                "subtitle": "",
-                                "notes": ""
-                              },
-                              {
-                                "name": "chinese-room3.png",
-                                "title": "A Chinese Room with a Window and a Door",
+                                "title": "The Chinese Room is Broken",
+                                "image_only": true,
+                                "url":"https://ai.gopubby.com/ai-breaks-the-chinese-room-0c860e20b623",
                                 "subtitle": "",
                                 "notes": ""
                               }
@@ -543,29 +582,13 @@
                               },
                               {
                                 "name": "turing-test2.png",
-                                "title": "The Turing Test is a Game",
+                                "title": "The Turing Test is Broken",
+                                "image_only": true,
+                                "url":"https://www.nature.com/articles/d41586-023-02361-7",
                                 "subtitle": "",
                                 "notes": ""
                               }
                             ]
-                          }
-                        ]
-                      },
-                      {
-                        "node": "What is an Explanation?",
-                        "weight": 10,
-                        "widgets": [
-                          {
-                            "name": "explainable_ai6.png",
-                            "title": "What is an Explanation?",
-                            "subtitle": "",
-                            "notes": ""
-                          },
-                          {
-                            "name": "explainable_ai7.png",
-                            "title": "What is an Explanation?",
-                            "subtitle": "",
-                            "notes": ""
                           }
                         ]
                       },
@@ -577,6 +600,8 @@
                             "name": "thought.png",
                             "title": "What is Thought, Anyway?",
                             "subtitle": "",
+                            "image_only": true,
+                            "url":"https://yogajala.com/what-is-a-thought/ ",
                             "notes": ""
                           },
                           {
@@ -593,13 +618,15 @@
                             "widgets": [
                               {
                                 "name": "grok.png",
-                                "title": "Grokking1",
+                                "title": "Stranger in a Strange Land",
                                 "subtitle": "",
                                 "notes": ""
                               },
                               {
                                 "name": "grok2.png",
                                 "title": "Grokking2",
+                                "url":"https://pair.withgoogle.com/explorables/grokking/",
+                                "image_only": true,
                                 "subtitle": "",
                                 "notes": ""
                               }
@@ -613,6 +640,16 @@
                                 "name": "manifold.png",
                                 "title": "The Manifold of Truth",
                                 "subtitle": "",
+                                "url":"https://peterjamesthomas.com/2009/06/25/a-single-version-of-the-truth/",
+                                "image_only": true,
+                                "notes": ""
+                              }, 
+                              {
+                                "name": "vector-embedding.png",
+                                "title": "Words to Vectors",
+                                "subtitle": "",
+                                "url":"https://www.nvidia.com/en-us/glossary/vector-database/",
+                                "image_only": true,
                                 "notes": ""
                               },
                               {
@@ -622,7 +659,7 @@
                                 "notes": ""
                               },
                               {
-                                "name": "vector-sequence2.png",
+                                "name": "vector-sequences.png",
                                 "title": "The Age of Interpolation",
                                 "subtitle": "discovering ourselves",
                                 "notes": "LLMs are giving us ideas 'between the lines' \n May discover new ethics, mathematics, aesthetics, etc. \n Next 5-10 years may see much discovery here \n We will quickly max out on currently availble data"
@@ -638,10 +675,10 @@
                     "weight": 30,
                     "widgets": [
                       {
-                        "name": "ai_alignment.png",
-                        "title": "AI Alignment",
+                        "name": "alignment_problem.png",
+                        "title": "The AI Alignment Problem",
                         "subtitle": "",
-                        "notes": ""
+                        "notes": "We want AI to do everything \n\n • But we don't want it to do everything \n\n • How do we specify what we want, and what we don't want? \n\n • Problem is we don't even understand ourselves"
                       }
                     ]
                   },
@@ -653,7 +690,7 @@
                         "name": "ai_ethics.png",
                         "title": "AI Ethics",
                         "subtitle": "",
-                        "notes": ""
+                        "notes": "BECAUSE:"
                       }
                     ]
                   },
@@ -662,9 +699,9 @@
                     "weight": 10,
                     "widgets": [
                       {
-                        "name": "irobot.png",
+                        "name": "positronic_brain.png",
                         "title": "Positronic Brain Shutoffs",
-                        "subtitle": "",
+                        "subtitle": "(or similar hardware controls)",
                         "notes": ""
                       }
                     ]
@@ -688,9 +725,19 @@
                 "weight": 10,
                 "widgets": [
                   {
-                    "name": "mcp_agentic_ai.png",
+                    "name": "mcp.png",
                     "title": "MCP Agentic AI",
                     "subtitle": "see my MCP server",
+                    "url":"https://addyo.substack.com/p/mcp-what-it-is-and-why-it-matters",
+                    "image_only": true,
+                    "notes": "Distributed P2P Functionality \n\n Gated (controllable, putting $$ back to people) \n\n New Cottage Industry (like apps for smartphones)"
+                  },
+                  {
+                    "name": "mcp2.png",
+                    "title": "Hallucination Detection MCP Server",
+                    "url":"https://medium.com/@1054h34/make-a-free-mcp-server-next-weekend-adacea5fa698",
+                    "image_only": true,
+                    "subtitle": "",
                     "notes": ""
                   }
                 ]
@@ -703,12 +750,20 @@
                     "name": "llm_hallucination.png",
                     "title": "Type I (HK+) Hallucination",
                     "subtitle": "bad answer despite having the knowledge",
-                    "notes": "https://arxiv.org/abs/2410.22071 "
+                    "url":"https://arxiv.org/abs/2410.22071 ",
+                    "image_only": true,
+                    "notes": "\n like getting the wrong delivery  "
                   },
                   {
                     "name": "llm_hallucination2.png",
                     "title": "Type II (HK-) Hallucination",
                     "subtitle": "bad answer because it doesn't have the knowledge",
+                    "notes": ""
+                  },
+                  {
+                    "name": "RAG.png",
+                    "title": "RAG is the only trusted application",
+                    "subtitle": "(because we can verify the hallucination)",
                     "notes": ""
                   },
                   {
@@ -730,6 +785,12 @@
                         "notes": ""
                       },
                       {
+                        "name": "interrogate.png",
+                        "title": "Borrowing from Interrogation Techniques",
+                        "subtitle": "",
+                        "notes": "Ask the same question in different ways \n Look for variation in response"
+                      },
+                      {
                         "name": "gamma.png",
                         "title": "Trustworthy -> low Gamma",
                         "subtitle": "",
@@ -742,9 +803,17 @@
                         "notes": ""
                       }, 
                       {
+                        "name": "xenon.png",
+                        "title": "Adversarial Example",
+                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
                         "name": "gamma_trends.png",
                         "title": "Statistically Makes Sense",
                         "subtitle": "the higher gamma is, more likely to be hallucination",
+                        "url":"https://arxiv.org/pdf/2404.19708",
+                        "image_only": true,
                         "notes": ""
                       },
                       {
@@ -823,6 +892,8 @@
                     "name": "superintelligence3.png",
                     "title": "Might is Right",
                     "subtitle": "...what choice do you really have?",
+                    "url":"https://en.wikipedia.org/wiki/Near-Earth_supernova",
+                    "image_only": true,
                     "notes": ""
                   },
                   {
@@ -877,12 +948,6 @@
                         "title": "Don't Spend Too Much Energy",
                         "subtitle": "",
                         "notes": ""
-                      },
-                      {
-                        "name": "https://www.youtube.com/watch?v=kwW0g3aF1pE",
-                        "title": "Synchron Demonstration",
-                        "subtitle": "",
-                        "notes": ""
                       }
                     ]
                   },
@@ -894,19 +959,32 @@
                         "name": "pose.png",
                         "title": "An LLM for Motion?",
                         "subtitle": "Sequences of Words -> Sequences of Poses",
-                        "notes": "First make for Humans \n Consider other body topologies as needed"
-                      },
+                        "notes": "• First make for Humans \n\n • Consider other body topologies as needed"
+                      },   
                       {
                         "name": "https://www.youtube.com/watch?v=zV1qLYukTH8",
                         "title": "Dance",
                         "subtitle": "",
-                        "notes": ""
+                        "notes": "• What motions are natural? \n\n • What motions are beautiful? \n\n • Unexplored regimes of the Art?\n\n • Collaborative Choreography"
                       },
                       {
-                        "name": "https://www.youtube.com/watch?v=3uHxgQ_hHs8",
+                        "name": "https://www.youtube.com/watch?v=3uHxgQ_hHs8&t=80s",
                         "title": "Wushu (Kungfu)",
                         "subtitle": "(martial arts in general)",
-                        "notes": ""
+                        "notes": "• What motions are efficient? \n\n • What motions are unexpected? \n\n • Hidden/unexplored techniques? \n\n • Adversarial applications"
+                      },
+                      {
+                        "name": "https://www.youtube.com/watch?v=UcK2XtwaK5M",
+                        "title": "Collaborative Robotics",
+                        "subtitle": "(creative dancing)",
+                        "notes": "• 3D Printing \n\n • Swarm/Group Coordination \n\n • Transformers?"
+                      },
+                      
+                      {
+                        "name": "https://www.youtube.com/shorts/n33eMQ3GNgY",
+                        "title": "Industrial Motion",
+                        "subtitle": "",
+                        "notes": "• What worker motions are dominant? \n\n • Robotic training \n\n • Efficiency/Ergonomics"
                       }
                     ]
                   }
@@ -925,16 +1003,16 @@
                 "notes": ""
               },
               {
-                "name": "losing_control2.png",
+                "name": "https://www.youtube.com/watch?v=1UufaK3pQMg",
                 "title": "Humanity Eliminated",
-                "subtitle": "",
-                "notes": ""
+                "subtitle": "AI 2027",
+                "notes": "5:13"
               },
               {
-                "name": "losing_control3.png",
+                "name": "chaos.png",
                 "title": "Chaos",
-                "subtitle": "",
-                "notes": ""
+                "subtitle": "(though there may be structure)",
+                "notes": "Some people like Jackson Pollock"
               }
             ]
           },
@@ -951,6 +1029,8 @@
               {
                 "name": "religion_acceptance2.png",
                 "title": "Acceptance of AI as the new God",
+                "url":"https://www.msn.com/en-gb/money/technology/rise-of-ai-religion-robotheism-inevitable-as-tech-won-t-be-humanity-s-slave-for-long/ar-AA1DHqcr",
+                "image_only": true,
                 "subtitle": "",
                 "notes": "Another Asimov prediction!"
               },
@@ -958,7 +1038,7 @@
                 "name": "religion_acceptance3.png",
                 "title": "Acceptance of AI as our new Master",
                 "subtitle": "",
-                "notes": "Thresholds we cannot ignore: Kasparov losing to Deep Blue, Ken losing to IBM Watson in Jeopardy, AlphaGo ..."
+                "notes": "Thresholds we cannot ignore: Kasparov losing to Deep Blue, Ken Jennings losing to IBM Watson in Jeopardy, AlphaGo ..."
               }
             ]
           }
@@ -976,13 +1056,13 @@
                 "name": "natural_safeguards.png",
                 "title": "Physical Limits",
                 "subtitle": "",
-                "notes": ""
+                "notes": "• We trust things which are naturally constrained \n\n • 'Dont Be There' is one of the 'extra' 36 miliary stratgems of Sun Tzu \n\n • e.g. we trust Target shoppers to buy knives because their destructive power is very limited (relative to the car they drive to get there) \n\n • We trust drivers will not cross the yellow line because of strong negative motivation"
               },
               {
                 "name": "natural_safeguards2.png",
                 "title": "Manifolds of Truth",
                 "subtitle": "",
-                "notes": ""
+                "notes": "• Mathematical safeguards are even better"
               },
               {
                 "name": "natural_safeguards3.png",
@@ -1005,6 +1085,8 @@
               {
                 "name": "nuclear-tapes.png",
                 "title": "Legacy Data Formats",
+                "url":"https://www.zmescience.com/research/technology/floppy-disks-nuclear-arsenal/",
+                "image_only": true,
                 "subtitle": "",
                 "notes": ""
               }
@@ -1027,7 +1109,7 @@
                 "notes": ""
               },
               {
-                "name": "kung_fu2.png",
+                "name": "kung_fu3.png",
                 "title": "Work with your Environment",
                 "subtitle": "",
                 "notes": ""
@@ -1069,25 +1151,25 @@
                 "notes": ""
               },
               {
-                "name": "communication5.png",
+                "name": "communication6.png",
                 "title": "Smoke Signals",
                 "subtitle": "",
                 "notes": ""
               },
               {
-                "name": "communication6.png",
+                "name": "communication7.png",
                 "title": "Carrier Pigeons",
                 "subtitle": "",
                 "notes": ""
               },
               {
-                "name": "communication7.png",
+                "name": "communication8.png",
                 "title": "Papyrus",
                 "subtitle": "",
                 "notes": ""
               },
               {
-                "name": "communication8.png",
+                "name": "communication9.png",
                 "title": "Stone Tablets",
                 "subtitle": "",
                 "notes": ""
@@ -1214,7 +1296,7 @@
                         "notes": "Financial Institutions / Credit Card Companies like this"
                       },
                       {
-                        "name": "v.png",
+                        "name": "distributed.png",
                         "title": "Distributed Data",
                         "subtitle": "",
                         "notes": ""
@@ -1272,21 +1354,22 @@
                       {
                         "name": "Lovable.png",
                         "url": "https://lovable.dev/",
+                        "image_only": true,
                         "title": "Lovable",
                         "subtitle": "",
-                        "notes": "A platform for webapp development \n Powered by LLMs \n Generates code from natural language \n Commits to GitHub automatically \n Makes web development accessible to everyone"
+                        "notes": "• A platform for webapp development \n • Powered by LLMs \n • Generates code from natural language \n • Commits to GitHub automatically \n • Makes web development accessible to everyone"
                       },
                       {
                         "name": "githubcopilot.png",
                         "title": "GitHub Copilot",
                         "subtitle": "(AI generation is not the panacea we thought)",
-                        "notes": "Human needs to get involved with the code \n Lovable is not perfect \n Some things easier to do by hand (save credits!)"
+                        "notes": "• Human needs to get involved with the code \n • Lovable is not perfect \n • Some things easier to do by hand (save credits!) \n • Interpolation limit encountered quickly \n • 'Cmon, Try Harder!''"
                       },
                       {
                         "name": "KnowledgeTree.png",
                         "title": "Knowledge Tree",
                         "subtitle": "",
-                        "notes": "Thought starts out as a structured graph \n Put talk in structured JSON \n DIY works, or ... \n AI can do this for you from prose text"
+                        "notes": "• Thought starts out as a structured graph \n • Put talk in structured JSON \n • DIY from scratch, or ... \n • AI can do this for you from prose text!"
                       }
                     ]
                   }
@@ -1323,19 +1406,29 @@
                 "weight": 30,
                 "widgets": [
                   {
-                    "name": "art-defn.png",
+                    "name": "motorcycle.png",
+                    "title": "Can Anything Be Art?",
+                    "image_only": true,
+                    "subtitle": "(read this book)",
+                    "notes": "• Compare Author's take on motorcyle maintence to his friend's \n\n • Also many good notes on how to Write (and Think)"
+                  },
+
+                  {
+                    "name": "mona-lisa.png",
                     "title": "What is Art",
+                    "url": "https://medium.com/@1054h34/defining-art-and-science-for-ai-ad32b789fa1e",
+                    "image_only": true,
                     "subtitle": "Arbitrary Creation",
-                    "notes": ""
+                    "notes": "• Is it Art? Only if it's ambiguous! \n\n • e.g. reduce Mona Lisa to a mathematical formula -> no longer art"
                   },
                   {
-                    "name": "science-defn.png",
+                    "name": "science.png",
                     "title": "What is Science?",
                     "subtitle": "",
                     "notes": ""
                   },
                   {
-                    "name": "math-defn.png",
+                    "name": "math.png",
                     "title": "What is Math?",
                     "subtitle": "",
                     "notes": ""
@@ -1353,7 +1446,7 @@
                     {"name": "jazz.png", "title": "Jazz", "subtitle": "", "notes": ""},
                     {"name": "rock.png", "title": "Rock", "subtitle": "", "notes": ""},
                     {"name": "pop.png", "title": "Pop", "subtitle": "", "notes": ""},
-                    {"name": "hiphop.png", "title": "Hip Hop", "subtitle": "", "notes": ""},
+                    {"name": "hip-op.png", "title": "Hip Hop", "subtitle": "", "notes": ""},
                     {"name": "experimental-music.png", "title": "Experimental Music", "subtitle": "", "notes": ""}
                    ]},
                    {"node": "Literature", "weight":20, "widgets":[
@@ -1372,7 +1465,7 @@
                     {"name": "experimental-visual.png", "title": "Experimental Visual", "subtitle": "", "notes": ""}
                    ]},
                    {"node": "Performing Arts", "weight":20, "widgets":[
-                    {"name": "theatre.png", "title": "Theatre", "subtitle": "", "notes": ""},
+                    {"name": "theater.png", "title": "Theatre", "subtitle": "", "notes": ""},
                     {"name": "dance.png", "title": "Dance", "subtitle": "", "notes": ""},
                     {"name": "magic.png", "title": "Magic", "subtitle": "", "notes": ""},
                     {"name": "vaudeville.png", "title": "Vaudeville", "subtitle": "", "notes": ""},
@@ -1380,10 +1473,9 @@
                     {"name": "experimental-performance.png", "title": "Experimental Performance", "subtitle": "", "notes": ""}
                    ]},
                    {"node": "Infinite Arts", "weight":20, "widgets":[
-                    {"name": "infinite-art1.png", "title": "Fermionic Matter", "subtitle": "", "notes": ""},
-                    {"name": "infinite-art2.png", "title": "Bosonic Matter", "subtitle": "", "notes": "Elementary (e.g., Higgs) \n Composite (e.g., Pion)"},
-                    {"name": "infinite-art3.png", "title": "Force Carriers", "subtitle": "", "notes": ""},
-                    {"name": "infinite-art4.png", "title": "Other Stuff?", "subtitle": "", "notes": "Dark Matter \n Dark Energy \n Exotic Matter \n etc."}
+                    {"name": "fermions.png", "title": "Fermionic Matter", "subtitle": "", "notes": ""},
+                    {"name": "bosons.png", "title": "Bosonic Matter", "subtitle": "", "notes": "Elementary (e.g., Higgs) \n Composite (e.g., Pion)"},
+                    {"name": "undiscovered.png", "title": "Other Stuff?", "subtitle": "", "notes": "Dark Matter \n Dark Energy \n Exotic Matter \n etc."}
                    ]},
                    {
                     "node": "Art is Satisfying",
@@ -1422,7 +1514,7 @@
                     "notes": "Realization of early 21st century in business/economics \n Evolution requires some disruption or mutation \n Machines / AI by itself does not have enough (we hope)"
                   },
                   {
-                    "name": "drop-out.png",
+                    "name": "dropout.png",
                     "title": "Dropping Out",
                     "subtitle": "(not just for high school)",
                     "notes": "It was discovered early on that Neural Nets with drop-out perform better \n Drop-out is a form of regularization \n It is a form of noise \n Noise is good for us"
