@@ -1,42 +1,48 @@
 {
   "seo": {
     "title": "Safety and Humanity in the Age of AI",
-    "description": "Nick Kersting"
+      "description": "Nick Kersting",
+      "prose": "Today I'm going to be talking about a topic that I think everyone can appreciate: namely how can we most palatably deal with the rise of AI that seems and is everywhere. Well, first of all the hard pill we have to swallow is that AI is inevitable --- it's not quite a bubble, but is over-hyped at times --- and it will infiltrate every aspect of our life within years (probably less than 15 to be conservative). Once we accept that, we naturally wonder how we should deal with that. My thesis is we need Safety and we need Humanity, realized in certain ways, to make this a future worth having."
   },
-  "pageTitle": "Preserving Safety and Humanity in the Age of AI",
-  "pageDescription": "A clear, bottom-up view of your JSON-defined knowledge tree with tooltips on each node.",
+  "pageTitle": "Safety and Humanity in the Age of AI",
+  "pageDescription": "A Dynamic Tree representation",
   "knowledgeTree": {
     "node": "Safety First",
-    "weight": 100,
+      "weight": 100,
+      "prose": "So I'd like to start with Safety, as we've all heard this a countless number of times, Safety First, though I think you'll agree that we've also ignored that same another countless number of times.  But probably my favorite example of Safety in practice because it is so singularly exciting, fascinating, and terrifying at the same time is the Apollo 11 Moon Landing in 1969. This was really the epitome of a 0-1 situation: either boots touch the lunar surface or they don't. And there were a million very plausible ways you could fail. Add to that the national and scientific pressure and prestige, the fact that 3 highly valuable and respected human lives were at stake, and oh yes the whole world is watching on live TV. But the people at NASA really thought hard about this and prepared incredibly well for a huge number of failure scenarios, the vast majority of which thankfully never showed a hint of occuring. And you know they have their list of safety and engineering guidelines, of course, but I think of it from my perspective and it seems to me you can collect all that safety preparation in 3 principles which probably applies to any large, fault-tolerant system or mission, in particular our own mission to come to grips with AI. But I call these out as Frequent Recalibration, Loose Coupling, and a Backup Plan for Everything. ",
     "widgets": [
       {
         "name": "/INFORMS/agc.jpg",
         "title": "Frequent Recalibration",
-        "subtitle": "avoid metric drift",
+        "subtitle": "(no system is perfectly calibrated)",
         "image_only": true,
-        "notes": "e.g. continual recalibration of Apollo Guidance Computer (AGC) \n without updating Inertial Measurement Unit (IMU), errors accumulate unacceptably \n\n e.g., 10% thrust for 30s to measure spaceship stability (P63 landing phase, 50k ft alt.)",
-        "url":"https://www.youtube.com/watch?v=B1J2RMorJXM&t=1410s"
+        "notes": "⦿  Even the best-designed systems can drift/go-out-of-whack \n\n ⦿  e.g. continual recalibration of Apollo Guidance Computer (AGC) \n without updating Inertial Measurement Unit (IMU), errors accumulate unacceptably \n https://space.stackexchange.com/questions/31279/how-was-the-apollo-imu-calibrated \n\n ⦿  e.g., 10% thrust for 30s to measure spaceship stability (P63 landing phase, 50k ft alt.)  \n\n ⦿  e.g. with AI, constantly re-evaluate our alignment",
+          "url":"https://www.youtube.com/watch?v=B1J2RMorJXM&t=1410s",
+	  "prose": "So first, Frequent Recalibration. No system, no matter how well-designed, stays true to its purpose forever. It needs to be tuned and readjusted. And in the Apollo Mission nothing exhibited this more poignantly than the AGC, the Apollo Guidance Computer. It's a really beautiful 32kg chunk of copper and electronics, with this little interactive panel called the DSKY. There's a link here to a great lecture on this computer and a lot of what it did during the mission --- and believe me it got out of whack in numerous ways. In particular its  IMU (Inertial Measurement Unit) reported the spacecraft's orientation, which is crucial to anything you're doing out there, and it had to be continually aligned via astronauts looking out the window and reading star positions with a sextant -- yes just like ancient mariners. Another great example of this was during the so-called P63 landing phase when the spacecraft was in position to lower to the surface at a controlled speed via its thrusters. Now remember you're falling rapidly towards the lunar surface at 5000ft altitude and you really do need to slow down, but you just don't fire the thrusters and hope for the best --- you measure and calibrate first, by firing at 10% thrust and observing whether the spacecraft rotates. If there is any rotation, you then adjust the position before retrying this exercise, and then eventually going to maximum thrust (actually 94%, but there's another safety reason for that). So recalibration --- obviously incredibly important for safety. Likewise with AI in our lives, we need to constantly recalibrate where we're going and how fast."
       },
       {
         "name": "/INFORMS/gemini.jpeg",
         "title": "Loose Coupling",
         "image_only": true,
-        "subtitle": "accommodate imperfection",
+        "subtitle": "(learn to accommodate imperfection)",
         "url":"https://space1.com/pdf/gemini_docking_simV2_1.pdf",
-        "notes": "Moon Landing = Safety Critical \n Avoid single points of failure \n Avoid domino effects \n e.g. Gemini spacecraft magnetic docking"
+          "notes": "⦿  dilute single points of failure \n\n ⦿  interrupt domino effects \n\n ⦿  e.g. Gemini spacecraft magnetic docking \n\n ⦿  e.g. with AI, Human-in-the-Loop",
+	  "prose":"The next principle I call Loose Coupling, or try to accommodate imperfection everywhere. And again I think a great example from the Apollo mission was the way the Gemini spacecraft would dock with a Target Vehicle -- I mean you have these two massive hunks of metal floating in space, how do you get them to couple together with sub-millimeter precision? And there's even a game here you can play to try this yourself in a simulation, it's quite challenging (I've done it at Kennedy Space Center I think) as you need to get the two ends very close without crashing into eachother, but the key is that they don't need to be perfectly aligned because you have magnets here that pull them to perfect alignment within a certain distance. You accommodate the imperfect way the human is inevitably going to steer these things. So what you've done here with this arrangement is you've smoothed out a possible single point of failure, i.e. the spacecraft misaligning with and damaging its docking station, which would you know scrap the whole mission. So when components need to come together, you make it soft. Likewise in our relationship with AI, we need to emphasize soft interfaces. Human-in-the-loop, which I talked about in my last INFORMS talk 10 years ago, you've all heard of by now, and is a great example of that."
       },
       {
         "name": "/INFORMS/Apollo_Pad_Abort_Test_-2.jpg",
         "title": "A Backup Plan for Everything",
         "subtitle": "don't be caught without a parachute (or two)",
-        "notes": "e.g. Apollo Launch Escape System",
-        "url":"https://spaceflighthistory.blogspot.com/2015/08/failure-was-option-what-if-apollo.html"
+          "notes": " ⦿  e.g. Apollo Launch Escape System \n\n ⦿  e.g. in AI, have low/no-tech backups \n\n",
+          "url":"https://spaceflighthistory.blogspot.com/2015/08/failure-was-option-what-if-apollo.html",
+	  "prose":"My final principle, I call have a Backup Plan for Everything. And that should be familiar to everyone in some way or another. Again in the Apollo mission, countless backup plans. My favorite here is called the Apollo Launch Escape System, which is a little side thruster that fires in case something were to go wrong with the enormous Saturn rocket: you want to decouple the lunar module and get the astronauts as quickly away as possible from the possibly-going-to-explode Saturn rocket, and sideways is your best bet. In AI, an example of a Plan B would be to have low or no-tech backup solutions, because if the AI has failed, then you can't trust any of the technology behind it which is probably controlling everything else hi-tech. And we'll get back to discuss this point later."
       }
     ],
     "children": [
       {
         "node": "Back-reaction to Safety",
-        "weight": 50,
+          "weight": 50,
+	  "prose":"Now, despite all our great safety principles and enjoyment of an increasingly long and healthy lifespan in step, there's an awful amount of backlash against Safety. Whether it's mockery for being overly cautious, or pride in shirking safety, or indignance against protocol, Safety doesn't have the perfect reputation it deserves.",
         "widgets": [
           {
             "name": "/INFORMS/safety_satire.png",
@@ -75,24 +81,17 @@
       },
       {
         "node": "Safety => Progress",
-        "weight": 50,
+          "weight": 50,
+	  "prose":"Yet I would argue that Safety is Integral to Progress",
         "widgets": [
-          {
-            "name": "/INFORMS/note7.jpg",
-            "title": "The Tautology",
-            "image_only": true,
-            "subtitle": "unsafe tech is naturally selected away",
-            "notes": "No one will use it if they have a choice \n e.g., Samsung Galaxy Note 7 \n Do not use the phone while charging (!)",
-            "url":"https://blog.easyacc.com/2016/10/14/how-to-avoid-samsung-note-7-from-explosio/"
-  
-          },
           {
             "name": "/INFORMS/sword.jpg",
             "subtitle": "",
             "title": "Sword Hilts",
             "image_only": true,
             "notes": "without a hand, you can't use a sword",
-            "url": "https://www.metmuseum.org/art/collection/search/35367"
+              "url": "https://www.metmuseum.org/art/collection/search/35367",
+	      "prose":"I'm sure once the sword guard was invented the earlier versions without that quickly disappeared."
           },
           {
             "name": "/INFORMS/gun_safety.jpg",
@@ -100,7 +99,8 @@
             "notes": "accidental discharge = bad \n accidental gun deaths down 4x since 1980s \n applies to other triggered devices (table saws, gas stoves, etc.)",
             "title": "Gun Safeties",
             "image_only": true,
-            "url":"https://www.gunfacts.info/wp-content/uploads/2025/02/ACCIDENTAL-GUN-DEATHS-U.S.-Accidental-Firearm-Death-Count-and-Rate-1981-through-2016-b.png"
+              "url":"https://www.gunfacts.info/wp-content/uploads/2025/02/ACCIDENTAL-GUN-DEATHS-U.S.-Accidental-Firearm-Death-Count-and-Rate-1981-through-2016-b.png",
+	      "prose":"Likewise with guns and other triggered devices like table saws, the safety versions quickly took over."
           },
           {
             "name": "/INFORMS/seatbelt.jpg",
@@ -108,82 +108,78 @@
             "title": "Seat Belts",
             "image_only": true,
             "notes": "seatbelts reduce the risk of fatal injury to front-seat occupants by 45%",
-            "url":"https://www.nhtsa.gov/book/countermeasures-that-work/seat-belts-and-child-restraints"
+              "url":"https://www.nhtsa.gov/book/countermeasures-that-work/seat-belts-and-child-restraints",
+	      "prose":"And seatbelts of course, who would dream of not using one today?"
           },
           {
             "name": "/INFORMS/internet.jpg",
             "subtitle": "",
             "title": "Web Security",
-            "notes": "0-1 type enabler \n SSL/TLS \n SHA \n RSA \n e-commerce depends on this"
+              "notes": "0-1 type enabler \n SSL/TLS \n SHA \n RSA \n e-commerce depends on this",
+	      "prose":"But even less obvious things like the Internet -- without secure protocols that safeguard your private information, I mean the .com revolution would have never happened, and how many of us could live without Amazon and Online Banking, right?"
+	      
           },
           {
             "name": "/INFORMS/ultima.png",
             "subtitle": "(in gaming)",
             "title": "Quit and Save",
-            "notes": "Zork (1980) \n Ultima \n Civilization ..."
+              "notes": "Zork (1980) \n Ultima \n Civilization ...",
+	      "prose":"Um, Quit and Save ... this was done as a safe courtesy but look what it enabled in video game progress"
+          },
+	              {
+            "name": "/INFORMS/note7.jpg",
+            "title": "The Tautology",
+            "image_only": true,
+            "subtitle": "unsafe tech is naturally selected away",
+            "notes": " ⦿  No one will use it if they have a choice \n e.g., Samsung Galaxy Note 7 \n Do not use the phone while charging (!) \n\n  ⦿  Would you use ChatGPT if it turned on you?",
+			  "url":"https://blog.easyacc.com/2016/10/14/how-to-avoid-samsung-note-7-from-explosio/",
+			  "prose":"So I think it really may be a Tautology -- that progress in tech needs to be Safe. And that applies to AI as well of course."
+  
           }
+
         ],
         "children": []
       },
       {
         "node": "Safety ~ Classical Physics",
-        "weight": 30,
+          "weight": 30,
+	  "prose":"Now I want to say one more thing about Safety from the perspective of a Physicist. And that is that many of the things we associate with Safety, like determinism, reproducibility, stability, are central tenets of Classical Physics.",
         "widgets": [
           {
             "name": "/INFORMS/action.png",
             "title": "Classical Physics = Minimal Action",
             "subtitle": "",
-            "notes": "• S = <KE> – <PE> is minimal \n\n • Energy is Conserved at All Times \n\n • Deterministic Motion \n\n • Only One Path between A and B \n\n • e.g., ballistics, orbital motion, electricity, fluids, etc. "
+              "notes": "• S = <KE> – <PE> is minimal \n\n • Energy is Conserved at All Times \n\n • Deterministic Motion \n\n • Only One Path between A and B \n\n • e.g., ballistics, orbital motion, electricity, fluids, etc. ",
+	      "prose":"You see, there is this principle in classical mechanics of Minimal Action. This basically says that in any process the average difference between kinetic and potential energy, the action, is the smallest it could ever be. When you throw a ball up in the air, it takes the path it does precisely because it minimizes this action. Now it also takes that path, which many of you remember can be a parabola, due to Newton's Laws of Motion, and it turns out that is equivalent. But the Minimal Action Principle is a much mor elegant way of saying it, and it is useful in understanding something beyond Classical Physics, namely Quantum Physics. "
           },
           {
             "name": "/INFORMS/quantum.png",
             "title": "Quantum Physics = Measured Deviations from Classical",
             "subtitle": "(measured by Planck's Constant, h)",
-            "notes": "• S = <KE> – <PE> swings around minimum \n\n • Energy Can Be Violated (for short times) \n\n • Non-Deterministic Motion \n\n • Many Paths between A and B (all coexist) \n\n • e.g., decay of a Uranium atom, Casimir Effect, Hawking Radiation, etc. "
+              "notes": "• S = <KE> – <PE> swings around minimum \n\n • Energy Can Be Violated (for short times) \n\n • Non-Deterministic Motion \n\n • Many Paths between A and B (all coexist) \n\n • e.g., decay of a Uranium atom, Casimir Effect, Hawking Radiation, etc. ",
+	      "prose":"In Quantum Physics, Action is no longer always minimal. In fact it is almost never minimal, but strays from the minimum with a certain probability that depends on how far it strays. So the Polonium nucleus here has an alpha particle wandering about inside that has a probability of leaking outside of the nucleus causing the whole thing to fall apart, even though that would require briefly breaking energy conservation. Yes, shocking things happen when you violate the Minimal Action Principle. Or two metal plates in space start attracting each other due to virtual photons, which spontaneously arise from the vacuum for a brief interval of time, violating energy conservation, before disappearing again. But during their brief lifetime they cause the plates to attract. And other things you may have heard of like Hawking Radiation, there is a huge list of weird Quantum Physics phenomena. The thing is, no one is really comfortable with Quantum Physics. Even Nature is uncomfortable with it which is why the departures from the Minimal Action are so small (controlled by something called Planck's Constant, which in standard units is on the order of 10^-34 Joule-seconds."
           },
           {
             "name": "/INFORMS/pipe.png",
             "title": "This is Why Safety First",
             "subtitle": "",
-            "notes": "The lowest order (classical) solution should be paramount \n Then add perturbations (quantum) as needed"
+              "notes": "The lowest order (classical) solution should be paramount \n Then add perturbations (quantum) as needed",
+	      "prose":"So Nature is usually classical, that is what we see, but with a little quantum wiggling around. Like when you walk down a pipe, you stay at the bottom right? You don't go up and down the sides too much unless you're a sk8er or a rebel. But that's alright in moderation, in units of Planck's constant. The point is that Safety is like Classical Physics: it's what you want most of the time, otherwise the world would be too crazy."
           },
           {
             "name": "/INFORMS/banking.png",
             "title": "A Banking Analogy",
             "subtitle": "(don't spend what you don't have)",
-            "notes": "Classical: buy only what you can afford \n Quantum: use credit (in moderation ... that's why Planck's Constant is small!)"
-          }
-        ],
-        "children": []
-      },
-      {
-        "node": "Humane => Progress",
-        "weight": 50,
-        "widgets": [
-          {
-            "name": "/INFORMS/tautology.png",
-            "title": "The Tautology",
-            "subtitle": "if it wasn't humane, it would kill us!",
-            "notes": ""
-          },
-          {
-            "name": "/INFORMS/inhumane1.png",
-            "subtitle": "",
-            "title": "Example 1",
-            "notes": ""
-          },
-          {
-            "name": "/INFORMS/inhumane2.png",
-            "subtitle": "",
-            "notes": "",
-            "title": ""
+              "notes": "Classical: buy only what you can afford \n Quantum: use credit (in moderation ... that's why Planck's Constant is small!)",
+	      "prose":"In fact, there's a nice banking analogy I often used in my classes to explain the difference between Classical and Quantum Physics. Classical Physics is like only taking money out of the bank that you have. Quantum Physics is like taking a loan. Most of the time we do the former, but Nature, like a good financier, is an inventive opportunist and sees the use cases for wanting to borrow money sometimes, as long as it's paid back. And I think with any new technology like AI we need to be like prudent consumers. "
           }
         ],
         "children": []
       },
       {
         "node": "Motivation/Urgency",
-        "weight": 90,
+          "weight": 90,
+	  "prose":"So anyways what's the Urgency here? Why should we be very, very motivated to discuss this?",
         "children": [
           {
             "node": "Humanoid Robots",
@@ -261,42 +257,7 @@
               }
             ]
           },
-          {
-            "node": "Aliens",
-            "weight": 30,
-            "widgets": [
-              {
-                "name": "/INFORMS/aliens.png",
-                "title": "Are we alone?",
-                "subtitle": "",
-                "notes": ""
-              },
-              {
-                "name": "/INFORMS/drake.png",
-                "title": "The Fermi Paradox",
-                "subtitle": "",
-                "notes": ""
-              },
-              {
-                "name": "/INFORMS/great-filter.png",
-                "title": "The Great Filter",
-                "subtitle": "",
-                "notes": ""
-              },
-              {
-                "name": "/INFORMS/asimov-victory.png",
-                "title": "We'll see their robots first",
-                "subtitle": "",
-                "notes": ""
-              },
-              {
-                "name": "/INFORMS/annihilation.png",
-                "title": "Or maybe no warning instant annihilation",
-                "subtitle": "",
-                "notes": ""
-              }
-            ]
-          },
+  
           {
             "node": "The next ChatGPT Moment",
             "weight": 70,
@@ -388,6 +349,42 @@
                 ]
               }
 
+            ]
+          },
+          {
+            "node": "Aliens",
+            "weight": 30,
+            "widgets": [
+              {
+                "name": "/INFORMS/aliens.png",
+                "title": "Are we alone?",
+                "subtitle": "",
+                "notes": ""
+              },
+              {
+                "name": "/INFORMS/drake.png",
+                "title": "The Fermi Paradox",
+                "subtitle": "",
+                "notes": ""
+              },
+              {
+                "name": "/INFORMS/great-filter.png",
+                "title": "The Great Filter",
+                "subtitle": "",
+                "notes": ""
+              },
+              {
+                "name": "/INFORMS/asimov-victory.png",
+                "title": "We'll see their robots first",
+                "subtitle": "",
+                "notes": ""
+              },
+              {
+                "name": "/INFORMS/annihilation.png",
+                "title": "Or maybe no warning instant annihilation",
+                "subtitle": "",
+                "notes": ""
+              }
             ]
           },
           {
@@ -827,221 +824,222 @@
                     ]
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "node": "Integration",
-            "weight": 40,
-            "widgets": [
-              {
-                "name": "/INFORMS/integration.png",
-                "title": "Integration of AI and Robotics",
-                "subtitle": "",
-                "notes": ""
-              }
-            ],
-            "children": [
-              {
-                "node": "Historical Precedent",
-                "weight": 20,
-                "widgets": [
-                  {
-                    "name": "/INFORMS/history1.png",
-                    "title": "Pacemakers",
-                    "subtitle": "",
-                    "notes": ""
-                  },
-                  {
-                    "name": "/INFORMS/history2.png",
-                    "title": "Prosthetic Limbs",
-                    "subtitle": "",
-                    "notes": ""
-                  },
-                  {
-                    "name": "/INFORMS/history3.png",
-                    "title": "ChatGPT in your Life",
-                    "subtitle": "",
-                    "notes": ""
-                  }
-                ]
               },
               {
-                "node": "The Remedy to Superintelligence",
-                "weight": 20,
+                "node": "Integration",
+                "weight": 40,
                 "widgets": [
                   {
-                    "name": "/INFORMS/superintelligence.png",
-                    "title": "Dealing with Superintelligence",
-                    "subtitle": "You can't beat it",
-                    "notes": "Nick Bostrom ..."
-                  },
-                  {
-                    "name": "/INFORMS/uncanny.png",
-                    "title": "Navigating the Uncannny Valley",
+                    "name": "/INFORMS/integration.png",
+                    "title": "Integration of AI and Robotics",
                     "subtitle": "",
-                    "notes": "(see first 3 minutes) \n rest of the video is full of Chinese wow innovations"
-                  },
-                  {
-                    "name": "/INFORMS/https://www.youtube.com/watch?v=or0iYHjoptE",
-                    "title": "Uncanny is Everywhere",
-                    "subtitle": "",
-                    "notes": ""
-                  },
-                  {
-                    "name": "/INFORMS/superintelligence3.png",
-                    "title": "Might is Right",
-                    "subtitle": "...what choice do you really have?",
-                    "url":"https://en.wikipedia.org/wiki/Near-Earth_supernova",
-                    "image_only": true,
-                    "notes": ""
-                  },
-                  {
-                    "name": "/INFORMS/https://www.youtube.com/watch?v=imNtSPM3-r4&list=LL&index=89&t=300s&pp=gAQBiAQB",
-                    "title": "All Tomorrows?",
-                    "subtitle": "...changing ourselves is inevitable?",
                     "notes": ""
                   }
                 ],
                 "children": [
                   {
-                    "node": "Optimizing Ourselves",
-                    "weight": 10,
+                    "node": "Historical Precedent",
+                    "weight": 20,
                     "widgets": [
                       {
-                        "name": "/INFORMS/https://www.youtube.com/watch?v=2rhbh6BpxVc&list=LL&index=138&pp=gAQBiAQB",
-                        "title": "Transhumanism",
+                        "name": "/INFORMS/history1.png",
+                        "title": "Pacemakers",
                         "subtitle": "",
                         "notes": ""
                       },
                       {
-                        "name": "/INFORMS/KarlSims.png",
-                        "url":"https://www.karlsims.com/evolved-virtual-creatures.html", 
-                        "title": "Karl Sims' experiments",
+                        "name": "/INFORMS/history2.png",
+                        "title": "Prosthetic Limbs",
                         "subtitle": "",
                         "notes": ""
                       },
                       {
-                        "name": "/INFORMS/https://www.youtube.com/watch?v=JBgG_VSP7f8",
-                        "title": "Evolved Creatures",
+                        "name": "/INFORMS/history3.png",
+                        "title": "ChatGPT in your Life",
                         "subtitle": "",
                         "notes": ""
                       }
                     ]
                   },
                   {
-                    "node": "Variety",
+                    "node": "The Remedy to Superintelligence",
                     "weight": 20,
                     "widgets": [
                       {
-                        "name": "/INFORMS/variety.png",
-                        "image_only": true,
-                        "url": "https://medium.com/@1054h34/identifying-chatgpt-with-variety-ce392b09e38e",
-                        "title": "Variety is the Spice of Life",
-                        "subtitle": "(from which it gets its flavor)",
+                        "name": "/INFORMS/superintelligence.png",
+                        "title": "Dealing with Superintelligence",
+                        "subtitle": "You can't beat it",
+                        "notes": "Nick Bostrom ..."
+                      },
+                      {
+                        "name": "/INFORMS/uncanny.png",
+                        "title": "Navigating the Uncannny Valley",
+                        "subtitle": "",
+                        "notes": "(see first 3 minutes) \n rest of the video is full of Chinese wow innovations"
+                      },
+                      {
+                        "name": "/INFORMS/https://www.youtube.com/watch?v=or0iYHjoptE",
+                        "title": "Uncanny is Everywhere",
+                        "subtitle": "",
                         "notes": ""
                       },
                       {
-                        "name": "/INFORMS/energy.png",
+                        "name": "/INFORMS/superintelligence3.png",
+                        "title": "Might is Right",
+                        "subtitle": "...what choice do you really have?",
+                        "url":"https://en.wikipedia.org/wiki/Near-Earth_supernova",
                         "image_only": true,
-                        "url": "https://medium.com/@1054h34/identifying-ai-content-with-variety-128b4c728724",
-                        "title": "Don't Spend Too Much Energy",
-                        "subtitle": "",
+                        "notes": ""
+                      },
+                      {
+                        "name": "/INFORMS/https://www.youtube.com/watch?v=imNtSPM3-r4&list=LL&index=89&t=300s&pp=gAQBiAQB",
+                        "title": "All Tomorrows?",
+                        "subtitle": "...changing ourselves is inevitable?",
                         "notes": ""
                       }
-                    ]
-                  },
-                  { 
-                    "node": "An LLM for Motion?",
-                    "weight": 10,
-                    "widgets": [
+                    ],
+                    "children": [
                       {
-                        "name": "/INFORMS/pose.png",
-                        "title": "An LLM for Motion?",
-                        "subtitle": "Sequences of Words -> Sequences of Poses",
-                        "notes": "• First make for Humans \n\n • Consider other body topologies as needed"
-                      },   
-                      {
-                        "name": "/INFORMS/https://www.youtube.com/watch?v=zV1qLYukTH8",
-                        "title": "Dance",
-                        "subtitle": "",
-                        "notes": "• What motions are natural? \n\n • What motions are beautiful? \n\n • Unexplored regimes of the Art?\n\n • Collaborative Choreography"
+                        "node": "Optimizing Ourselves",
+                        "weight": 10,
+                        "widgets": [
+                          {
+                            "name": "/INFORMS/https://www.youtube.com/watch?v=2rhbh6BpxVc&list=LL&index=138&pp=gAQBiAQB",
+                            "title": "Transhumanism",
+                            "subtitle": "",
+                            "notes": ""
+                          },
+                          {
+                            "name": "/INFORMS/KarlSims.png",
+                            "url":"https://www.karlsims.com/evolved-virtual-creatures.html", 
+                            "title": "Karl Sims' experiments",
+                            "subtitle": "",
+                            "notes": ""
+                          },
+                          {
+                            "name": "/INFORMS/https://www.youtube.com/watch?v=JBgG_VSP7f8",
+                            "title": "Evolved Creatures",
+                            "subtitle": "",
+                            "notes": ""
+                          }
+                        ]
                       },
                       {
-                        "name": "/INFORMS/https://www.youtube.com/watch?v=3uHxgQ_hHs8&t=80s",
-                        "title": "Wushu (Kungfu)",
-                        "subtitle": "(martial arts in general)",
-                        "notes": "• What motions are efficient? \n\n • What motions are unexpected? \n\n • Hidden/unexplored techniques? \n\n • Adversarial applications"
+                        "node": "Variety",
+                        "weight": 20,
+                        "widgets": [
+                          {
+                            "name": "/INFORMS/variety.png",
+                            "image_only": true,
+                            "url": "https://medium.com/@1054h34/identifying-chatgpt-with-variety-ce392b09e38e",
+                            "title": "Variety is the Spice of Life",
+                            "subtitle": "(from which it gets its flavor)",
+                            "notes": ""
+                          },
+                          {
+                            "name": "/INFORMS/energy.png",
+                            "image_only": true,
+                            "url": "https://medium.com/@1054h34/identifying-ai-content-with-variety-128b4c728724",
+                            "title": "Don't Spend Too Much Energy",
+                            "subtitle": "",
+                            "notes": ""
+                          }
+                        ]
                       },
-                      {
-                        "name": "/INFORMS/https://www.youtube.com/watch?v=UcK2XtwaK5M",
-                        "title": "Collaborative Robotics",
-                        "subtitle": "(creative dancing)",
-                        "notes": "• 3D Printing \n\n • Swarm/Group Coordination \n\n • Transformers?"
-                      },
-                      
-                      {
-                        "name": "/INFORMS/https://www.youtube.com/shorts/n33eMQ3GNgY",
-                        "title": "Industrial Motion",
-                        "subtitle": "",
-                        "notes": "• What worker motions are dominant? \n\n • Robotic training \n\n • Efficiency/Ergonomics"
+                      { 
+                        "node": "An LLM for Motion?",
+                        "weight": 10,
+                        "widgets": [
+                          {
+                            "name": "/INFORMS/pose.png",
+                            "title": "An LLM for Motion?",
+                            "subtitle": "Sequences of Words -> Sequences of Poses",
+                            "notes": "• First make for Humans \n\n • Consider other body topologies as needed"
+                          },   
+                          {
+                            "name": "/INFORMS/https://www.youtube.com/watch?v=zV1qLYukTH8",
+                            "title": "Dance",
+                            "subtitle": "",
+                            "notes": "• What motions are natural? \n\n • What motions are beautiful? \n\n • Unexplored regimes of the Art?\n\n • Collaborative Choreography"
+                          },
+                          {
+                            "name": "/INFORMS/https://www.youtube.com/watch?v=3uHxgQ_hHs8&t=80s",
+                            "title": "Wushu (Kungfu)",
+                            "subtitle": "(martial arts in general)",
+                            "notes": "• What motions are efficient? \n\n • What motions are unexpected? \n\n • Hidden/unexplored techniques? \n\n • Adversarial applications"
+                          },
+                          {
+                            "name": "/INFORMS/https://www.youtube.com/watch?v=UcK2XtwaK5M",
+                            "title": "Collaborative Robotics",
+                            "subtitle": "(creative dancing)",
+                            "notes": "• 3D Printing \n\n • Swarm/Group Coordination \n\n • Transformers?"
+                          },
+                          
+                          {
+                            "name": "/INFORMS/https://www.youtube.com/shorts/n33eMQ3GNgY",
+                            "title": "Industrial Motion",
+                            "subtitle": "",
+                            "notes": "• What worker motions are dominant? \n\n • Robotic training \n\n • Efficiency/Ergonomics"
+                          }
+                        ]
                       }
                     ]
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "node": "Losing Control",
-            "weight": 20,
-            "widgets": [
-              {
-                "name": "/INFORMS/losing_control.png",
-                "title": "Humanity Enslaved",
-                "subtitle": "",
-                "notes": ""
               },
               {
-                "name": "/INFORMS/https://www.youtube.com/watch?v=1UufaK3pQMg",
-                "title": "Humanity Eliminated",
-                "subtitle": "AI 2027",
-                "notes": "5:13"
+                "node": "Losing Control",
+                "weight": 20,
+                "widgets": [
+                  {
+                    "name": "/INFORMS/losing_control.png",
+                    "title": "Humanity Enslaved",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "/INFORMS/https://www.youtube.com/watch?v=1UufaK3pQMg",
+                    "title": "Humanity Eliminated",
+                    "subtitle": "AI 2027",
+                    "notes": "5:13"
+                  },
+                  {
+                    "name": "/INFORMS/chaos.png",
+                    "title": "Chaos",
+                    "subtitle": "(though there may be structure)",
+                    "notes": "Some people like Jackson Pollock"
+                  }
+                ]
               },
               {
-                "name": "/INFORMS/chaos.png",
-                "title": "Chaos",
-                "subtitle": "(though there may be structure)",
-                "notes": "Some people like Jackson Pollock"
-              }
-            ]
-          },
-          {
-            "node": "Religion, Acceptance",
-            "weight": 10,
-            "widgets": [
-              {
-                "name": "/INFORMS/religion_acceptance.png",
-                "title": "Ignoring It All",
-                "subtitle": "",
-                "notes": ""
-              },
-              {
-                "name": "/INFORMS/religion_acceptance2.png",
-                "title": "Acceptance of AI as the new God",
-                "url":"https://www.msn.com/en-gb/money/technology/rise-of-ai-religion-robotheism-inevitable-as-tech-won-t-be-humanity-s-slave-for-long/ar-AA1DHqcr",
-                "image_only": true,
-                "subtitle": "",
-                "notes": "Another Asimov prediction!"
-              },
-              {
-                "name": "/INFORMS/religion_acceptance3.png",
-                "title": "Acceptance of AI as our new Master",
-                "subtitle": "",
-                "notes": "Thresholds we cannot ignore: Kasparov losing to Deep Blue, Ken Jennings losing to IBM Watson in Jeopardy, AlphaGo ..."
+                "node": "Religion, Acceptance",
+                "weight": 10,
+                "widgets": [
+                  {
+                    "name": "/INFORMS/religion_acceptance.png",
+                    "title": "Ignoring It All",
+                    "subtitle": "",
+                    "notes": ""
+                  },
+                  {
+                    "name": "/INFORMS/religion_acceptance2.png",
+                    "title": "Acceptance of AI as the new God",
+                    "url":"https://www.msn.com/en-gb/money/technology/rise-of-ai-religion-robotheism-inevitable-as-tech-won-t-be-humanity-s-slave-for-long/ar-AA1DHqcr",
+                    "image_only": true,
+                    "subtitle": "",
+                    "notes": "Another Asimov prediction!"
+                  },
+                  {
+                    "name": "/INFORMS/religion_acceptance3.png",
+                    "title": "Acceptance of AI as our new Master",
+                    "subtitle": "",
+                    "notes": "Thresholds we cannot ignore: Kasparov losing to Deep Blue, Ken Jennings losing to IBM Watson in Jeopardy, AlphaGo ..."
+                  }
+                ]
               }
             ]
           }
+          
         ]
       },
       {
@@ -1401,6 +1399,31 @@
               }
             ],
             "children":[
+              {
+                "node": "Humane => Progress",
+                "weight": 50,
+                "widgets": [
+                  {
+                    "name": "/INFORMS/tautology.png",
+                    "title": "The Tautology",
+                    "subtitle": "if it wasn't humane, it would kill us!",
+                    "notes": ""
+                  },
+                  {
+                    "name": "/INFORMS/inhumane1.png",
+                    "subtitle": "",
+                    "title": "Example 1",
+                    "notes": ""
+                  },
+                  {
+                    "name": "/INFORMS/inhumane2.png",
+                    "subtitle": "",
+                    "notes": "",
+                    "title": ""
+                  }
+                ],
+                "children": []
+              },
               {
                 "node": "Art",
                 "weight": 30,
