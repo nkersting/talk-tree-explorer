@@ -7,7 +7,7 @@ export function ThemeToggle() {
 
   return (
     <div className="flex items-center space-x-2">
-      <Label htmlFor="theme-toggle">Dark mode</Label>
+      <Label htmlFor="theme-toggle">Ambience</Label>
       <Switch
         id="theme-toggle"
         checked={theme === "dark"}
