@@ -66,8 +66,8 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
         type="target"
         position={Position.Top}
         style={{ 
-          background: 'hsl(var(--primary))', 
-          border: '2px solid hsl(var(--background))',
+          background: '#1f2937', 
+          border: '2px solid #f5f5f5',
           width: '8px',
           height: '8px'
         }}
@@ -77,18 +77,23 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
         <TooltipTrigger asChild>
           <div
             // Updated styling for focused node with THICKER light blue border and yellow highlight for search matches
-            className={`rounded-full shadow-[var(--shadow-glow)] transition-transform duration-400 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
+            className={`rounded-full transition-transform duration-400 hover:scale-105 cursor-move flex items-center justify-center text-xs font-medium text-center leading-tight p-1 ${
               isFocused 
-              ? 'scale-210 animate-[pulse_2s_ease-in-out_infinite] bg-primary text-primary-foreground' 
+              ? 'scale-210 animate-[pulse_2s_ease-in-out_infinite]' 
               : isSearchMatch
               ? 'bg-yellow-400 text-black ring-2 ring-yellow-500'
-              : 'bg-primary text-primary-foreground ring-1 ring-ring'
+              : ''
             }`}
             style={{
-              width: radius * 2,
-              height: radius * 2,
-              fontSize: Math.max(8, radius / 3),
-              ...(isFocused ? { boxShadow: '0 0 0 48px rgb(249 115 22)' } : {}) // 8px thick sky-300 border
+              backgroundColor: isFocused ? '#f97316' : '#1f2937',
+              color: '#ffffff',
+              border: isFocused ? 'none' : '1px solid #374151',
+              boxShadow: isFocused ? '0 0 0 4px #fb923c' : '0 2px 4px rgba(0,0,0,0.1)',
+              ...{
+                width: radius * 2,
+                height: radius * 2,
+                fontSize: Math.max(8, radius / 3)
+              }
             }}
             title={data.label}
             onClick={handleNodeClick}
@@ -104,8 +109,8 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
         type="source"
         position={Position.Bottom}
         style={{ 
-          background: 'hsl(var(--primary))', 
-          border: '2px solid hsl(var(--background))',
+          background: '#1f2937', 
+          border: '2px solid #f5f5f5',
           width: '8px',
           height: '8px'
         }}
