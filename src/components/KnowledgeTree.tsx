@@ -322,12 +322,12 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
           maxZoom={10}
           minZoom={0.01}
           defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
-          style={{ backgroundColor: 'hsl(var(--card))' }}
+          style={{ backgroundColor: '#f5f5f5' }}
           nodesDraggable
           nodesConnectable={false}
           elementsSelectable
         >
-            <Background color="hsl(var(--muted))" gap={20} />
+          <Background color="#e0e0e0" gap={20} />
             <Controls showInteractive={false}>
               <Button
                 variant="ghost" 
