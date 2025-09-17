@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { createPortal } from "react-dom";
 import type { KnowledgeNode, Widget } from "../types"; // Adjusted path to match the correct location
 import { useFocus } from '@/contexts/FocusContext';
+import { useTheme } from "next-themes";
 import { 
   Drawer,
   DrawerContent,
@@ -1320,6 +1321,14 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   );
 }
 
+// Component for theme-aware 3D background
+function BackgroundColor() {
+  const { theme } = useTheme();
+  const backgroundColor = theme === "light" ? "hsl(39, 100%, 95%)" : "hsl(222.2, 84%, 4.9%)"; // Light beige for light mode, dark for dark mode
+  
+  return <color attach="background" args={[backgroundColor] as any} />;
+}
+
 // And update the Graph3D component to include the drawer
 export function Graph3D({ data }: { data: KnowledgeNode }) {
   const card = useCssHsl("--card", "hsl(0 0% 100%)");
@@ -1358,8 +1367,8 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
         
         <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
           <Canvas shadows camera={{ position: [0, 5, -15], fov: 50 }}>
-            <color attach="background" args={["black"] as any} />
-            <GraphSceneWithDrawer 
+            <BackgroundColor />
+            <GraphSceneWithDrawer
               data={data} 
               setSidePanelOpen={setSidePanelOpen}
               setSelectedWidget={setSelectedWidget}
