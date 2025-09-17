@@ -7,6 +7,7 @@ import { KnowledgeNode } from "../types";
 import { KnowledgeTree } from "@/components/KnowledgeTree";
 import { FocusProvider, useFocus } from '@/contexts/FocusContext';
 import { NavigationButton } from "@/components/NavigationButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 
 const particleData = knowledgeData.knowledgeTree as KnowledgeNode;
@@ -34,6 +35,9 @@ function IndexContent() {
         description={`${knowledgeData["seo"].description}`}
       />
       <header className="relative">
+        <div className="absolute top-4 right-4 z-50">
+          <ThemeToggle />
+        </div>
         <div
           onMouseMove={onMove}
           className="relative mx-auto max-w-5xl px-6 pt-8 pb-4"
