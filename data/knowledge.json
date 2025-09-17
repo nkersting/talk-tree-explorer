@@ -709,13 +709,102 @@
                             ]
                           }
                         ]
-                      }
+                      },
+                      {
+                        "node": "LLM Hallucination",
+                          "weight": 40,
+			  "prose":"But now speaking of Truth, let's consider the opposite, which has become known as Hallucination. It's not an ideal term, but it basically stands for at least two kinds of false information: 1. when the LLM is so confident it knows the answer but really it has no knowledge about the topic and is just making stuff up, and 2. when the LLM should have the information it needs but gives you garbage instead. Either one of these possibilities is straying from the manifold of truth, which however, is also trained on garbage, also gives you a third type of hallucination where the LLM is just telling you what you trained it on, so I'm sure you've heard the phrase 'garbage in, garbage out'. ",
+                        "widgets": [
+                          {
+                            "name": "/INFORMS/llm_hallucination.png",
+                            "title": "Type I (HK+) Hallucination",
+                            "subtitle": "bad answer despite having the knowledge",
+                            "url":"https://arxiv.org/abs/2410.22071 ",
+                            "image_only": true,
+                            "notes": "\n like getting the wrong delivery  "
+                          },
+                          {
+                            "name": "/INFORMS/llm_hallucination2.png",
+                            "title": "Type II (HK-) Hallucination",
+                            "subtitle": "bad answer because it doesn't have the knowledge",
+                            "notes": ""
+                          },
+                          {
+                            "name": "/INFORMS/RAG.png",
+                            "title": "RAG is the only trusted application",
+                            "subtitle": "(because we can verify the hallucination)",
+                              "notes": "",
+			      "prose":"Now what's interesting is that we're almost 3 years on from the ChatGPT revolution, and we still haven't found anything more trustworthy than RAG which actually pre-dates ChatGPT."
+                          },
+                          {
+                            "name": "/INFORMS/llm_hallucination3.png",
+                            "title": "Straying from the Manifold of Truth?",
+                            "subtitle": "measure the degree of violation",
+                            "notes": ""
+                          }
+                        ],
+                        "children": [
+                          {
+                              "node": "Stability as a Proxy for Trustworthiness",
+                              "weight": 20,
+			      "prose":"Now we've seen this before, Stability being a proxy for Explainability, for LLMs this translates to hallucination detection. So how does this work?",
+                            "widgets": [
+                              {
+                                "name": "/INFORMS/harmonic_LLM.png",
+                                "title": "Should LLMs live on Harmonic Manifolds?",
+                                "subtitle": "",
+                                  "notes": "",
+				  "prose":"Well just like for vanilla ML we look in the neighborhood of the input point and check if the outputs satisfy the harmonic condition. In general, LLMs do not, but the degree of violation may indicate liklihood of hallucination."
+                              },
+                              {
+                                "name": "/INFORMS/interrogate.png",
+                                "title": "Borrowing from Interrogation Techniques",
+                                "subtitle": "",
+                                "notes": "Ask the same question in different ways \n Look for variation in response"
+                              },
+                              {
+                                "name": "/INFORMS/gamma.png",
+                                "title": "Trustworthy -> low Gamma",
+                                "subtitle": "",
+                                "notes": ""
+                              }, 
+                              {
+                                "name": "/INFORMS/gamma_1.png",
+                                "title": "Untrustworthy/Ambiguous -> high Gamma",
+                                "subtitle": "",
+                                "notes": ""
+                              }, 
+                              {
+                                "name": "/INFORMS/xenon.png",
+                                "title": "Adversarial Example",
+                                "subtitle": "",
+                                "notes": ""
+                              },
+                              {
+                                "name": "/INFORMS/gamma_trends.png",
+                                "title": "Statistically Makes Sense",
+                                "subtitle": "the higher gamma is, more likely to be hallucination",
+                                "url":"https://arxiv.org/pdf/2404.19708",
+                                "image_only": true,
+                                "notes": ""
+                              },
+                              {
+                                "name": "/INFORMS/visa_olympics.png",
+                                "title": "At the 2024 Olympics",
+                                "subtitle": "(we used gamma to filter out bad answers)",
+                                  "notes": "Here we got away with N=1 ! \n In general, need larger N \n Further work needed to maximize potential",
+				  "prose":"You may be interested to know this was actually deployed at the Paris 2024 Summer Olympics in a chatbot, which allowed us to avoid giving embarrassingly hallucinatory answers with GPT-4 to literally the 100% level."
+                              }
+        
+        
+                            ]
+                          }
                     ]
                   },
                   {
                     "node": "AI Alignment",
                       "weight": 30,
-		      "prose":"Now there are a few more nodes here I'm just going to gloss over, we can come back to them if you'd like to ask questions afterwards, but 'The Alignment Problem', highly recommend this book because it really talks about what do we really want from AI, and it isn't all that trivial. And these other topics again I'm just going to flash by in the interest of time.",
+		      "prose":"Now there are a few more nodes here I'm just going to gloss over, we can come back to them if you'd like to ask questions afterwards, but 'The Alignment Problem', highly recommend this book because it really talks about what do we really want from AI, and it isn't all that trivial. And these other topics again I'm just going to flash by in the interest of time. But again feel free to ask about them in the QA afterwards.",
                     "widgets": [
                       {
                         "name": "/INFORMS/alignment_problem.png",
@@ -762,11 +851,15 @@
                     ]
                   }
                 ]
+              }
+              
+              
+                ]
               },
               {
                 "node": "MCP Agentic AI",
                   "weight": 10,
-		  "prose":"OK now remember, we're still talking about how to deal with this coming revolution, and ",
+		  "prose":"OK now remember, we're still talking about how to deal with this coming revolution, and so far we've emphasized very control-oriented things. Now what about other ways to deal with it?",
                 "widgets": [
                   {
                     "name": "/INFORMS/mcp.png",
@@ -774,7 +867,8 @@
                     "subtitle": "see my MCP server",
                     "url":"https://addyo.substack.com/p/mcp-what-it-is-and-why-it-matters",
                     "image_only": true,
-                    "notes": "Distributed P2P Functionality \n\n Gated (controllable, putting $$ back to people) \n\n New Cottage Industry (like apps for smartphones)"
+                      "notes": "Distributed P2P Functionality \n\n Gated (controllable, putting $$ back to people) \n\n New Cottage Industry (like apps for smartphones)",
+		      "prose":"Well for the positively-minded among you, there is the MCP micro-revolution happening now. This is akin to the App Store micro-revolution when the iPad came out and every 1-year-old suddenly wanted 1000 apps. It was a golden age for developers to get ideas out there and make a quick buck."
                   },
                   {
                     "name": "/INFORMS/mcp2.png",
@@ -782,111 +876,29 @@
                     "url":"https://medium.com/@1054h34/make-a-free-mcp-server-next-weekend-adacea5fa698",
                     "image_only": true,
                     "subtitle": "",
-                    "notes": ""
-                  }
-                ]
-              },
-              {
-                "node": "LLM Hallucination",
-                "weight": 40,
-                "widgets": [
-                  {
-                    "name": "/INFORMS/llm_hallucination.png",
-                    "title": "Type I (HK+) Hallucination",
-                    "subtitle": "bad answer despite having the knowledge",
-                    "url":"https://arxiv.org/abs/2410.22071 ",
-                    "image_only": true,
-                    "notes": "\n like getting the wrong delivery  "
-                  },
-                  {
-                    "name": "/INFORMS/llm_hallucination2.png",
-                    "title": "Type II (HK-) Hallucination",
-                    "subtitle": "bad answer because it doesn't have the knowledge",
-                    "notes": ""
-                  },
-                  {
-                    "name": "/INFORMS/RAG.png",
-                    "title": "RAG is the only trusted application",
-                    "subtitle": "(because we can verify the hallucination)",
-                    "notes": ""
-                  },
-                  {
-                    "name": "/INFORMS/llm_hallucination3.png",
-                    "title": "Straying from the Manifold of Truth?",
-                    "subtitle": "measure the degree of violation",
-                    "notes": ""
-                  }
-                ],
-                "children": [
-                  {
-                    "node": "Stability as a Proxy for Trustworthiness",
-                    "weight": 20,
-                    "widgets": [
-                      {
-                        "name": "/INFORMS/harmonic_LLM.png",
-                        "title": "Should LLMs live on Harmonic Manifolds?",
-                        "subtitle": "",
-                        "notes": ""
-                      },
-                      {
-                        "name": "/INFORMS/interrogate.png",
-                        "title": "Borrowing from Interrogation Techniques",
-                        "subtitle": "",
-                        "notes": "Ask the same question in different ways \n Look for variation in response"
-                      },
-                      {
-                        "name": "/INFORMS/gamma.png",
-                        "title": "Trustworthy -> low Gamma",
-                        "subtitle": "",
-                        "notes": ""
-                      }, 
-                      {
-                        "name": "/INFORMS/gamma_1.png",
-                        "title": "Untrustworthy/Ambiguous -> high Gamma",
-                        "subtitle": "",
-                        "notes": ""
-                      }, 
-                      {
-                        "name": "/INFORMS/xenon.png",
-                        "title": "Adversarial Example",
-                        "subtitle": "",
-                        "notes": ""
-                      },
-                      {
-                        "name": "/INFORMS/gamma_trends.png",
-                        "title": "Statistically Makes Sense",
-                        "subtitle": "the higher gamma is, more likely to be hallucination",
-                        "url":"https://arxiv.org/pdf/2404.19708",
-                        "image_only": true,
-                        "notes": ""
-                      },
-                      {
-                        "name": "/INFORMS/visa_olympics.png",
-                        "title": "At the 2024 Olympics",
-                        "subtitle": "(we used gamma to filter out bad answers)",
-                        "notes": "Here we got away with N=1 ! \n In general, need larger N \n Further work needed to maximize potential"
-                      }
-
-
-                    ]
+                      "notes": "⦿  Hosted on HuggingFace Spaces (free)\n\n ⦿  About 20 minutes of Python programming (with AI) \n\n ⦿  10 minutes struggling to integrate with Claude Desktop \n\n ⦿   But now the whole world can use!",
+		      "prose":" So here's my idea, which hasn't made a quick buck yet, but it was incredibly easy to make a MCP server running on the free HuggingFace Spaces which can easily integrate to Claude Desktop to detection hallucination realtime. My point is this is a really meritocritous way for people to get involved in the AI revolution --- and the sooner your tool is out there to use, the more effect you will have on the future of humanity, literally. So make it good."
                   }
                 ]
               },
               {
                 "node": "Integration",
-                "weight": 40,
+                  "weight": 40,
+		  "prose":"But now aside from directly contributing to this revolution with your development skills making an MCP server, there are other things which will be, perhaps, more passive.",
                 "widgets": [
                   {
                     "name": "/INFORMS/integration.png",
                     "title": "Integration of AI and Robotics",
                     "subtitle": "",
-                    "notes": ""
+                      "notes": "",
+		      "prose":"You know we might not want to always frame this as an AI vs Human situation .... Integration is highly likely."
                   }
                 ],
                 "children": [
                   {
                     "node": "Historical Precedent",
-                    "weight": 20,
+                      "weight": 20,
+		      "prose":"I mean look at the precedent, we've been preparing for this all along with prosthetic limbs, artificial hearts, and now ChatGPT is doing most of your work for you by now, right? It's part of you.",
                     "widgets": [
                       {
                         "name": "/INFORMS/history1.png",
@@ -910,7 +922,8 @@
                   },
                   {
                     "node": "The Remedy to Superintelligence",
-                    "weight": 20,
+                      "weight": 20,
+		      "prose":"Now there's plenty of negative press about the AI Doomsday, Nick Bostrom's book comes to mind, and check out All Tomorrows for some truly horrific science fiction",
                     "widgets": [
                       {
                         "name": "/INFORMS/superintelligence.png",
@@ -922,13 +935,13 @@
                         "name": "/INFORMS/uncanny.png",
                         "title": "Navigating the Uncannny Valley",
                         "subtitle": "",
-                        "notes": "(see first 3 minutes) \n rest of the video is full of Chinese wow innovations"
+                        "notes": ""
                       },
                       {
                         "name": "/INFORMS/https://www.youtube.com/watch?v=or0iYHjoptE",
                         "title": "Uncanny is Everywhere",
                         "subtitle": "",
-                        "notes": ""
+                        "notes": "(see first 3 minutes) \n rest of the video is full of Chinese wow innovations"
                       },
                       {
                         "name": "/INFORMS/superintelligence3.png",
@@ -936,7 +949,8 @@
                         "subtitle": "...what choice do you really have?",
                         "url":"https://en.wikipedia.org/wiki/Near-Earth_supernova",
                         "image_only": true,
-                        "notes": ""
+                          "notes": "",
+			  "prose":"But you know, I offer the very real possibility that this is what the universe wants ... can you really argue with a supernova? Well this is part of this process, perhaps."
                       },
                       {
                         "name": "/INFORMS/https://www.youtube.com/watch?v=imNtSPM3-r4&list=LL&index=89&t=300s&pp=gAQBiAQB",
@@ -948,7 +962,8 @@
                     "children": [
                       {
                         "node": "Optimizing Ourselves",
-                        "weight": 10,
+                          "weight": 10,
+			  "prose":"On that note, there is plenty of discourse on this topic, see for example this 8 hour video ... no really it's worth watching, it's quite good.",
                         "widgets": [
                           {
                             "name": "/INFORMS/https://www.youtube.com/watch?v=2rhbh6BpxVc&list=LL&index=138&pp=gAQBiAQB",
@@ -961,7 +976,8 @@
                             "url":"https://www.karlsims.com/evolved-virtual-creatures.html", 
                             "title": "Karl Sims' experiments",
                             "subtitle": "",
-                            "notes": ""
+                              "notes": "",
+			      "prose":"Or perhaps the lesser-known work of Karl Sims, who magnificently showed how you can evolve efficient body topologies given a goal"
                           },
                           {
                             "name": "/INFORMS/https://www.youtube.com/watch?v=JBgG_VSP7f8",
@@ -971,37 +987,18 @@
                           }
                         ]
                       },
-                      {
-                        "node": "Variety",
-                        "weight": 20,
-                        "widgets": [
-                          {
-                            "name": "/INFORMS/variety.png",
-                            "image_only": true,
-                            "url": "https://medium.com/@1054h34/identifying-chatgpt-with-variety-ce392b09e38e",
-                            "title": "Variety is the Spice of Life",
-                            "subtitle": "(from which it gets its flavor)",
-                            "notes": ""
-                          },
-                          {
-                            "name": "/INFORMS/energy.png",
-                            "image_only": true,
-                            "url": "https://medium.com/@1054h34/identifying-ai-content-with-variety-128b4c728724",
-                            "title": "Don't Spend Too Much Energy",
-                            "subtitle": "",
-                            "notes": ""
-                          }
-                        ]
-                      },
+                      
                       { 
                         "node": "An LLM for Motion?",
-                        "weight": 10,
+                          "weight": 10,
+			  "prose":"Another idea under my active research is developing a ChatGPT for Motion, if you will.",
                         "widgets": [
                           {
                             "name": "/INFORMS/pose.png",
                             "title": "An LLM for Motion?",
                             "subtitle": "Sequences of Words -> Sequences of Poses",
-                            "notes": "• First make for Humans \n\n • Consider other body topologies as needed"
+                              "notes": "• First make for Humans \n\n • Consider other body topologies as needed",
+			      "prose":"Starting with pose sequences, can we predict the next pose?"
                           },   
                           {
                             "name": "/INFORMS/https://www.youtube.com/watch?v=zV1qLYukTH8",
@@ -1036,7 +1033,8 @@
               },
               {
                 "node": "Losing Control",
-                "weight": 20,
+                  "weight": 20,
+		  "prose":"Finally, remembering we're considering ways of dealing with the coming Robo Moment, we look at controls and positive contributions, well there are negative and apathetic possibilities as well, either something Matrix-like, Chaos, or perhaps just acceptance of AI as the new master or God. But I think that's all a little extreme, so what's my real Proposition here?",
                 "widgets": [
                   {
                     "name": "/INFORMS/losing_control.png",
@@ -1091,7 +1089,8 @@
       },
       {
         "node": "Proposal",
-        "weight": 90,
+          "weight": 90,
+	  "prose":"First of all, it's important to remember that Humans are still in control, so we have first-movers advantage. In order to safely integrate AI into our society, let's apply natural safeguards, things that can't really fail, because AI has no way to change physics.",
         "children": [
           {
             "node": "natural safeguards",
@@ -1101,25 +1100,29 @@
                 "name": "/INFORMS/natural_safeguards.png",
                 "title": "Physical Limits",
                 "subtitle": "",
-                "notes": "• We trust things which are naturally constrained \n\n • 'Dont Be There' is one of the 'extra' 36 miliary stratgems of Sun Tzu \n\n • e.g. we trust Target shoppers to buy knives because their destructive power is very limited (relative to the car they drive to get there) \n\n • We trust drivers will not cross the yellow line because of strong negative motivation"
+                  "notes": "• We trust things which are naturally constrained \n\n • 'Dont Be There' is one of the 'extra' 36 miliary stratgems of Sun Tzu \n\n • e.g. we trust Target shoppers to buy knives because their destructive power is very limited (relative to the car they drive to get there) \n\n • We trust drivers will not cross the yellow line because of strong negative motivation",
+		  "prose":"so you know, the first natural safeguard is plate glass, keep AI well contained as long as possible."
               },
               {
                 "name": "/INFORMS/natural_safeguards2.png",
                 "title": "Manifolds of Truth",
                 "subtitle": "",
-                "notes": "• Mathematical safeguards are even better"
+                  "notes": "• Mathematical safeguards are even better",
+		  "prose":"And instill some mathematical guarantees it will stay in bounds. Or at least give ourselves the power to measure that. Remember my Recalibration principle --- we're always checking whether AI is within bounds, and correcting it if not."
               },
               {
                 "name": "/INFORMS/natural_safeguards3.png",
                 "title": "Expiration",
                 "subtitle": "",
-                "notes": ""
+                  "notes": "",
+		  "prose":"Expiration is also a natural bound. Like radioactive items, incredibly dangerous but by their very nature they get weaker over time. We CAN let AI expire. We can always rebuild it if needed, and probably better than before."
               }
             ]
           },
           {
             "node": "low-tech",
-            "weight": 50,
+              "weight": 50,
+	      "prose":"Remember my other maxim, A Backup Plan for Everything. Well, keep low-tech around. Because if AI fails, every other high-tech system will be unreliable. Only the ancient technology will be resistant.",
             "widgets": [
               {
                 "name": "/INFORMS/land-rover.png",
@@ -1139,7 +1142,8 @@
           },
           {
             "node": "kung-fu",
-            "weight": 50,
+              "weight": 50,
+	      "prose":"Finally, and this is no joke, Kung-fu, not just the martial art but the spirit to do good, that is tantamount to my principle of Loose Coupling --- AI may fail in a million ways, but you keep the core goal of doing good, and being efficient, that will smooth over any hiccups in development.",
             "widgets": [
               {
                 "name": "/INFORMS/kung_fu.png",
@@ -1470,6 +1474,28 @@
                   }
                 ],
                 "children": []
+              },
+              {
+                "node": "Variety",
+                "weight": 20,
+                "widgets": [
+                  {
+                    "name": "/INFORMS/variety.png",
+                    "image_only": true,
+                    "url": "https://medium.com/@1054h34/identifying-chatgpt-with-variety-ce392b09e38e",
+                    "title": "Variety is the Spice of Life",
+                    "subtitle": "(from which it gets its flavor)",
+                    "notes": ""
+                  },
+                  {
+                    "name": "/INFORMS/energy.png",
+                    "image_only": true,
+                    "url": "https://medium.com/@1054h34/identifying-ai-content-with-variety-128b4c728724",
+                    "title": "Don't Spend Too Much Energy",
+                    "subtitle": "",
+                    "notes": ""
+                  }
+                ]
               },
               {
                 "node": "Art",
