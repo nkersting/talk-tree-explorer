@@ -1262,8 +1262,8 @@ function GraphScene({ data }: { data: KnowledgeNode }) {
   }, [focusId, nodes, camera]);
   
   // Get colors from CSS variables
-  const muted = useCssHsl("--muted-foreground", "hsl(215 20% 65%)");
-  const focusedEdgeColor = "#000000";
+  const muted = "#3b82f6"; // Blue color for edges
+  const focusedEdgeColor = "#1d4ed8"; // Darker blue for focused edges
   
   return (
     <>
