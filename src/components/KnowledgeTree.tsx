@@ -45,6 +45,15 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
   // Check if this node matches the search term
   const isSearchMatch = data.searchTerm && data.label.toLowerCase().includes(data.searchTerm.toLowerCase());
   
+  // Debug logging
+  if (data.searchTerm) {
+    console.log(`Node ${data.label} - searchTerm: ${data.searchTerm}, isSearchMatch: ${isSearchMatch}`, {
+      nodeLabel: data.label,
+      searchTerm: data.searchTerm,
+      isMatch: isSearchMatch
+    });
+  }
+  
   // Handle click on the node
   const handleNodeClick = () => {
     if (focusedNodeLabel === data.label) {
@@ -81,14 +90,14 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
               isFocused 
               ? 'scale-210 animate-[pulse_2s_ease-in-out_infinite]' 
               : isSearchMatch
-              ? 'bg-yellow-400 text-black ring-2 ring-yellow-500'
+              ? '!bg-yellow-400 !text-black ring-4 ring-yellow-500 scale-110'
               : ''
             }`}
             style={{
-              backgroundColor: isFocused ? '#f97316' : '#1f2937',
-              color: '#ffffff',
+              backgroundColor: isFocused ? '#f97316' : isSearchMatch ? undefined : '#1f2937',
+              color: isFocused ? '#ffffff' : isSearchMatch ? undefined : '#ffffff',
               border: isFocused ? 'none' : '1px solid #374151',
-              boxShadow: isFocused ? '0 0 0 4px #fb923c' : '0 2px 4px rgba(0,0,0,0.1)',
+              boxShadow: isFocused ? '0 0 0 4px #fb923c' : isSearchMatch ? '0 0 0 4px #eab308' : '0 2px 4px rgba(0,0,0,0.1)',
               ...{
                 width: radius * 2,
                 height: radius * 2,
@@ -232,6 +241,7 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
 
   // Update nodes with search term
   useEffect(() => {
+    console.log('Updating nodes with search term:', searchTerm);
     setNodes(nds => nds.map(node => ({
       ...node,
       data: {
@@ -309,7 +319,10 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
             <Input
               placeholder="Search nodes..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                console.log('Search input changed:', e.target.value);
+                setSearchTerm(e.target.value);
+              }}
               className="w-full max-w-md"
             />
           </div>
@@ -337,7 +350,10 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
               <Button
                 variant="ghost" 
                 size="sm"
-                onClick={() => setIsSearchVisible(!isSearchVisible)}
+                onClick={() => {
+                  console.log('Search button clicked, current visibility:', isSearchVisible);
+                  setIsSearchVisible(!isSearchVisible);
+                }}
                 className="h-8 w-8 p-0"
               >
                 <Search size={14} />
