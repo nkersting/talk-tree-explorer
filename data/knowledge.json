@@ -991,7 +991,7 @@
                       { 
                         "node": "An LLM for Motion?",
                           "weight": 10,
-			  "prose":"Another idea under my active research is developing a ChatGPT for Motion, if you will.",
+			  "prose":"Another idea under my active research is developing a ChatGPT for Motion, if you will. Partly because I believe we can teach robots how to move more efficiently this way in say collaborative 3D printing, but also because this will also give us ideas on how to move efficiently, either in artistic domains like dance or more practical ones like martial arts and motion in life. ",
                         "widgets": [
                           {
                             "name": "/INFORMS/pose.png",
@@ -1090,11 +1090,12 @@
       {
         "node": "Proposal",
           "weight": 90,
-	  "prose":"First of all, it's important to remember that Humans are still in control, so we have first-movers advantage. In order to safely integrate AI into our society, let's apply natural safeguards, things that can't really fail, because AI has no way to change physics.",
+	  "prose":"So what's my Proposal?",
         "children": [
           {
             "node": "natural safeguards",
-            "weight": 50,
+              "weight": 50,
+	      "prose":" First of all, it's important to remember that Humans are still in control, so we have first-movers advantage. In order to safely integrate AI into our society, let's apply natural safeguards, things that can't really fail, because AI has no way to change physics.",
             "widgets": [
               {
                 "name": "/INFORMS/natural_safeguards.png",
@@ -1115,7 +1116,7 @@
                 "title": "Expiration",
                 "subtitle": "",
                   "notes": "",
-		  "prose":"Expiration is also a natural bound. Like radioactive items, incredibly dangerous but by their very nature they get weaker over time. We CAN let AI expire. We can always rebuild it if needed, and probably better than before."
+		  "prose":"Expiration is also a natural bound. Like radioactive items, incredibly dangerous but by their very nature they get weaker over time. We CAN let AI expire. Don't build it to last. We can always rebuild it if needed, and probably better than before."
               }
             ]
           },
@@ -1166,7 +1167,8 @@
             ]
           },
           {
-            "node": "communication",
+              "node": "communication",
+	      "prose":"Next we have to pay careful attention to how we communicate. Because let's not forget communication is central to humanity's progress throughout the millenia, from the spoken word, to the invention of writing, telegraph, telephone, and internet. We are a species that massively benefits from sharing ideas, and conversely atropies when we can't. But in the AI age we need to safeguard Privacy, Security, and Integrity. ",
             "weight": 50,
             "widgets": [
               {
@@ -1226,15 +1228,17 @@
             ],
             "children": [
               {
-                "node": "Privacy",
-                "weight": 30,
+                  "node": "Privacy",
+                  "weight": 30,
+		  "prose":"Privacy is paramount in my mind -- historically we have safeguarded intellectual property from other humans, with a legal system to uphold that, but who's going to defend us if critical information is leaked to AI? Chances are that would lead to immediate loss of privacy with no one held accountable, at best, and at worst it could enable AI to monitor us and optimize its own survival over ours. Aside from low-tech solutions we mentioned earlier (like passing hand-written notes), do we also have technological solutions? ", 
                 "widgets": [
                   {
                     "url": "https://quantumrepoire.com/",
                     "name": "/INFORMS/qr.png", 
                     "title": "Quantum Repoire",
                     "subtitle": "",
-                    "notes": ""
+                      "notes": "",
+		      "prose":"Well here's one at least I've developed, which was originally meant as a privacy-preserving social network among humans, but now I think it may be highly applicable to the problem we have at hand, namely how can humans communicate amongst themselves without including the eyes and ears of AI."
                   }
                 ]
               },
@@ -1276,7 +1280,8 @@
               },
               {
                 "node": "P2P",
-                "weight": 10,
+                  "weight": 30,
+		  "prose":"Another aspect of communication I want to stress is moving away from centralized compute. P2P is a trend which has been gaining speed in recent years, as we find monolithic datacenters are becoming harder to pay for and also provide single points of failure. P2P avoid those problems and we see signs that, for example SLMs are just as good or better than LLMs on benchmarks, and especially with cost factored in. There are many exciting directions in P2P which are proving themselves quite worthy.",
                 "widgets": [
                   {
                     "name": "/INFORMS/P2P.png",
@@ -1286,7 +1291,9 @@
                   },
                   {
                     "name": "/INFORMS/SLM.png",
-                    "title": "Small Language Models",
+                      "title": "Small Language Models",
+		      "url":"https://arxiv.org/pdf/2506.02153",
+		      "image_only":true,
                     "subtitle": "the many small beat the few large",
                     "notes": ""
                   },
@@ -1312,7 +1319,8 @@
                         "name": "/INFORMS/bitcoin.png",
                         "title": "Bitcoin",
                         "subtitle": "The most popular Blockchain",
-                        "notes": ""
+                          "notes": "",
+			  "prose":"Name crypto currency. The epitome of P2P supporting a global structure."
                       },
                       {
                         "name": "/INFORMS/ethereum.png",
@@ -1336,13 +1344,14 @@
                   },
                   {
                     "node": "Distributed Compute",
-                    "weight": 5,
+                      "weight": 5,
+		      "prose":"And with Distributed Computation, you have the classical example of the SETI project, where everyone's home computer can help find extraterrestrial Life. But it may not be the wisest thing.  You have of course Distributed Storage which has been around a while, but oh how crucial it is! And Federated Learning is making headwinds, for example NVIDIA's Flare library. ",
                     "widgets": [
                       {
                         "name": "/INFORMS/federated.png",
                         "title": "Federated Learning",
                         "subtitle": "",
-                        "notes": "Financial Institutions / Credit Card Companies like this"
+                        "notes": "Financial Institutions / Credit Card Companies like this \n\n e.g. NVIDIA FLARE"
                       },
                       {
                         "name": "/INFORMS/distributed.png",
@@ -1360,7 +1369,8 @@
                   },
                   {
                     "node": "Digital Democracy",
-                    "weight": 3,
+                      "weight": 3,
+		      "prose":"And don't forget, the Internet was probably the first P2P egalatarian network, nobody denies it is a great thing. And we all have smartphones and this is really the Edge Compute revolution. Of course there is always some doubt whether Pure Democracy is really stable on huge scales (in fact the Greeks probably never imagined it going beyond 500-people communities), and would be shocked that the US still functions.",
                     "widgets": [
                       {
                         "name": "/INFORMS/internet.png",
@@ -1386,7 +1396,8 @@
               },             
               {
                 "node": "New Methods from AI",
-                "weight": 10,
+                  "weight": 10,
+		  "prose":"Finally, don't forget that AI itself may give us new ways to communicate. This presentation for example.",
                 "widgets": [
                   {
                     "name": "/INFORMS/ai_comm_methods.png",
@@ -1428,31 +1439,36 @@
           },
           {
             "node": "Human Industry",
-            "weight": 50,
+              "weight": 50,
+	      "prose":"Now getting on to the last part of my proposal: Human Industry",
             "widgets": [
               {
                 "name": "/INFORMS/human_industry.png",
                 "title": "What We Do",
                 "subtitle": "",
-                "notes": "Elevating, meaningful work \n Healthful work \n Necessary Work \n Sometimes just Fun work"
+                  "notes": "Elevating, meaningful work \n Healthful work \n Necessary Work \n Sometimes just Fun work",
+		  "prose":"I think everyone wants their job, or what they do in society, to be like this: meaningful, healthful, useful to everyone else, and fun."
               },
               {
                 "name": "/INFORMS/human_industry2.png",
                 "title": "How We Do it",
                 "subtitle": "",
-                "notes": "Working bosonically (not fermionically) \n Degree of Selflessness \n "
+                  "notes": "Working bosonically (not fermionically) \n Degree of Selflessness \n ",
+		  "prose":"And I think everyone prefers to work together rather than against one another (what I call bosonic versus the fermionic 0-sum game "
               },
               {
                 "name": "/INFORMS/human_industry3.png",
                 "title": "We already know this",
                 "subtitle": "",
-                "notes": "Most belief systems of the world have these ideas at their core"
+                  "notes": "Most belief systems of the world have these ideas at their core",
+		  "prose":"And I think most religions and belief systems have these tenets in there, so hopefully we can agree on that."
               }
             ],
             "children":[
               {
                 "node": "Humane => Progress",
-                "weight": 50,
+                  "weight": 50,
+		  "prose":"Now requiring our activity be Human is also something of a Tautology --- if it weren't, if we treated ourselves like these prisoners all the time, and trashed our environment everywhere so we lived in filth, obviously that's not human and no one is going to tolerate that. But it's best to recognize it before it happens, and prevent it. Like you recognize the stove is hot before putting your hand on it.",
                 "widgets": [
                   {
                     "name": "/INFORMS/tautology.png",
@@ -1477,15 +1493,16 @@
               },
               {
                 "node": "Variety",
-                "weight": 20,
+                  "weight": 20,
+		  "prose":"Now, Human activity isn't just blind altruism. We like Variety. In fact we NEED this to function, I believe. So what is Variety and how do we recognize it?",
                 "widgets": [
                   {
                     "name": "/INFORMS/variety.png",
                     "image_only": true,
                     "url": "https://medium.com/@1054h34/identifying-chatgpt-with-variety-ce392b09e38e",
-                    "title": "Variety is the Spice of Life",
-                    "subtitle": "(from which it gets its flavor)",
-                    "notes": ""
+                      "title": "Variety's the (very) Spice of Life",
+                      "subtitle": "(That gives it all its flavour)",
+                      "notes": "⦿  Leibniz (recall your calculus?): the best world is the one that yields the greatest variety of phenomena governed by the simplest set of laws \n\n ⦿  Physicists Julian Barbour and Lee Smolin pursued this idea to derive fundamental physics (like gravity and quantum mechanics)."
                   },
                   {
                     "name": "/INFORMS/energy.png",
@@ -1493,13 +1510,15 @@
                     "url": "https://medium.com/@1054h34/identifying-ai-content-with-variety-128b4c728724",
                     "title": "Don't Spend Too Much Energy",
                     "subtitle": "",
-                    "notes": ""
+                      "notes": "",
+		      "prose":"Now in the course of my exploration I found it useful to define Energy. This isn't quite the physical energy we learn in physics, though it is motivated by it. For example, looking at these two musical compositions, it is apparent that Beethoven's notes move around a lot less than the AI-generated music. It has less Energy. How do we quantify that? ... so we see that Fur Elise has less energy, but a higher V/E. This pattern seems to be repeated across various human-generated vs. AI-generated media, for example text, and images. My hypothesis, therefore, is that V/E is a measure of humanity, because we're good at it. So, what are we going to do with that?"
                   }
                 ]
               },
               {
                 "node": "Art",
-                "weight": 30,
+                  "weight": 30,
+		  "prose":"For one thing, Art. Now, I wrote a short treatise on what is Art, Science, and Math. Because they're all related. Art is arbitrariness. The Mona Lisa is Art becuase you can change her a little bit and it is still acceptable. Math is the opposite. You can't change the Pythagorean Theorem, not one iota. And Science is the process of Art becoming Math. If you haven't read Robert Persig's book, a classic, well it's similarly confirming this: Art is anything you put your mind to that has space to explore; and that's why we have so many title like 'zen and the art of xyz'. ",
                 "widgets": [
                   {
                     "name": "/INFORMS/motorcycle.png",
@@ -1521,19 +1540,20 @@
                     "name": "/INFORMS/science.png",
                     "title": "What is Science?",
                     "subtitle": "",
-                    "notes": ""
+                    "notes": "Science is the process of Art becoming Mathematics"
                   },
                   {
                     "name": "/INFORMS/math.png",
                     "title": "What is Math?",
                     "subtitle": "",
-                    "notes": ""
+                    "notes": "Mathematics is zero-ambiguity Universal Truth."
                   },
                   {
                     "name": "/INFORMS/human-art.png",
                     "title": "Why are Humans best fit for this?",
                     "subtitle": "(we are quite random and noisy)",
-                    "notes": "Asimov's argument: our short lifespans and decent reproductive ratio"
+                      "notes": "Asimov's argument: our short lifespans and decent reproductive ratio",
+		      "prose":"Now why are humans always going to be better than machines at Art? First of all, we are very random, messy biological computer-animals. No metallic computer can compete with that degree of ambiguity. And we  have finite lifespans and a tradition of passing on knowledge to our offspring --- every generation has a different zeitgeist, and thus the pool of social beliefs keeps churning and spewing out new things. Computers can also beget other computers but there is a priori no limit to their lifespans, so they stagnate. This is actually also Asimov's argument why humans are so good at taking over the galaxy versus other lifeforms with long stable lives and few offspring."
                   }
                 ],
                 "children":[
@@ -1542,7 +1562,7 @@
                     {"name": "/INFORMS/jazz.png", "title": "Jazz", "subtitle": "", "notes": ""},
                     {"name": "/INFORMS/rock.png", "title": "Rock", "subtitle": "", "notes": ""},
                     {"name": "/INFORMS/pop.png", "title": "Pop", "subtitle": "", "notes": ""},
-                    {"name": "/INFORMS/hip-op.png", "title": "Hip Hop", "subtitle": "", "notes": ""},
+                    {"name": "/INFORMS/hip-hop.png", "title": "Hip Hop", "subtitle": "", "notes": ""},
                     {"name": "/INFORMS/experimental-music.png", "title": "Experimental Music", "subtitle": "", "notes": ""}
                    ]},
                    {"node": "Literature", "weight":20, "widgets":[
@@ -1575,7 +1595,8 @@
                    ]},
                    {
                     "node": "Art is Satisfying",
-                    "weight":20,
+                       "weight":20,
+		       "prose":"But basically, you know Art is satisfying. Who ever has regrets about visiting an Art gallery or attending a concert? Chances are it opened up your mind to new avenues. And I think this is about freedom, to show you are not just an algorithm in a machine, you have to try something new.",
                     "widgets":[
                       {"name": "/INFORMS/freedom.png", 
                       "title": "Is it all about Freedom?",
@@ -1595,7 +1616,8 @@
               },
               {
                 "node": "Disruption",
-                "weight": 20,
+                  "weight": 20,
+		  "prose":"Now finally, aside from Art, what are Humans good at? Well, messing things up. Disruption. It's not as negative as you think. In fact since Darwin's time I think we've accepted that evolution requires disruption of the genome. Interestingly, it was also discovered not too long ago that Neural Nets require disruption (in the form of DropOut) to trian efficiently.",
                 "widgets": [
                   {
                     "name": "/INFORMS/disruption.png",
@@ -1619,7 +1641,8 @@
                     "name": "/INFORMS/human-disruption.png",
                     "title": "Why are Humans best fit for this?",
                     "subtitle": "(we are quite random and noisy)",
-                    "notes": "Asimov's argument: our short lifespans and decent reproductive ratio \n We get bored with regularity (Variety is the Spice of Life) \n We are naturally curious \n But not too much (we have some need for safety and self-preservation)"
+                      "notes": "Asimov's argument: our short lifespans and decent reproductive ratio \n We get bored with regularity (Variety is the Spice of Life) \n We are naturally curious \n But not too much (we have some need for safety and self-preservation)",
+		      "prose":"So again, this is something privvy to our Human Legacy. We are random. We are emotional, We like to muck things up. No computer program is ever going to compete with that. So it is our advantage and we should leverage that in the coming tech revolution. As a result, you know I highly support counter-culture movements and anything against-the-grain as long as it is done safely, of course. Worried about losing your job? Find something artful and disruptive --- guaranteed you will form a long career!"
                   }
                 ]
               }
