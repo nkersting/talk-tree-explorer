@@ -387,7 +387,7 @@
                 "name": "/INFORMS/great-filter.png",
                 "title": "The Great Filter",
                 "subtitle": "",
-                "notes": ""
+                "notes": "There are counterarguments --- can you think of some?"
               },
               {
                 "name": "/INFORMS/asimov-victory.png",
@@ -1479,14 +1479,14 @@
                   {
                     "name": "/INFORMS/inhumane1.png",
                     "subtitle": "",
-                    "title": "Example 1",
-                    "notes": ""
+                    "title": "We can do better than this",
+                      "notes": "(no one will tolerate this for long)"
                   },
                   {
                     "name": "/INFORMS/inhumane2.png",
                     "subtitle": "",
                     "notes": "",
-                    "title": ""
+                    "title": "Pollution = Inhumane"
                   }
                 ],
                 "children": []
