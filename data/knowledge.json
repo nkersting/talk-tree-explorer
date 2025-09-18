@@ -1239,6 +1239,15 @@
                     "subtitle": "",
                       "notes": "",
 		      "prose":"Well here's one at least I've developed, which was originally meant as a privacy-preserving social network among humans, but now I think it may be highly applicable to the problem we have at hand, namely how can humans communicate amongst themselves without including the eyes and ears of AI."
+                  },
+                  {
+                    "url": "https://havenweb.org/",
+                    "name": "/INFORMS/haven.png", 
+                    "title": "Haven",
+                    "image_only": true,
+                    "subtitle": "Self-host a private blog instead of using Facebook",
+                      "notes": "• Haven is an open-source, self-hosted blog designed as a private alternative to platforms like Facebook. It allows sharing posts and photos with a select group of invited peers, rather than the general public.\n\n • Complete User Control: Complete control of content, data, and access. There are no mechanism for ads, user tracking, or censorship of content. \n\n • Invite-Only Access: The platform is inherently private and secure. There is no public directory or search function; users must be directly invited for access. \n\n • Built-in Personal Feed: Haven includes a reader that allows creation of a curated feed of other websites and other Havens, free from algorithms and advertisements. \n\n • Aligned incentives: The user controls the platform. There are no vectors for misaligned incentives between the user and service-provider (eg. Facebook/Tiktok engagement-hacking)",
+		      "prose":"And here's another type of solution developed by my friend and fellow PCI colleague, Matt Wise. Which is to say you completely decouple from something like FB managing your content visibility."
                   }
                 ]
               },
