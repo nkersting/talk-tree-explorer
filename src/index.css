@@ -109,3 +109,21 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* ReactFlow Controls styling for light/dark mode */
+.react-flow__controls {
+  button {
+    @apply bg-background border-border text-foreground !important;
+    @apply hover:bg-accent hover:text-accent-foreground !important;
+    @apply shadow-md !important;
+  }
+  
+  button svg {
+    @apply text-current !important;
+  }
+}
+
+.react-flow__controls-button {
+  @apply bg-background border-border text-foreground !important;
+  @apply hover:bg-accent hover:text-accent-foreground !important;
+}
