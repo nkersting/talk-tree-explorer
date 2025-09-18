@@ -315,7 +315,7 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
       <div className="w-full h-full rounded-lg border border-border bg-card overflow-hidden">
         {/* Conditional Search Bar */}
         {isSearchVisible && (
-          <div className="p-4 border-b border-border bg-card">
+          <div className="p-4 border-b border-border bg-background">
             <Input
               placeholder="Search nodes..."
               value={searchTerm}
@@ -323,7 +323,7 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
                 console.log('Search input changed:', e.target.value);
                 setSearchTerm(e.target.value);
               }}
-              className="w-full max-w-md"
+              className="w-full max-w-md bg-background border-border text-foreground placeholder:text-muted-foreground"
             />
           </div>
         )}
@@ -348,13 +348,13 @@ export function KnowledgeTree({ data }: { data: KnowledgeNode }) {
           <Background color="#e0e0e0" gap={20} />
             <Controls showInteractive={false}>
               <Button
-                variant="ghost" 
+                variant="outline" 
                 size="sm"
                 onClick={() => {
                   console.log('Search button clicked, current visibility:', isSearchVisible);
                   setIsSearchVisible(!isSearchVisible);
                 }}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 bg-background border-border hover:bg-accent hover:text-accent-foreground"
               >
                 <Search size={14} />
               </Button>
