@@ -1461,21 +1461,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
         {/* Control panel with focus mode and TTS */}
         <div className="absolute top-4 right-4 z-10 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg">
           <div className="flex items-center space-x-4">
-            {/* Voice Selector */}
-            <div className="flex items-center space-x-2">
-              <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Voice" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(voicePresets).map(([key, preset]) => (
-                    <SelectItem key={key} value={key}>
-                      {preset.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+           
             
             {/* Widget visibility toggle */}
             <div className="flex items-center space-x-2">
@@ -1509,6 +1495,21 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 {isReading ? "Stop" : "Read"}
               </Button>
             )}
+             {/* Voice Selector */}
+             <div className="flex items-center space-x-2">
+              <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Voice" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(voicePresets).map(([key, preset]) => (
+                    <SelectItem key={key} value={key}>
+                      {preset.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
         
@@ -1546,21 +1547,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 </DrawerDescription>
               </div>
               <div className="flex items-center gap-2">
-                {/* Voice Selector for widget */}
-                {selectedWidget?.prose && (
-                  <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="Voice" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(voicePresets).map(([key, preset]) => (
-                        <SelectItem key={key} value={key}>
-                          {preset.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+              
                 {/* TTS Speaker Button for widget */}
                 {selectedWidget?.prose && (
                   <Button
