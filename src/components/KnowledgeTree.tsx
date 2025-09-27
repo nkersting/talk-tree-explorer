@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { useFocus } from '@/contexts/FocusContext';
 import TaperedEdge from './TaperedEdge';
+import { isValidImageUrl } from '@/lib/utils';
 
 export type KnowledgeNode = {
   node: string;
@@ -107,7 +108,25 @@ function KnowledgeNodeComponent({ data }: { data: any }) {
             title={data.label}
             onClick={handleNodeClick}
           >
-            {data.label}
+            {isValidImageUrl(data.label) ? (
+              <div className="w-full h-full rounded-full overflow-hidden">
+                <img 
+                  src={data.label} 
+                  alt="Node"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to text if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement!;
+                    parent.innerHTML = data.label;
+                    parent.className = 'w-full h-full rounded-full flex items-center justify-center text-xs font-medium';
+                  }}
+                />
+              </div>
+            ) : (
+              data.label
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent>{data.label}</TooltipContent>

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/drawer";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { isValidImageUrl } from "@/lib/utils";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -904,16 +905,39 @@ function NodeMesh({
       onClick={(e) => { e.stopPropagation(); onClick(node.id); }}
       scale={[pulseScale, pulseScale, pulseScale]}
     >
-      {/* Main node with random 3D geometry */}
+      {/* Main node with random 3D geometry or image texture */}
       <mesh castShadow receiveShadow scale={[scale, scale, scale]}>
-        {nodeShape.geometry}
-        <meshStandardMaterial 
-          color={isFocused ? focusColor : primary} 
-          emissive={isFocused ? "hsl(220 100% 50%)" : ring}
-          emissiveIntensity={isFocused ? 1.2 : 0.15} 
-          metalness={isFocused ? 0.3 : 0.1} 
-          roughness={isFocused ? 0.2 : 0.4} 
-        />
+        {isValidImageUrl(node.label) ? (
+          // Use a plane geometry for image nodes
+          <planeGeometry args={[2, 2]} />
+        ) : (
+          nodeShape.geometry
+        )}
+        {isValidImageUrl(node.label) ? (
+          <meshStandardMaterial 
+            transparent
+            opacity={isFocused ? 1.0 : 0.9}
+            emissive={isFocused ? "hsl(220 100% 20%)" : "hsl(0 0% 0%)"}
+            emissiveIntensity={isFocused ? 0.3 : 0.0}
+          >
+            <primitive 
+              object={(() => {
+                const texture = new THREE.TextureLoader().load(node.label);
+                texture.flipY = false;
+                return texture;
+              })()} 
+              attach="map"
+            />
+          </meshStandardMaterial>
+        ) : (
+          <meshStandardMaterial 
+            color={isFocused ? focusColor : primary} 
+            emissive={isFocused ? "hsl(220 100% 50%)" : ring}
+            emissiveIntensity={isFocused ? 1.2 : 0.15} 
+            metalness={isFocused ? 0.3 : 0.1} 
+            roughness={isFocused ? 0.2 : 0.4} 
+          />
+        )}
       </mesh>
       
       {/* Glow halo for focused nodes */}
