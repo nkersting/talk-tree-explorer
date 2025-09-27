@@ -17,6 +17,7 @@ import { Switch } from "../components/ui/switch";
 import { Button } from "../components/ui/button";
 import { isValidImageUrl } from "../lib/utils";
 import { Volume2, VolumeX } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -1364,9 +1365,19 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [iframeError, setIframeError] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [isReadingWidget, setIsReadingWidget] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState('default');
   
   // Get the current focus from context  
   const { focusedNodeLabel } = useFocus();
+  
+  // Voice presets with different characteristics
+  const voicePresets = {
+    default: { name: 'Default', rate: 0.9, pitch: 1, volume: 0.8 },
+    elon: { name: 'Elon Musk', rate: 0.7, pitch: 0.8, volume: 0.9 },
+    narrator: { name: 'Narrator', rate: 0.8, pitch: 0.9, volume: 0.8 },
+    fast: { name: 'Fast Reader', rate: 1.3, pitch: 1.1, volume: 0.7 },
+    calm: { name: 'Calm Voice', rate: 0.6, pitch: 0.7, volume: 0.9 }
+  };
   
   // Get the focused node's prose content
   const { nodes } = useMemo(() => build3DLayout(data), [data]);
@@ -1390,11 +1401,12 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
     }
     
     const utterance = new SpeechSynthesisUtterance(focusedNode.prose);
+    const voiceConfig = voicePresets[selectedVoice];
     
-    // Configure speech settings
-    utterance.rate = 0.9; // Slightly slower for better comprehension
-    utterance.pitch = 1;
-    utterance.volume = 0.8;
+    // Configure speech settings with selected voice preset
+    utterance.rate = voiceConfig.rate;
+    utterance.pitch = voiceConfig.pitch;
+    utterance.volume = voiceConfig.volume;
     
     // Set up event listeners
     utterance.onstart = () => setIsReading(true);
@@ -1421,11 +1433,12 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
     }
     
     const utterance = new SpeechSynthesisUtterance(selectedWidget.prose);
+    const voiceConfig = voicePresets[selectedVoice];
     
-    // Configure speech settings
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 0.8;
+    // Configure speech settings with selected voice preset
+    utterance.rate = voiceConfig.rate;
+    utterance.pitch = voiceConfig.pitch;
+    utterance.volume = voiceConfig.volume;
     
     // Set up event listeners
     utterance.onstart = () => setIsReadingWidget(true);
@@ -1450,6 +1463,22 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
         {/* Control panel with focus mode and TTS */}
         <div className="absolute top-4 right-4 z-10 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg">
           <div className="flex items-center space-x-4">
+            {/* Voice Selector */}
+            <div className="flex items-center space-x-2">
+              <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Voice" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(voicePresets).map(([key, preset]) => (
+                    <SelectItem key={key} value={key}>
+                      {preset.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
             {/* Widget visibility toggle */}
             <div className="flex items-center space-x-2">
               <Switch
