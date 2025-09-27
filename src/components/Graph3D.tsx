@@ -16,6 +16,7 @@ import {
 import { Switch } from "../components/ui/switch";
 import { Button } from "../components/ui/button";
 import { isValidImageUrl } from "../lib/utils";
+import { Volume2, VolumeX } from "lucide-react";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
@@ -38,6 +39,7 @@ type Node3D = {
   weight?: number;
   position: [number, number, number];
   widgets?: Widget[];
+  prose?: string;
 };
 
 type Edge3D = { source: string; target: string };
@@ -138,7 +140,7 @@ function build3DLayout(root: KnowledgeNode) {
       attempts++;
     }
 
-    nodes.push({ id, label: n.node, weight: n.weight, position: finalPosition, widgets: n.widgets });
+    nodes.push({ id, label: n.node, weight: n.weight, position: finalPosition, widgets: n.widgets, prose: (n as any).prose });
 
     if (parentId) edges.push({ source: parentId, target: id });
 
@@ -1360,32 +1362,94 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [selectedWidget, setSelectedWidget] = useState<Widget | null>(null);
   const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(true);
   const [iframeError, setIframeError] = useState(false);
+  const [isReading, setIsReading] = useState(false);
+  
+  // Get the current focus from context  
+  const { focusedNodeLabel } = useFocus();
+  
+  // Get the focused node's prose content
+  const { nodes } = useMemo(() => build3DLayout(data), [data]);
+  const focusedNode = useMemo(() => {
+    return nodes.find(node => node.label === focusedNodeLabel);
+  }, [nodes, focusedNodeLabel]);
+  
+  // Text-to-speech functionality
+  const readProseContent = () => {
+    if (!focusedNode?.prose) {
+      console.log('No prose content available for the focused node');
+      return;
+    }
+    
+    // Stop any current speech
+    speechSynthesis.cancel();
+    
+    if (isReading) {
+      setIsReading(false);
+      return;
+    }
+    
+    const utterance = new SpeechSynthesisUtterance(focusedNode.prose);
+    
+    // Configure speech settings
+    utterance.rate = 0.9; // Slightly slower for better comprehension
+    utterance.pitch = 1;
+    utterance.volume = 0.8;
+    
+    // Set up event listeners
+    utterance.onstart = () => setIsReading(true);
+    utterance.onend = () => setIsReading(false);
+    utterance.onerror = () => setIsReading(false);
+    
+    // Start speaking
+    speechSynthesis.speak(utterance);
+  };
   
   // Reset iframe error when widget changes
   useEffect(() => {
     setIframeError(false);
   }, [selectedWidget]);
   
-  // Get the current focus from context
-  const { focusedNodeLabel, setFocusedNodeLabel, focusSource, setFocusSource, setDfsIndexByLabel } = useFocus();
+  // Get focus control functions from context
+  const { setFocusedNodeLabel, focusSource, setFocusSource, setDfsIndexByLabel } = useFocus();
   
   return (
     <>
       <section aria-label="3D knowledge tree" className="w-full h-[800px] mt-10 relative">
-        {/* Widget visibility toggle */}
+        {/* Control panel with focus mode and TTS */}
         <div className="absolute top-4 right-4 z-10 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg">
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="widget-visibility"
-              checked={showOnlyFocusedWidgets}
-              onCheckedChange={setShowOnlyFocusedWidgets}
-            />
-            <label 
-              htmlFor="widget-visibility" 
-              className="text-sm font-medium text-foreground cursor-pointer"
-            >
-              Focus mode
-            </label>
+          <div className="flex items-center space-x-4">
+            {/* Widget visibility toggle */}
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="widget-visibility"
+                checked={showOnlyFocusedWidgets}
+                onCheckedChange={setShowOnlyFocusedWidgets}
+              />
+              <label 
+                htmlFor="widget-visibility" 
+                className="text-sm font-medium text-foreground cursor-pointer"
+              >
+                Focus mode
+              </label>
+            </div>
+            
+            {/* TTS Speaker Button */}
+            {focusedNode?.prose && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={readProseContent}
+                disabled={!focusedNode?.prose}
+                className="flex items-center gap-2"
+              >
+                {isReading ? (
+                  <VolumeX className="h-4 w-4" />
+                ) : (
+                  <Volume2 className="h-4 w-4" />
+                )}
+                {isReading ? "Stop" : "Read"}
+              </Button>
+            )}
           </div>
         </div>
         
