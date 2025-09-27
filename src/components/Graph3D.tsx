@@ -1363,6 +1363,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [showOnlyFocusedWidgets, setShowOnlyFocusedWidgets] = useState(true);
   const [iframeError, setIframeError] = useState(false);
   const [isReading, setIsReading] = useState(false);
+  const [isReadingWidget, setIsReadingWidget] = useState(false);
   
   // Get the current focus from context  
   const { focusedNodeLabel } = useFocus();
@@ -1373,7 +1374,7 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
     return nodes.find(node => node.label === focusedNodeLabel);
   }, [nodes, focusedNodeLabel]);
   
-  // Text-to-speech functionality
+  // Text-to-speech functionality for nodes
   const readProseContent = () => {
     if (!focusedNode?.prose) {
       console.log('No prose content available for the focused node');
@@ -1399,6 +1400,37 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
     utterance.onstart = () => setIsReading(true);
     utterance.onend = () => setIsReading(false);
     utterance.onerror = () => setIsReading(false);
+    
+    // Start speaking
+    speechSynthesis.speak(utterance);
+  };
+
+  // Text-to-speech functionality for widgets
+  const readWidgetProseContent = () => {
+    if (!selectedWidget?.prose) {
+      console.log('No prose content available for the selected widget');
+      return;
+    }
+    
+    // Stop any current speech
+    speechSynthesis.cancel();
+    
+    if (isReadingWidget) {
+      setIsReadingWidget(false);
+      return;
+    }
+    
+    const utterance = new SpeechSynthesisUtterance(selectedWidget.prose);
+    
+    // Configure speech settings
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.volume = 0.8;
+    
+    // Set up event listeners
+    utterance.onstart = () => setIsReadingWidget(true);
+    utterance.onend = () => setIsReadingWidget(false);
+    utterance.onerror = () => setIsReadingWidget(false);
     
     // Start speaking
     speechSynthesis.speak(utterance);
@@ -1476,10 +1508,30 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
       <Drawer open={sidePanelOpen} onOpenChange={setSidePanelOpen}>
         <DrawerContent className="max-w-4xl ml-auto h-full z-[100]">
           <DrawerHeader className="text-left">
-            <DrawerTitle>{selectedWidget?.title || 'Widget Details'}</DrawerTitle>
-            <DrawerDescription>
-              {selectedWidget?.subtitle || ''}
-            </DrawerDescription>
+            <div className="flex justify-between items-start">
+              <div>
+                <DrawerTitle>{selectedWidget?.title || 'Widget Details'}</DrawerTitle>
+                <DrawerDescription>
+                  {selectedWidget?.subtitle || ''}
+                </DrawerDescription>
+              </div>
+              {/* TTS Speaker Button for widget */}
+              {selectedWidget?.prose && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={readWidgetProseContent}
+                  className="flex items-center gap-2"
+                >
+                  {isReadingWidget ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
+                  {isReadingWidget ? "Stop" : "Read"}
+                </Button>
+              )}
+            </div>
           </DrawerHeader>
           <div className="p-4 flex-1 overflow-auto">
             {selectedWidget && (
@@ -1662,6 +1714,16 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                         e.currentTarget.style.display = 'none';
                       }}
                     />
+                  </div>
+                )}
+                
+                {/* Widget prose content */}
+                {selectedWidget.prose && (
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-foreground">Prose:</h3>
+                    <div className="text-lg font-bold text-foreground whitespace-pre-wrap bg-muted/50 p-3 rounded-lg">
+                      {selectedWidget.prose}
+                    </div>
                   </div>
                 )}
                 
