@@ -1373,11 +1373,8 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   // Voice presets with different characteristics
   const voicePresets = {
     default: { name: 'Default', rate: 0.9, pitch: 1, volume: 0.8 },
-    elon: { name: 'Elon Musk', rate: 0.65, pitch: 0.75, volume: 0.95 },
-    morgan: { name: 'Morgan Freeman', rate: 0.7, pitch: 0.6, volume: 0.9 },
-    david: { name: 'David Attenborough', rate: 0.8, pitch: 0.8, volume: 0.85 },
-    fast: { name: 'Speed Reader', rate: 1.4, pitch: 1.2, volume: 0.7 },
-    robot: { name: 'AI Assistant', rate: 1.0, pitch: 1.3, volume: 0.8 }
+    ai: { name: 'AI Assistant', rate: 1.0, pitch: 1.3, volume: 0.8 },
+    speed: { name: 'Speed Reader', rate: 1.8, pitch: 1.1, volume: 0.7 }
   };
   
   // Get the focused node's prose content
@@ -1549,8 +1546,8 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 {/* Voice Selector for widget */}
                 {selectedWidget?.prose && (
                   <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-                    <SelectTrigger className="w-28">
-                      <SelectValue />
+                    <SelectTrigger className="w-32">
+                      <SelectValue placeholder="Voice" />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(voicePresets).map(([key, preset]) => (
