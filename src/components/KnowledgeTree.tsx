@@ -18,9 +18,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import { useFocus } from '@/contexts/FocusContext';
+import { useFocus } from '../contexts/FocusContext';
 import TaperedEdge from './TaperedEdge';
-import { isValidImageUrl } from '@/lib/utils';
+import { isValidImageUrl } from '../lib/utils';
 
 export type KnowledgeNode = {
   node: string;

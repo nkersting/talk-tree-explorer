@@ -4,7 +4,7 @@ import { OrbitControls, Line, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { createPortal } from "react-dom";
 import type { KnowledgeNode, Widget } from "../types"; // Adjusted path to match the correct location
-import { useFocus } from '@/contexts/FocusContext';
+import { useFocus } from '../contexts/FocusContext';
 import { useTheme } from "next-themes";
 import { 
   Drawer,
@@ -12,10 +12,10 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { isValidImageUrl } from "@/lib/utils";
+} from "../components/ui/drawer";
+import { Switch } from "../components/ui/switch";
+import { Button } from "../components/ui/button";
+import { isValidImageUrl } from "../lib/utils";
 
 // Resolve CSS HSL tokens like --primary into a usable CSS color string
 function useCssHsl(varName: string, fallback: string = "hsl(220 14% 96%)") {
