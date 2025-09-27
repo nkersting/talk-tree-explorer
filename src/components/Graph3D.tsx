@@ -1373,10 +1373,11 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   // Voice presets with different characteristics
   const voicePresets = {
     default: { name: 'Default', rate: 0.9, pitch: 1, volume: 0.8 },
-    elon: { name: 'Elon Musk', rate: 0.7, pitch: 0.8, volume: 0.9 },
-    narrator: { name: 'Narrator', rate: 0.8, pitch: 0.9, volume: 0.8 },
-    fast: { name: 'Fast Reader', rate: 1.3, pitch: 1.1, volume: 0.7 },
-    calm: { name: 'Calm Voice', rate: 0.6, pitch: 0.7, volume: 0.9 }
+    elon: { name: 'Elon Musk', rate: 0.65, pitch: 0.75, volume: 0.95 },
+    morgan: { name: 'Morgan Freeman', rate: 0.7, pitch: 0.6, volume: 0.9 },
+    david: { name: 'David Attenborough', rate: 0.8, pitch: 0.8, volume: 0.85 },
+    fast: { name: 'Speed Reader', rate: 1.4, pitch: 1.2, volume: 0.7 },
+    robot: { name: 'AI Assistant', rate: 1.0, pitch: 1.3, volume: 0.8 }
   };
   
   // Get the focused node's prose content
@@ -1544,22 +1545,39 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                   {selectedWidget?.subtitle || ''}
                 </DrawerDescription>
               </div>
-              {/* TTS Speaker Button for widget */}
-              {selectedWidget?.prose && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={readWidgetProseContent}
-                  className="flex items-center gap-2"
-                >
-                  {isReadingWidget ? (
-                    <VolumeX className="h-4 w-4" />
-                  ) : (
-                    <Volume2 className="h-4 w-4" />
-                  )}
-                  {isReadingWidget ? "Stop" : "Read"}
-                </Button>
-              )}
+              <div className="flex items-center gap-2">
+                {/* Voice Selector for widget */}
+                {selectedWidget?.prose && (
+                  <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                    <SelectTrigger className="w-28">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(voicePresets).map(([key, preset]) => (
+                        <SelectItem key={key} value={key}>
+                          {preset.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+                {/* TTS Speaker Button for widget */}
+                {selectedWidget?.prose && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={readWidgetProseContent}
+                    className="flex items-center gap-2"
+                  >
+                    {isReadingWidget ? (
+                      <VolumeX className="h-4 w-4" />
+                    ) : (
+                      <Volume2 className="h-4 w-4" />
+                    )}
+                    {isReadingWidget ? "Stop" : "Read"}
+                  </Button>
+                )}
+              </div>
             </div>
           </DrawerHeader>
           <div className="p-4 flex-1 overflow-auto">
