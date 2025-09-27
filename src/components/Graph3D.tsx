@@ -1533,7 +1533,10 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
 
       {/* Side panel drawer */}
       <Drawer open={sidePanelOpen} onOpenChange={setSidePanelOpen}>
-        <DrawerContent className="max-w-4xl ml-auto h-full z-[100]">
+        <DrawerContent 
+          className="max-w-4xl ml-auto h-full z-[100]"
+          onWheel={(e) => e.stopPropagation()}
+        >
           <DrawerHeader className="text-left">
             <div className="flex justify-between items-start">
               <div>
