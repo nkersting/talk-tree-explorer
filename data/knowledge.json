@@ -691,20 +691,6 @@
                                 "image_only": true,
                                   "notes": "",
 				  "prose":"Take word embeddings, for example. It has long been observed that there are more than coincidental, almost eerie logical connections established among words without the model being explicitly told to do so. Now as a reminder that back in 2014 or so these word embeddings were originally trained with nothing more than statistical co-occurence: you initialize all the embeddings to random vectors and then feed billions of phrases and non-phrases with instructions to a neural net to output 1 if the phrase is real, 0 if fake. And the embeddings gradually converge. Now when all your embeddings converge you stop the process and look: you have vector algebra among the vectors exhibiting real logic. In fact if you didn't know the word 'man', you could predict it by 'queen-woman+king'. Presumably this 'AI' is able to predict new words with real logical meaning we haven't even thought of. And that's budding intelligences, i.e., kids, do!  "
-                              },
-                              {
-                                "name": "/INFORMS/vector-sequence.png",
-                                "title": "Measuring the Manifold",
-                                "subtitle": "",
-                                  "notes": "",
-				  "prose":"Now what I've just discussed is old hat. What I'm about to discuss is cutting edge and likely to prove a very powerful tool within the near future. So consider a sentence, which is a sequence of words, right? It traces out a trajectory in embedding space."
-                              },
-                              {
-                                "name": "/INFORMS/vector-sequences.png",
-                                "title": "The Age of Interpolation",
-                                "subtitle": "discovering ourselves",
-                                  "notes": "LLMs are giving us ideas 'between the lines' \n May discover new ethics, mathematics, aesthetics, etc. \n Next 5-10 years may see much discovery here \n We will quickly max out on currently availble data",
-				  "prose":"Now consider many such sentences in our training data, say. They start to carve out a portion of embedding space, which I call the manifold. Now it's kind of a wireframe of a manifold, because these lines are discrete 1-dimensional surfaces tracing through the very high dimensional space. But in between the lines are other possible lines which are probably logically consistent. So between 'I like to run' and 'People enjoy walking' is a trajectory which corresponds to say 'She likes to jog'. And so on. This is a conjecture, by the way, that this manifold really exists."
                               }
                             ]
                           }
