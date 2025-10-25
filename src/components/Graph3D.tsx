@@ -1551,21 +1551,20 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
               {/* Widget Control Panel */}
               <div className="flex items-center gap-2">
                 {/* TTS Speaker Button for widget */}
-                {selectedWidget?.prose && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={readWidgetProseContent}
-                    className="flex items-center gap-2"
-                  >
-                    {isReadingWidget ? (
-                      <VolumeX className="h-4 w-4" />
-                    ) : (
-                      <Volume2 className="h-4 w-4" />
-                    )}
-                    {isReadingWidget ? "Stop" : "Read"}
-                  </Button>
-                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={readWidgetProseContent}
+                  disabled={!selectedWidget?.prose}
+                  className="flex items-center gap-2"
+                >
+                  {isReadingWidget ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
+                  {isReadingWidget ? "Stop" : "Read"}
+                </Button>
                 
                 {/* Voice Selector for widget TTS */}
                 <Select value={selectedVoice} onValueChange={setSelectedVoice}>
