@@ -1548,8 +1548,8 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                   {selectedWidget?.subtitle || ''}
                 </DrawerDescription>
               </div>
+              {/* Widget Control Panel */}
               <div className="flex items-center gap-2">
-              
                 {/* TTS Speaker Button for widget */}
                 {selectedWidget?.prose && (
                   <Button
@@ -1566,6 +1566,20 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                     {isReadingWidget ? "Stop" : "Read"}
                   </Button>
                 )}
+                
+                {/* Voice Selector for widget TTS */}
+                <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue placeholder="Voice" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(voicePresets).map(([key, preset]) => (
+                      <SelectItem key={key} value={key}>
+                        {preset.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </DrawerHeader>
