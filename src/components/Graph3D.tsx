@@ -622,8 +622,10 @@ function ImagePreview({
                 boxShadow: "0 0 10px rgba(0,0,0,0.7)",
                 fontSize: "10px",
                 color: "white",
-                textAlign: "center"
+                textAlign: "center",
+                cursor: "pointer"
               }}
+              onClick={openSidePanel}
             >
               Image<br/>Error
             </div>
