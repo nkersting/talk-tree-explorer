@@ -1367,17 +1367,55 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
   const [iframeError, setIframeError] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [isReadingWidget, setIsReadingWidget] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState('default');
+  const [selectedVoice, setSelectedVoice] = useState('');
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   
   // Get the current focus from context  
   const { focusedNodeLabel } = useFocus();
   
-  // Voice presets with different characteristics
-  const voicePresets = {
-    default: { name: 'Default', rate: 0.9, pitch: 1, volume: 0.8 },
-    ai: { name: 'AI Assistant', rate: 1.0, pitch: 1.3, volume: 0.8 },
-    speed: { name: 'Speed Reader', rate: 1.8, pitch: 1.1, volume: 0.7 }
-  };
+  // Load available voices from Web Speech API
+  useEffect(() => {
+    const loadVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      
+      // Filter for high-quality voices (Google, Microsoft, etc.)
+      const qualityVoices = voices.filter(voice => {
+        const name = voice.name.toLowerCase();
+        const lang = voice.lang.toLowerCase();
+        
+        // Prioritize English voices from quality providers
+        return (
+          lang.startsWith('en') && (
+            name.includes('google') ||
+            name.includes('microsoft') ||
+            name.includes('enhanced') ||
+            name.includes('premium') ||
+            name.includes('natural') ||
+            voice.localService === false // Cloud-based voices are usually better
+          )
+        );
+      });
+      
+      // Fallback to all English voices if no quality voices found
+      const selectedVoices = qualityVoices.length > 0 
+        ? qualityVoices 
+        : voices.filter(v => v.lang.toLowerCase().startsWith('en'));
+      
+      setAvailableVoices(selectedVoices);
+      
+      // Set default voice to first available
+      if (selectedVoices.length > 0 && !selectedVoice) {
+        setSelectedVoice(selectedVoices[0].name);
+      }
+    };
+    
+    loadVoices();
+    
+    // Voices may load asynchronously
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }, []);
   
   // Get the focused node's prose content
   const { nodes } = useMemo(() => build3DLayout(data), [data]);
@@ -1401,12 +1439,17 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
     }
     
     const utterance = new SpeechSynthesisUtterance(focusedNode.prose);
-    const voiceConfig = voicePresets[selectedVoice];
     
-    // Configure speech settings with selected voice preset
-    utterance.rate = voiceConfig.rate;
-    utterance.pitch = voiceConfig.pitch;
-    utterance.volume = voiceConfig.volume;
+    // Find and set the selected voice
+    const voice = availableVoices.find(v => v.name === selectedVoice);
+    if (voice) {
+      utterance.voice = voice;
+    }
+    
+    // Configure speech settings
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+    utterance.volume = 0.9;
     
     // Set up event listeners
     utterance.onstart = () => setIsReading(true);
@@ -1433,12 +1476,17 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
     }
     
     const utterance = new SpeechSynthesisUtterance(selectedWidget.prose);
-    const voiceConfig = voicePresets[selectedVoice];
     
-    // Configure speech settings with selected voice preset
-    utterance.rate = voiceConfig.rate;
-    utterance.pitch = voiceConfig.pitch;
-    utterance.volume = voiceConfig.volume;
+    // Find and set the selected voice
+    const voice = availableVoices.find(v => v.name === selectedVoice);
+    if (voice) {
+      utterance.voice = voice;
+    }
+    
+    // Configure speech settings
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+    utterance.volume = 0.9;
     
     // Set up event listeners
     utterance.onstart = () => setIsReadingWidget(true);
@@ -1500,13 +1548,13 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
              {/* Voice Selector */}
              <div className="flex items-center space-x-2">
               <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Voice" />
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Select Voice" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(voicePresets).map(([key, preset]) => (
-                    <SelectItem key={key} value={key}>
-                      {preset.name}
+                  {availableVoices.map((voice) => (
+                    <SelectItem key={voice.name} value={voice.name}>
+                      {voice.name.replace(/\s*\(.*?\)\s*/g, '').substring(0, 30)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -1568,13 +1616,13 @@ export function Graph3D({ data }: { data: KnowledgeNode }) {
                 
                 {/* Voice Selector for widget TTS */}
                 <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue placeholder="Voice" />
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Select Voice" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(voicePresets).map(([key, preset]) => (
-                      <SelectItem key={key} value={key}>
-                        {preset.name}
+                    {availableVoices.map((voice) => (
+                      <SelectItem key={voice.name} value={voice.name}>
+                        {voice.name.replace(/\s*\(.*?\)\s*/g, '').substring(0, 30)}
                       </SelectItem>
                     ))}
                   </SelectContent>
